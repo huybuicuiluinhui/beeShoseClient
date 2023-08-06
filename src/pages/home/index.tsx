@@ -226,7 +226,6 @@ const HomePage = () => {
           >
             Convert 14
           </button>
-          {/* Add more buttons for additional tabs */}
         </div>
 
         {/* Tab contents */}
@@ -234,7 +233,6 @@ const HomePage = () => {
           {activeTab === 0 && <Tab01 />}
           {activeTab === 1 && <Tab01 />}
           {activeTab === 2 && <Tab01 />}
-          {/* Add more content blocks for additional tabs */}
         </div>
       </div>
       <SliderListProduct />

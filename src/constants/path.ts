@@ -10,5 +10,6 @@ const path = {
   product: "/product",
   listProductsByBrand: "/danh-muc/:id",
   payment: "/payment",
+  invoice: "/invoice",
 } as const;
 export default path;

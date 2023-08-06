@@ -15,7 +15,7 @@ const PaymentPage = () => {
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
-      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
+      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 shadow-md my-10">
         <div className="px-4 pt-8">
           <p className="text-xl font-medium text-red-500">Thông báo</p>
           <p className="text-gray-400">
@@ -32,8 +32,16 @@ const PaymentPage = () => {
                 <span className="font-semibold">
                   Nike Air Max Pro 8888 - Super Light
                 </span>
-                <span className="float-right text-gray-400">Giày Nike</span>
-                <p className="text-lg font-bold">100.000.000đ</p>
+                <div className="flex justify-between">
+                  <span className="float-right text-gray-400">Giày Nike</span>
+                  <span className="float-right text-gray-400">Size: 30.5</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-lg font-bold text-red-500">
+                    100.000.000đ
+                  </span>
+                  <span className="text-lg font-bold">SL:5</span>
+                </div>
               </div>
             </div>
             <div className="flex flex-col rounded-lg bg-white sm:flex-row items-center">
@@ -45,8 +53,16 @@ const PaymentPage = () => {
                 <span className="font-semibold">
                   Nike Air Max Pro 8888 - Super Light
                 </span>
-                <span className="float-right text-gray-400">Giày Nike</span>
-                <p className="mt-auto text-lg font-bold">100.000.000đ</p>
+                <div className="flex justify-between">
+                  <span className="float-right text-gray-400">Giày Nike</span>
+                  <span className="float-right text-gray-400">Size: 30.5</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-lg font-bold text-red-500">
+                    100.000.000đ
+                  </span>
+                  <span className="text-lg font-bold">SL:5</span>
+                </div>
               </div>
             </div>
           </div>
@@ -386,16 +402,15 @@ const PaymentPage = () => {
           </div>
           <button
             className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-            onClick={() => [
-              setTimeout(() => setShowToast(false), 3000),
-              setShowToast(true),
-            ]}
+            onClick={() => setShowToast(true)}
           >
             Đặt hàng
           </button>
         </div>
       </div>
-      {showToast && <SimpleToast />}
+      {showToast && (
+        <SimpleToast typeToast="success" message="Đặt hàng thành công" />
+      )}
     </div>
   );
 };

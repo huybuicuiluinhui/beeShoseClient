@@ -15,6 +15,7 @@ import ListProductsByBrand from "./pages/listProductsByBrand";
 import ScrollToTopButton from "./components/scrollToTop";
 import CartPage from "./pages/cart";
 import PaymentPage from "./pages/payment";
+import Invoice from "./pages/invoice";
 
 function App() {
   let routes: RouteObject[] = [
@@ -29,6 +30,7 @@ function App() {
         { path: path.product, element: <ProductPage /> },
         { path: path.cart, element: <CartPage /> },
         { path: path.payment, element: <PaymentPage /> },
+        { path: path.invoice, element: <Invoice /> },
       ],
     },
   ];
