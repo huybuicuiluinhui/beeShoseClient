@@ -38,6 +38,7 @@ import iconLogout from "./icons/iconLogout.png";
 import iconCart from "./icons/iconCart.png";
 import iconDeliveryFash from "./icons/iconDeliveryFash.png";
 import iconShoppingSuccess from "./icons/iconShoppingSuccess.png";
+import iconAvatar from "./icons/iconAvatar.png";
 const Images = {
   banner01,
   banner02,
@@ -79,5 +80,6 @@ const Images = {
   iconCart,
   iconDeliveryFash,
   iconShoppingSuccess,
+  iconAvatar,
 };
 export default Images;

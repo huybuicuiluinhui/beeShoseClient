@@ -237,7 +237,7 @@ const HomePage = () => {
       </div>
       <SliderListProduct />
       {/* Danh mục sản phẩm giày adidas */}
-      {Array(3)
+      {Array(1)
         .fill(0)
         .map((_, i) => {
           return (
@@ -258,9 +258,18 @@ const HomePage = () => {
                             className="h-64 w-full object-cover"
                             src={Images.giay03}
                           />
-                          <div className="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                            <button className="bg-black text-white py-2 px-5">
+                          <div className="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex-col">
+                            <button
+                              className="bg-black text-white w-full mb-2 py-2 "
+                              onClick={() => navigate(path.cart)}
+                            >
                               Thêm vào giỏ hàng
+                            </button>
+                            <button
+                              className="bg-black text-white  w-full py-2"
+                              onClick={() => navigate("/product")}
+                            >
+                              Mua ngay
                             </button>
                           </div>
                         </div>

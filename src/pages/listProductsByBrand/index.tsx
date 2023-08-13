@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import path from "../../constants/path";
 import useBreadcrumbs, { BreadcrumbMatch } from "use-react-router-breadcrumbs";
@@ -11,53 +11,88 @@ import Images from "../../static";
 interface CustomBreadcrumbMatch extends BreadcrumbMatch {
   url: string;
 }
+interface ShoeSize {
+  size: number;
+  selected: boolean;
+}
+interface ShoeMaterial {
+  material: string;
+  selected: boolean;
+}
+
 const ListProductsByBrand = () => {
   const breadcrumbs = useBreadcrumbs();
   const navigate = useNavigate();
   const id = useParams<{ id: string }>().id;
   const decodedId = decodeURIComponent(id!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-  const [priceRange, setPriceRange] = useState([0, 1000]); // Giá trị mặc định của khoảng giá
+  const [isDropdownOpen2, setIsDropdownOpen2] = useState(true);
+  const [isDropdownOpen3, setIsDropdownOpen3] = useState(true);
+  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [selectedSizes, setSelectedSizes] = useState<ShoeSize[]>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<ShoeMaterial[]>(
+    []
+  );
+  const shoeSizes: number[] = [33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
+  const [materials, setMaterials] = useState([
+    "Leather",
+    "Canvas",
+    "Synthetic",
+  ]);
+
+  const handleSizeSelect = (size: number) => {
+    setSelectedSizes((prevSizes) => {
+      const existingSize = prevSizes.find((s) => s.size === size);
+      if (existingSize) {
+        return prevSizes.filter((s) => s.size !== size);
+      } else {
+        return [...prevSizes, { size, selected: true }];
+      }
+    });
+  };
+  const handleMaterialsSelect = (material: string) => {
+    setSelectedMaterials((prevSizes) => {
+      const existingSize = prevSizes.find((s) => s.material === material);
+      if (existingSize) {
+        return prevSizes.filter((s) => s.material !== material);
+      } else {
+        return [...prevSizes, { material, selected: true }];
+      }
+    });
+  };
   const handlePriceChange = (value: any) => {
     setPriceRange(value);
   };
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  console.log(isDropdownOpen);
+
+  const handleDropdownTogglePrice = () => {
+    setIsDropdownOpen2(!isDropdownOpen2);
+  };
+  const handleDropdownToggleMaterial = () => {
+    setIsDropdownOpen3(!isDropdownOpen3);
+  };
 
   return (
     <div className="w-full h-full ">
       <div className="flex w-full relative">
         <aside
           id="logo-sidebar"
-          className="sticky   left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 "
+          className="sticky   left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-32 "
           aria-label="Sidebar"
         >
-          <div className="h-full px-3 py-4 overflow-y-auto    ">
-            <div className="flex flex-col items-center w-full">
-              <h2 className="text-black text-sm font-medium self-start pb-3">
-                Lọc theo khoảng giá
-              </h2>
-              <Slider
-                range
-                min={0}
-                max={1000}
-                defaultValue={priceRange}
-                onChange={handlePriceChange}
-              />
-              <p>Min Price: ${priceRange[0]}</p>
-              <p>Max Price: ${priceRange[1]}</p>
-            </div>
+          <span className="text-xl font-bold">Lọc sản phẩm</span>
+          <div className="h-full px-3 py-4 overflow-y-auto ">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
                 onClick={handleDropdownToggle}
                 id="dropdownDefault"
                 data-dropdown-toggle="dropdown"
-                className="self-start text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-1 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 "
+                className="self-start uppercase text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 "
                 type="button"
               >
-                Lọc theo kích thước
+                kích thước size
                 <svg
                   className="w-4 h-4 ml-2"
                   aria-hidden="true"
@@ -76,175 +111,148 @@ const ListProductsByBrand = () => {
               </button>
               {/* Dropdown menu */}
               {isDropdownOpen && (
-                <div className="  w-full p-3  rounded-lg shadow dark:bg-gray-700">
+                <div className="  w-full  rounded-lg ">
                   <ul
                     className="space-y-2 text-sm"
                     aria-labelledby="dropdownDefault"
                   >
-                    <li className="flex items-center">
-                      <input
-                        id="apple"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="apple"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Apple (56)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="fitbit"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="fitbit"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Fitbit (56)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="dell"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="dell"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Dell (56)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="asus"
-                        type="checkbox"
-                        defaultChecked
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="asus"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Asus (97)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="logitech"
-                        type="checkbox"
-                        defaultChecked
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="logitech"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Logitech (97)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="msi"
-                        type="checkbox"
-                        defaultChecked
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="msi"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        MSI (97)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="bosch"
-                        type="checkbox"
-                        defaultChecked
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="bosch"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Bosch (176)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="sony"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="sony"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Sony (234)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="samsung"
-                        type="checkbox"
-                        defaultChecked
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="samsung"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Samsung (76)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="canon"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="canon"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Canon (49)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="microsoft"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="microsoft"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Microsoft (45)
-                      </label>
-                    </li>
-                    <li className="flex items-center">
-                      <input
-                        id="razor"
-                        type="checkbox"
-                        className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      />
-                      <label
-                        htmlFor="razor"
-                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Razor (49)
-                      </label>
-                    </li>
+                    {shoeSizes.map((size, index) => {
+                      const isSelected = selectedSizes.some(
+                        (s) => s.size === size && s.selected
+                      );
+                      return (
+                        <li
+                          key={index}
+                          className="flex items-center  "
+                          onClick={() => handleSizeSelect(size)}
+                        >
+                          <input
+                            id="apple"
+                            type="checkbox"
+                            checked={isSelected}
+                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                          />
+                          <label
+                            htmlFor="apple"
+                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                          >
+                            {size}
+                          </label>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
+              {/* theo chất liệu */}
+              <button
+                onClick={handleDropdownToggleMaterial}
+                id="dropdownDefault"
+                data-dropdown-toggle="dropdown"
+                className="self-start uppercase text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 "
+                type="button"
+              >
+                Chất liệu
+                <svg
+                  className="w-4 h-4 ml-2"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {/* Dropdown menu */}
+              {isDropdownOpen3 && (
+                <div className="  w-full  rounded-lg ">
+                  <ul
+                    className="space-y-2 text-sm"
+                    aria-labelledby="dropdownDefault"
+                  >
+                    {materials.map((material, index) => {
+                      const isSelected = selectedMaterials.some(
+                        (s) => s.material === material && s.selected
+                      );
+                      return (
+                        <li
+                          key={index}
+                          className="flex items-center"
+                          onClick={() => handleMaterialsSelect(material)}
+                        >
+                          <input
+                            id="apple"
+                            type="checkbox"
+                            checked={isSelected}
+                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                          />
+                          <label
+                            htmlFor="apple"
+                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                          >
+                            {material}
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              <div className="mt-2 w-full">
+                <button
+                  onClick={handleDropdownTogglePrice}
+                  id="dropdownDefault"
+                  data-dropdown-toggle="dropdown"
+                  className="self-start text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 uppercase  "
+                  type="button"
+                >
+                  khoảng giá
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                {isDropdownOpen2 && (
+                  <Fragment>
+                    <Slider
+                      range
+                      min={0}
+                      max={1000000}
+                      defaultValue={priceRange}
+                      onChange={handlePriceChange}
+                    />
+                    <div>
+                      <span className="font-semibold first-letter:">
+                        Min Price:{" "}
+                      </span>
+                      <span className="text-red-500">{priceRange[0]} đ</span>
+                      <br />
+                      <span className="font-semibold first-letter:">
+                        Max Price:{" "}
+                      </span>
+                      <span className="text-red-500">{priceRange[1]} đ</span>
+                    </div>
+                  </Fragment>
+                )}
+              </div>
             </div>
           </div>
         </aside>

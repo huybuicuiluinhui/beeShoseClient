@@ -176,7 +176,7 @@ const Header = () => {
               >
                 <img
                   className="w-8 h-8 rounded-full"
-                  src={Images.testAvatar}
+                  src={Images.iconAvatar}
                   alt="user photo"
                 />
               </button>

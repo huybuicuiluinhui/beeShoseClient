@@ -1,7 +1,6 @@
 import React from "react";
 import Slider, { Settings } from "react-slick";
 import dataProduct from "../constants/data";
-
 const SliderListProduct = () => {
   const settings: Settings = {
     dots: false,

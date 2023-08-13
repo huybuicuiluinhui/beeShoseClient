@@ -42,7 +42,6 @@ function App() {
         <Header />
         <div className="w-full  flex flex-col flex-1 ">{element}</div>
         <ScrollToTopButton />
-
         <footer className="bg-neutral-100 text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left pt-9 z-50">
           <div className="flex items-center justify-center border-b-2 border-neutral-200 p-6 dark:border-neutral-500 lg:justify-between">
             <div className="mr-12 hidden lg:block">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ProductItem from "../../components/ProductItem";
 import Rate from "../../components/Rate";
@@ -73,6 +73,10 @@ const ProductPage = () => {
       </div>
     );
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="w-full h-full  px-4">
       <nav className="flex" aria-label="Breadcrumb">
