@@ -9,11 +9,27 @@ import { useNavigate } from "react-router-dom";
 import path from "../../constants/path";
 import dataProduct from "../../constants/data";
 import SliderListBrand from "../../components/SliderListBrand";
+import axios from "axios";
+import API from "../../api";
 
 const HomePage = () => {
   const [showBanner, setShowBanner] = React.useState<boolean>(true);
   const [activeTab, setActiveTab] = React.useState(0);
   const [showModal, setShowModal] = useState(false);
+  const today = new Date();
+  const dayIndex = today.getDay(); // Lấy chỉ số ngày trong tuần (0 - Chủ Nhật, 1 - Thứ Hai, ...)
+  console.log(dayIndex);
+
+  let promotionType = "";
+
+  if (dayIndex === 1 || dayIndex === 2) {
+    promotionType = "Khuyến mãi đầu tuần";
+  } else if (dayIndex >= 3 && dayIndex <= 5) {
+    promotionType = "Khuyến mãi giữa tuần";
+  } else {
+    promotionType = "Khuyến mãi cuối tuần";
+  }
+
   const navigate = useNavigate();
   const handleTabClick = (index: number) => {
     setActiveTab(index);
@@ -25,6 +41,16 @@ const HomePage = () => {
     return (
       <span className="border-t-2 border-[#ebebeb] border-solid w-full h-[1px] my-3" />
     );
+  };
+
+  const getDataShoes = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getShoesImg(),
+    });
+    if (res.status) {
+      console.log("res.data", res.data);
+    }
   };
   const Tab01 = () => {
     return (
@@ -94,6 +120,10 @@ const HomePage = () => {
     );
   };
   useEffect(() => {
+    getDataShoes();
+  }, []);
+
+  useEffect(() => {
     // Tắt modal sau khi đóng
     if (showModal) {
       setTimeout(() => {
@@ -105,8 +135,6 @@ const HomePage = () => {
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       {!!showBanner && <BannerShow handleShow={handleShow} />}
       {showModal && <ShowModalHome />}
-
-      {}
       <SliderHome />
       {/* Thông tin ưu đãi */}
       <Line />
@@ -191,7 +219,7 @@ const HomePage = () => {
       <Line />
 
       <span className="text-[#999] italic  text-sm font-semibold text-center uppercase mb-5">
-        Khuyến mại cuối tuần
+        {promotionType}
       </span>
       <div className="w-full p-4 ">
         <div className="flex space-x-10 w-full justify-center">

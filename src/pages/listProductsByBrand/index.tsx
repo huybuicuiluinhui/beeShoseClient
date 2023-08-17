@@ -7,6 +7,9 @@ import "rc-slider/assets/index.css"; // Import CSS cho slider
 import ProductItem from "../../components/ProductItem";
 import ProductPage from "../product";
 import Images from "../../static";
+import axios from "axios";
+import API from "../../api";
+import { IType } from "../../types/product.type";
 
 interface CustomBreadcrumbMatch extends BreadcrumbMatch {
   url: string;
@@ -33,12 +36,8 @@ const ListProductsByBrand = () => {
   const [selectedMaterials, setSelectedMaterials] = useState<ShoeMaterial[]>(
     []
   );
-  const shoeSizes: number[] = [33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44];
-  const [materials, setMaterials] = useState([
-    "Leather",
-    "Canvas",
-    "Synthetic",
-  ]);
+  const [shoeSizes, setShoesSize] = useState<IType[]>();
+  const [materials, setMaterials] = useState<IType[]>([]);
 
   const handleSizeSelect = (size: number) => {
     setSelectedSizes((prevSizes) => {
@@ -73,7 +72,30 @@ const ListProductsByBrand = () => {
   const handleDropdownToggleMaterial = () => {
     setIsDropdownOpen3(!isDropdownOpen3);
   };
+  const getDataSize = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getSize(),
+    });
+    if (res.status) {
+      setShoesSize(res.data);
+    }
+  };
+  const getDataSole = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getSole(),
+    });
+    if (res.status) {
+      setMaterials(res.data);
+    }
+  };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    getDataSize();
+    getDataSole();
+  }, []);
   return (
     <div className="w-full h-full ">
       <div className="flex w-full relative">
@@ -83,15 +105,14 @@ const ListProductsByBrand = () => {
           aria-label="Sidebar"
         >
           <span className="text-xl font-bold">Lọc sản phẩm</span>
-          <div className="h-full px-3 py-4 overflow-y-auto ">
+          <div className="h-full px-2 py-4 overflow-y-auto ">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
                 onClick={handleDropdownToggle}
-                id="dropdownDefault"
-                data-dropdown-toggle="dropdown"
-                className="self-start uppercase text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 "
+                className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden"
                 type="button"
               >
+                <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-slate-400" />
                 kích thước size
                 <svg
                   className="w-4 h-4 ml-2"
@@ -111,36 +132,37 @@ const ListProductsByBrand = () => {
               </button>
               {/* Dropdown menu */}
               {isDropdownOpen && (
-                <div className="  w-full  rounded-lg ">
+                <div className="  w-full  rounded-lg mt-1 ">
                   <ul
                     className="space-y-2 text-sm"
                     aria-labelledby="dropdownDefault"
                   >
-                    {shoeSizes.map((size, index) => {
-                      const isSelected = selectedSizes.some(
-                        (s) => s.size === size && s.selected
-                      );
-                      return (
-                        <li
-                          key={index}
-                          className="flex items-center  "
-                          onClick={() => handleSizeSelect(size)}
-                        >
-                          <input
-                            id="apple"
-                            type="checkbox"
-                            checked={isSelected}
-                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                          />
-                          <label
-                            htmlFor="apple"
-                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                    {!!shoeSizes?.length &&
+                      shoeSizes.map((size, index) => {
+                        const isSelected = selectedSizes.some(
+                          (s) => s.size === Number(size.name) && s.selected
+                        );
+                        return (
+                          <li
+                            key={size.id}
+                            className="flex items-center  "
+                            onClick={() => handleSizeSelect(Number(size.name))}
                           >
-                            {size}
-                          </label>
-                        </li>
-                      );
-                    })}
+                            <input
+                              id="apple"
+                              type="checkbox"
+                              checked={isSelected}
+                              className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-gray-600 focus:ring-gray-500 dark:focus:ring-gray-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                            />
+                            <label
+                              htmlFor="apple"
+                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                            >
+                              {size.name}
+                            </label>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               )}
@@ -149,9 +171,10 @@ const ListProductsByBrand = () => {
                 onClick={handleDropdownToggleMaterial}
                 id="dropdownDefault"
                 data-dropdown-toggle="dropdown"
-                className="self-start uppercase text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 "
+                className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden  "
                 type="button"
               >
+                <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-slate-400" />
                 Chất liệu
                 <svg
                   className="w-4 h-4 ml-2"
@@ -176,31 +199,33 @@ const ListProductsByBrand = () => {
                     className="space-y-2 text-sm"
                     aria-labelledby="dropdownDefault"
                   >
-                    {materials.map((material, index) => {
-                      const isSelected = selectedMaterials.some(
-                        (s) => s.material === material && s.selected
-                      );
-                      return (
-                        <li
-                          key={index}
-                          className="flex items-center"
-                          onClick={() => handleMaterialsSelect(material)}
-                        >
-                          <input
-                            id="apple"
-                            type="checkbox"
-                            checked={isSelected}
-                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                          />
-                          <label
-                            htmlFor="apple"
-                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                    {!!materials &&
+                      !!materials.length &&
+                      materials.map((material, index) => {
+                        const isSelected = selectedMaterials.some(
+                          (s) => s.material === material.name && s.selected
+                        );
+                        return (
+                          <li
+                            key={index}
+                            className="flex items-center"
+                            onClick={() => handleMaterialsSelect(material.name)}
                           >
-                            {material}
-                          </label>
-                        </li>
-                      );
-                    })}
+                            <input
+                              id="apple"
+                              type="checkbox"
+                              checked={isSelected}
+                              className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                            />
+                            <label
+                              htmlFor="apple"
+                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                            >
+                              {material.name}
+                            </label>
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               )}
@@ -210,10 +235,11 @@ const ListProductsByBrand = () => {
                   onClick={handleDropdownTogglePrice}
                   id="dropdownDefault"
                   data-dropdown-toggle="dropdown"
-                  className="self-start text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm  py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 uppercase  "
+                  className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden  "
                   type="button"
                 >
                   khoảng giá
+                  <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-slate-400" />
                   <svg
                     className="w-4 h-4 ml-2"
                     aria-hidden="true"
@@ -232,6 +258,44 @@ const ListProductsByBrand = () => {
                 </button>
                 {isDropdownOpen2 && (
                   <Fragment>
+                    <div className="mt-2">
+                      <div className="relative z-0  w-[45%]">
+                        <input
+                          value={priceRange[0]}
+                          onChange={handlePriceChange}
+                          type="text"
+                          id="floating_standard"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="floating_standard"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Giá thấp nhất
+                        </label>
+                      </div>
+
+                      {/* <span className="text-red-500">{priceRange[0]} đ</span> */}
+                      <br />
+
+                      <div className="relative z-0  w-[45%]">
+                        <input
+                          value={priceRange[1]}
+                          onChange={handlePriceChange}
+                          type="text"
+                          id="floating_standard"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                          placeholder="  "
+                        />
+                        <label
+                          htmlFor="floating_standard"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Giá cao nhất
+                        </label>
+                      </div>
+                    </div>
                     <Slider
                       range
                       min={0}
@@ -239,17 +303,6 @@ const ListProductsByBrand = () => {
                       defaultValue={priceRange}
                       onChange={handlePriceChange}
                     />
-                    <div>
-                      <span className="font-semibold first-letter:">
-                        Min Price:{" "}
-                      </span>
-                      <span className="text-red-500">{priceRange[0]} đ</span>
-                      <br />
-                      <span className="font-semibold first-letter:">
-                        Max Price:{" "}
-                      </span>
-                      <span className="text-red-500">{priceRange[1]} đ</span>
-                    </div>
                   </Fragment>
                 )}
               </div>

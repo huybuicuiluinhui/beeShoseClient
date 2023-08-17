@@ -4,9 +4,16 @@ import Images from "../static";
 import ModalComponent from "./Modal";
 import SimpleToast from "./Toast";
 import path from "../constants/path";
+import axios from "axios";
+import API from "../api";
+import { IType } from "../types/product.type";
+import { useData } from "../context/app.context";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { sharedData } = useData();
+  console.log("2", sharedData);
+
   const listHeaderBrand = [
     "Giày Adidas",
     "Giày Thể Thao",
@@ -16,6 +23,7 @@ const Header = () => {
     "Giày Puma",
     "Giày Convert",
   ];
+  const [listBrandHeader, setListBrandHeader] = useState<IType[]>();
   const [isHeaderSticky, setIsHeaderSticky] = useState<boolean>(false);
   const [showDropdown, setIsShowDropdown] = useState<boolean>(false);
   const [showTable, setShowTable] = useState<boolean>(false);
@@ -27,6 +35,22 @@ const Header = () => {
       setShowTable(isHovering);
     }
   };
+  const onShowDropdown = (isShowDropDown: boolean) => {
+    setIsShowDropdown(isShowDropDown);
+  };
+  const getDataBrand = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getBrand(),
+    });
+    if (res.status) {
+      setListBrandHeader(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getDataBrand();
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       setIsHeaderSticky(window.scrollY > 0);
@@ -37,10 +61,6 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const onShowDropdown = (isShowDropDown: boolean) => {
-    setIsShowDropdown(isShowDropDown);
-  };
-
   const CategoryTable = () => {
     const categories = [
       {
@@ -124,9 +144,9 @@ const Header = () => {
     ];
 
     return (
-      <div className="w-full absolute z-40 bg-[#ececec] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+      <div className="w-full absolute z-40 bg-[#fff] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         {categories.map((item, index) => (
-          <div className="">
+          <div className="" key={index}>
             <span className="text-base text-black font-normal border-b-2 border-solid border-[#000] pb-1">
               {item.title}
             </span>
@@ -321,16 +341,17 @@ const Header = () => {
                   >
                     Trang chủ
                   </a>
-                  {!!listHeaderBrand &&
-                    listHeaderBrand.map((item, index) => {
+                  {!!listBrandHeader &&
+                    listBrandHeader.length &&
+                    listBrandHeader.map((item, index) => {
                       return (
-                        <li key={index}>
+                        <li key={item.id}>
                           <Link
-                            to={`/danh-muc/${encodeURIComponent(item)}`}
+                            to={`/danh-muc/${encodeURIComponent(item.name)}`}
                             className="text-gray-900 dark:text-white hover:underline"
                             aria-current="page"
                           >
-                            {item}
+                            {item.name}
                           </Link>
                         </li>
                       );
@@ -346,7 +367,7 @@ const Header = () => {
               setShowModal(false);
             }}
           >
-            {typeModal === 1 ? (
+            {sharedData === true || typeModal === 1 ? (
               <section className="bg-gray-50 dark:bg-gray-900 ">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
                   <a
