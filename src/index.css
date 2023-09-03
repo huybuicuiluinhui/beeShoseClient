@@ -23,3 +23,7 @@ code {
 .btn4:hover span {
   transform: translateX(0);
 }
+.hover-translate-up:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}

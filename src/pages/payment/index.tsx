@@ -3,8 +3,11 @@ import Images from "../../static";
 import { Toast } from "flowbite-react";
 import SimpleToast from "../../components/Toast";
 import ShippingProcess from "../../components/shippingProcess";
+import path from "../../constants/path";
+import { useNavigate } from "react-router-dom";
 
 const PaymentPage = () => {
+  const navigate = useNavigate();
   const [radioChoose, setRadioChoose] = React.useState<string>("option1");
   const [showToast, setShowToast] = React.useState<boolean>(false);
   const handleChange = (event: any) => {
@@ -29,7 +32,7 @@ const PaymentPage = () => {
                 src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
               />
               <div className="flex w-full flex-col px-4 py-4">
-                <span className="font-semibold">
+                <span className="font-semibold text-[#FFBA00]   ">
                   Nike Air Max Pro 8888 - Super Light
                 </span>
                 <div className="flex justify-between">
@@ -40,7 +43,7 @@ const PaymentPage = () => {
                   <span className="text-lg font-bold text-red-500">
                     100.000.000đ
                   </span>
-                  <span className="text-lg font-bold">SL:5</span>
+                  <span className="text-lg font-bold text-[#FFBA00]">SL:5</span>
                 </div>
               </div>
             </div>
@@ -50,7 +53,7 @@ const PaymentPage = () => {
                 src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
               />
               <div className="flex w-full flex-col px-4 py-4">
-                <span className="font-semibold">
+                <span className="font-semibold text-[#FFBA00]">
                   Nike Air Max Pro 8888 - Super Light
                 </span>
                 <div className="flex justify-between">
@@ -61,12 +64,14 @@ const PaymentPage = () => {
                   <span className="text-lg font-bold text-red-500">
                     100.000.000đ
                   </span>
-                  <span className="text-lg font-bold">SL:5</span>
+                  <span className="text-lg font-bold text-[#FFBA00]">SL:5</span>
                 </div>
               </div>
             </div>
           </div>
-          <p className="mt-8 text-lg font-medium">Phương thức giao hàng</p>
+          <p className="mt-8 text-lg font-medium text-[#FFBA00]">
+            Phương thức giao hàng
+          </p>
           <form className="mt-5 grid gap-6">
             <div className="relative">
               <input
@@ -76,9 +81,9 @@ const PaymentPage = () => {
                 name="radio"
                 defaultChecked
               />
-              <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
+              <span className="peer-checked:border-[#FFBA00] absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
               <label
-                className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
                 htmlFor="radio_1"
               >
                 <img
@@ -101,9 +106,9 @@ const PaymentPage = () => {
                 name="radio"
                 defaultChecked
               />
-              <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
+              <span className="peer-checked:border-[#FFBA00] absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
               <label
-                className="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
                 htmlFor="radio_2"
               >
                 <img className="w-14 object-contain" src={Images.iconDivery} />
@@ -119,7 +124,9 @@ const PaymentPage = () => {
         </div>
         {/* Thanh toán */}
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-          <p className="text-xl font-medium">Chi tiết thanh toán</p>
+          <p className="text-xl font-medium  text-[#FFBA00]">
+            Chi tiết thanh toán
+          </p>
           <p className="text-gray-400">
             Hoàn thành đơn đặt hàng của bạn bằng cách cung cấp chi tiết thanh
             toán của bạn.
@@ -135,7 +142,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập họ và tên
                 </label>
@@ -149,7 +156,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập số điện thoại
                 </label>
@@ -160,7 +167,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-[#FFBA00] bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     <option selected>Choose a country</option>
                     <option value="US">United States</option>
@@ -172,7 +179,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Tỉnh/Thành Phố
                 </label>
@@ -181,7 +188,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-[#FFBA00] bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     <option selected>Choose a country</option>
                     <option value="US">United States</option>
@@ -193,7 +200,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Quận/Huyện
                 </label>
@@ -205,7 +212,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-[#FFBA00] bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     <option selected>Choose a country</option>
                     <option value="US">United States</option>
@@ -217,7 +224,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Phường/Xã
                 </label>
@@ -226,12 +233,12 @@ const PaymentPage = () => {
                 <input
                   type="text"
                   id="floating_standard"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block py-2.5 px-0 w-full text-sm text-[#FFBA00] bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-[#FFBA00] dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập địa chỉ cụ thể
                 </label>
@@ -239,7 +246,7 @@ const PaymentPage = () => {
             </div>
             <label
               htmlFor="card-holder"
-              className="mt-4 mb-2 block text-sm font-medium"
+              className="mt-4 mb-2 block text-sm font-medium text-[#FFBA00]"
             >
               Chọn phương thức thanh toán
             </label>
@@ -253,15 +260,15 @@ const PaymentPage = () => {
                   id="option1"
                   aria-describedby="helper-radio-text"
                   type="radio"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className=" peer-checked:border-[#FFBA00]   peer-checked:ring-[#FFBA00] w-4 h-4 text-[#FFBA00] bg-gray-100 border-gray-300 focus:ring-[#FFBA00]  "
                 />
               </div>
               <div className="ml-2 text-sm">
                 <label
                   htmlFor="option1"
-                  className="font-medium text-gray-900 dark:text-gray-300"
+                  className="font-medium text-gray-900  peer-checked:text-[#FFBA00] "
                 >
-                  Thanh toán bằng ngay
+                  Thanh toán ngay
                 </label>
                 <p
                   id="helper-radio-text"
@@ -281,7 +288,7 @@ const PaymentPage = () => {
                   id="option2"
                   aria-describedby="helper-radio-text"
                   type="radio"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  className=" peer-checked:border-[#FFBA00]  peer-checked: peer-checked:ring-[#FFBA00] w-4 h-4 text-[#FFBA00] bg-gray-100 border-gray-300 focus:ring-[#FFBA00]  "
                 />
               </div>
               <div className="ml-2 text-sm">
@@ -401,8 +408,11 @@ const PaymentPage = () => {
             </div>
           </div>
           <button
-            className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-            onClick={() => setShowToast(true)}
+            className="mt-4 mb-8 w-full rounded-md bg-[#FFBA00] px-6 py-3 font-medium text-white"
+            onClick={() => {
+              setShowToast(true);
+              navigate(path.home);
+            }}
           >
             Đặt hàng
           </button>

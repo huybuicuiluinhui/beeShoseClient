@@ -49,7 +49,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    getDataBrand();
+    // getDataBrand();
   }, []);
   useEffect(() => {
     const handleScroll = () => {
@@ -146,7 +146,7 @@ const Header = () => {
     return (
       <div className="w-full absolute z-40 bg-[#fff] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         {categories.map((item, index) => (
-          <div className="" key={index}>
+          <div key={index}>
             <span className="text-base text-black font-normal border-b-2 border-solid border-[#000] pb-1">
               {item.title}
             </span>
@@ -167,8 +167,8 @@ const Header = () => {
       } top-0 left-0 w-full z-10`}
     >
       <header>
-        <nav className="bg-white border-gray-200 dark:bg-gray-900 py-2">
-          <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto ">
+        <nav className="bg-[#ffba00]  py-2">
+          <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 ">
             <div className="w-[20%]">
               <a href="/" className="flex items-center w-fit ">
                 <img src={Images.iconLogo} className="h-10  mr-3" />
@@ -208,12 +208,12 @@ const Header = () => {
                     id="user-dropdown"
                   >
                     <ul className="py-2" aria-labelledby="user-menu-button">
-                      <li>
+                      <li className="">
                         <a
                           onClick={() => {
                             setShowModal(true);
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
+                          className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
                         >
                           Đăng nhập
                         </a>
@@ -224,17 +224,15 @@ const Header = () => {
                           onClick={() => {
                             setShowModal(true);
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          className=" hover:text-[#FABA00]  cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
                           Đăng ký
                         </a>
                       </li>
                       <li>
                         <a
-                          onClick={() => {
-                            navigate(path.invoice);
-                          }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
+                          href={path.invoice}
+                          className="hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
                         >
                           Đơn mua
                         </a>
@@ -242,7 +240,7 @@ const Header = () => {
                       <li>
                         <a
                           href="#"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          className=" hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                         >
                           Cài đặt
                         </a>
@@ -250,7 +248,7 @@ const Header = () => {
                       <li>
                         <a
                           href="#"
-                          className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 flex"
+                          className="hover:text-[#FABA00]  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 flex"
                         >
                           Thoát
                           <img src={Images.iconLogout} className="w-4 ml-3" />
@@ -265,19 +263,19 @@ const Header = () => {
               className="items-center justify-between hidden w-full md:flex md:flex-[0.9] md:order-1"
               id="navbar-user"
             >
-              <ul className="flex flex-col flex-1 font-medium  md:p-0 mt-2 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 items-center justify-between ">
-                <li className="w-[80%]">
+              <ul className="flex flex-col flex-1 list-none font-medium  md:p-0 mt-2 border  md:flex-row md:space-x-8 md:mt-0 md:border-0  items-center justify-around ">
+                <li className="flex-[3]">
                   <form>
-                    <label
+                    {/* <label
                       htmlFor="default-search"
                       className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
                     >
                       Search
-                    </label>
+                    </label> */}
                     <div className="relative w-full">
-                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
                         <svg
-                          className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                          className="w-4 h-4 text-gray-500 "
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -295,63 +293,113 @@ const Header = () => {
                       <input
                         type="search"
                         id="default-search"
-                        className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className="placeholder:text-[#FABA00] block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500  "
                         placeholder="Tìm kiếm sản phẩm tại đây....."
                         required
                       />
-                      <button
-                        type="submit"
-                        className="text-black absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        Search
-                      </button>
                     </div>
                   </form>
                 </li>
-
-                <li>
-                  <a
-                    href="/cart"
-                    className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                <li className="flex-1 cursor-pointer">
+                  <div
+                    className=" flex justify-center items-center my-auto "
+                    onClick={() => {}}
                   >
-                    <img src={Images.iconCart} className="w-5 h-5" />
-                  </a>
+                    <img
+                      width="20"
+                      height="20"
+                      src="https://img.icons8.com/ios/50/phone--v2.png"
+                      alt="phone--v2"
+                    />
+                    <div>
+                      <span className="ml-3 hover:text-red-600">Liên hệ</span>
+                    </div>
+                  </div>
+                </li>
+                <li className="flex-1 px-0 cursor-pointer">
+                  <div
+                    className=" flex justify-center items-center my-auto "
+                    onClick={() => {}}
+                  >
+                    <img
+                      width="20"
+                      height="20"
+                      src="https://img.icons8.com/ios/50/conference-call--v1.png"
+                      alt="conference-call--v1"
+                    />
+                    <div>
+                      <span className="ml-3 hover:text-red-600">
+                        Về chúng tôi
+                      </span>
+                    </div>
+                  </div>
+                </li>
+
+                <li
+                  className="flex-1 px-0 cursor-pointer"
+                  onClick={() => {
+                    navigate(path.cart);
+                  }}
+                >
+                  <div className=" flex justify-center items-center my-auto ">
+                    <div className=" relative">
+                      <div className=" absolute left-3 -top-[50%]">
+                        <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
+                          3
+                        </p>
+                      </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="file:  h-6 w-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                        />
+                      </svg>
+                    </div>
+                    <span className="ml-3 hover:text-red-600">Giỏ hàng </span>
+                  </div>
                 </li>
               </ul>
             </div>
           </div>
         </nav>
         <div
-          className=""
-          onMouseEnter={() => {
-            handleHover(true);
-          }}
-          onMouseLeave={() => {
-            handleHover(false);
-          }}
+        // onMouseEnter={() => {
+        //   handleHover(true);
+        // }}
+        // onMouseLeave={() => {
+        //   handleHover(false);
+        // }}
         >
-          <nav className=" dark:bg-neutral-600 bg-neutral-100">
+          <nav className="  bg-white">
             <div className="max-w-screen-xl px-4 py-3 mx-auto">
               <div className="flex items-center">
                 <ul className="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
                   <a
                     href="/"
-                    className="block py-2 pl-3 pr-4 text-gray-900 bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                    className="block py-2 pl-3 pr-4 text-[#ffba00]  rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
                     aria-current="page"
                   >
                     Trang chủ
                   </a>
-                  {!!listBrandHeader &&
-                    listBrandHeader.length &&
-                    listBrandHeader.map((item, index) => {
+                  {!!listHeaderBrand &&
+                    // listBrandHeader.length &&
+                    listHeaderBrand.map((item, index) => {
                       return (
-                        <li key={item.id}>
+                        <li key={index}>
                           <Link
-                            to={`/danh-muc/${encodeURIComponent(item.name)}`}
+                            to={`/danh-muc/${encodeURIComponent(item)}`}
                             className="text-gray-900 dark:text-white hover:underline"
                             aria-current="page"
                           >
-                            {item.name}
+                            {item}
                           </Link>
                         </li>
                       );
@@ -360,7 +408,7 @@ const Header = () => {
               </div>
             </div>
           </nav>
-          {showTable && <CategoryTable />}
+          {/* {showTable && <CategoryTable />} */}
           <ModalComponent
             isVisible={showModal}
             onClose={() => {

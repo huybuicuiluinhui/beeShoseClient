@@ -13,16 +13,45 @@ const SliderListBrand = () => {
     autoplaySpeed: 1000,
   };
   const dataBrand = [
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
-    Images.iconLogoNike,
+    {
+      img: Images.iconLogoNike,
+      name: "Nike",
+    },
+
+    {
+      img: Images.iconAdidas,
+      name: "Adidas",
+    },
+    {
+      img: Images.iconJordan,
+      name: "Jordan",
+    },
+    {
+      img: Images.iconLogoNike,
+      name: "Nike",
+    },
+
+    {
+      img: Images.iconAdidas,
+      name: "Adidas",
+    },
+    {
+      img: Images.iconJordan,
+      name: "Jordan",
+    },
+    {
+      img: Images.iconLogoNike,
+      name: "Nike",
+    },
+
+    {
+      img: Images.iconAdidas,
+      name: "Adidas",
+    },
+    {
+      img: Images.iconJordan,
+      name: "Jordan",
+    },
   ];
   return (
     <div className="w-full ">
@@ -30,13 +59,14 @@ const SliderListBrand = () => {
         {dataBrand.map((item, index) => {
           return (
             <div
-              className="flex flex-col w-full items-center justify-center my-3 "
+              className="flex flex-col w-full items-center justify-center my-3 mb-10 h-auto "
               key={index}
             >
               <img
-                src={item}
-                className="w-[200px] h-auto object-contain mx-auto"
+                src={item.img}
+                className="w-[200px] h-[150px] object-contain mx-auto"
               />
+              <p className="text-center font-semibold">{item.name}</p>
             </div>
           );
         })}

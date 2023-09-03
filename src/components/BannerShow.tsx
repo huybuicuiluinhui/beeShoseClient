@@ -18,12 +18,7 @@ const BannerShow = ({ handleShow }: BannerShowType) => {
           href="https://flowbite.com/"
           className="flex items-center mb-2 border-gray-200 md:pr-4 md:mr-4 md:border-r md:mb-0 dark:border-gray-600"
         >
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-6 mr-2"
-            alt="Flowbite Logo"
-          />
-          <span className="self-center text-lg font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-lg font-semibold whitespace-nowrap text-[#FFBA00]">
             BeeShoes
           </span>
         </a>
@@ -36,7 +31,7 @@ const BannerShow = ({ handleShow }: BannerShowType) => {
         <a
           // href="#"
           onClick={() => setSharedData(true)}
-          className="px-5 py-2 mr-2 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 bg-black"
+          className="px-5 py-2 mr-2 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 bg-[#FFBA00]"
         >
           Đăng nhập
         </a>

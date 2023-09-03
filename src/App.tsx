@@ -38,14 +38,14 @@ function App() {
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="w-full max-w-7xl mx-auto px-4 py-2 ">
+      <div className="w-full max-w-7xl mx-auto px-4  ">
         <Header />
         <div className="w-full  flex flex-col flex-1 ">{element}</div>
         <ScrollToTopButton />
         <footer className="bg-neutral-100 text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left pt-9 z-50">
           <div className="flex items-center justify-center border-b-2 border-neutral-200 p-6 dark:border-neutral-500 lg:justify-between">
             <div className="mr-12 hidden lg:block">
-              <span>Get connected with us on social networks:</span>
+              <span>Hãy liên hệ với chúng tôi qua:</span>
             </div>
             {/* Social network icons container */}
             <div className="flex justify-center">
@@ -144,25 +144,25 @@ function App() {
                   >
                     <path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
                   </svg>
-                  Tailwind ELEMENTS
+                  BeeShose
                 </h6>
                 <p>
-                  Here you can use rows and columns to organize your footer
-                  content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                  elit.
+                  Chúng tôi luôn trân trọng và mong đợi nhận được mọi ý kiến
+                  đóng góp từ khách hàng để có thể nâng cấp trải nghiệm dịch vụ
+                  và sản phẩm tốt hơn nữa.
                 </p>
               </div>
               {/* Products section */}
               <div className="px-4">
                 <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                  Products
+                  Danh mục
                 </h6>
                 <p className="mb-4">
                   <a
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Angular
+                    Giày đá bóng
                   </a>
                 </p>
                 <p className="mb-4">
@@ -170,7 +170,7 @@ function App() {
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    React
+                    Giày thể thao
                   </a>
                 </p>
                 <p className="mb-4">
@@ -178,7 +178,7 @@ function App() {
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Vue
+                    Giày chạy bộ
                   </a>
                 </p>
                 <p>
@@ -186,21 +186,22 @@ function App() {
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Laravel
+                    Giày Nike
                   </a>
                 </p>
               </div>
               {/* Useful links section */}
               <div className="px-4">
                 <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                  Useful links
+                  Hệ thống cửa hàng
                 </h6>
                 <p className="mb-4">
                   <a
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Pricing
+                    Cửa hàng Hà Nội: 48 Hoàng Sâm, Cầu Giấy, Hà Nội -
+                    089.887.5522
                   </a>
                 </p>
                 <p className="mb-4">
@@ -208,7 +209,8 @@ function App() {
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Settings
+                    Cửa hàng Bắc Ninh: 173 Nguyễn Trãi, Thành phố Bắc Ninh -
+                    089.997.5522
                   </a>
                 </p>
                 <p className="mb-4">
@@ -216,22 +218,15 @@ function App() {
                     href="#!"
                     className="text-neutral-600 dark:text-neutral-200"
                   >
-                    Orders
-                  </a>
-                </p>
-                <p>
-                  <a
-                    href="#!"
-                    className="text-neutral-600 dark:text-neutral-200"
-                  >
-                    Help
+                    Cửa hàng Hà Nội: 48 Hoàng Sâm, Cầu Giấy, Hà Nội -
+                    089.887.5522
                   </a>
                 </p>
               </div>
               {/* Contact section */}
               <div>
                 <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                  Contact
+                  Liên hệ
                 </h6>
                 <p className="mb-4 flex items-center justify-center md:justify-start">
                   <svg
@@ -243,7 +238,7 @@ function App() {
                     <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
                     <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
                   </svg>
-                  New York, NY 10012, US
+                  Hà Nội, NY 10012, US
                 </p>
                 <p className="mb-4 flex items-center justify-center md:justify-start">
                   <svg
@@ -255,7 +250,7 @@ function App() {
                     <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
                     <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
                   </svg>
-                  info@example.com
+                  beeShose@example.com
                 </p>
                 <p className="mb-4 flex items-center justify-center md:justify-start">
                   <svg
@@ -270,7 +265,8 @@ function App() {
                       clipRule="evenodd"
                     />
                   </svg>
-                  + 01 234 567 88
+                  Mua hàng: 089.887.5522 <br />
+                  CSKH: 0948334705
                 </p>
                 <p className="flex items-center justify-center md:justify-start">
                   <svg
@@ -292,12 +288,15 @@ function App() {
           </div>
           {/*Copyright section*/}
           <div className="bg-neutral-200 p-6 text-center dark:bg-neutral-700">
-            <span>© 2023 Copyright:</span>
+            <span>© CÔNG TY TNHH SNEAKER BEESHOSE:</span>b
+            <br />
             <a
               className="font-semibold text-neutral-600 dark:text-neutral-400"
-              href="https://tailwind-elements.com/"
+              // href="https://tailwind-elements.com/"
             >
-              Tailwind Elements
+              Mã số doanh nghiệp: 0109902052. Giấy chứng nhận đăng ký doanh
+              nghiệp do Sở Kế hoạch và Đầu tư TP Hà Nội cấp lần đầu ngày
+              07/02/2022.
             </a>
           </div>
         </footer>
