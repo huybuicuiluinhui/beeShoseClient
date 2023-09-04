@@ -2,10 +2,10 @@ import React from "react";
 import { ProductType } from "../types/product.type";
 const ProductStanding = ({ product }: { product: ProductType }) => {
   return (
-    <div className="border-[1px] py-4 px-4 relative h-[300px] group">
-      <span className="text-black text-xs bg-[#fbda00] rounded-md font-medium px-1  absolute top-[2%] left-[2%]">
+    <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
+      <p className="text-black text-xs bg-[#fbda00] rounded-md font-medium px-1  absolute top-[2%] left-[2%]">
         Trả góp 0%
-      </span>
+      </p>
       <div className="hover-translate-up">
         <div className="min-h-[110px]">
           <img
@@ -22,6 +22,9 @@ const ProductStanding = ({ product }: { product: ProductType }) => {
           <span className="border-b border-black">đ</span>
         </p>
       </div>
+      <span
+        className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
+      />
     </div>
   );
 };

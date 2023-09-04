@@ -408,14 +408,12 @@ const Header = () => {
                           className="relative tracking-wider btn4 leading-none overflow-hidden   "
                         >
                           <span
-                            className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00] ${
-                              selectedCategory === item ? "bg-[#FFBA00]" : null
-                            } `}
+                            className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
                           />
                           <span
                             className={`cursor-pointer   hover:text-[#FFBA00] ${
                               selectedCategory === item
-                                ? "text-[#FFBA00] "
+                                ? "text-[#FFBA00]  "
                                 : "text-gray-900"
                             }`}
                             onClick={() => {
