@@ -14,7 +14,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
 .btn4 span {
   transform: translateX(-101%);
   transition: transform 0.2s ease-in;
@@ -26,4 +25,5 @@ code {
 .hover-translate-up:hover {
   transform: translateY(-5px);
   transition: transform 0.3s ease;
+  color: #ffba00;
 }

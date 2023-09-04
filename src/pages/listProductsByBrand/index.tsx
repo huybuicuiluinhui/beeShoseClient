@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
 import path from "../../constants/path";
-import useBreadcrumbs, { BreadcrumbMatch } from "use-react-router-breadcrumbs";
 // import Slider from "rc-slider";
 import "rc-slider/assets/index.css"; // Import CSS cho slider
 import ProductItem from "../../components/ProductItem";
@@ -13,9 +12,6 @@ import { IType } from "../../types/product.type";
 import dataProduct from "../../constants/data";
 import ProductStanding from "../../components/ProductStanding";
 
-interface CustomBreadcrumbMatch extends BreadcrumbMatch {
-  url: string;
-}
 interface ShoeSize {
   size: number;
   selected: boolean;
@@ -29,10 +25,10 @@ interface ShoseBrand {
   selected: boolean;
 }
 const ListProductsByBrand = () => {
-  const breadcrumbs = useBreadcrumbs();
+  const location = useLocation();
+  const item = location.state.item;
+  console.log("categorySlug", item);
   const navigate = useNavigate();
-  const id = useParams<{ id: string }>().id;
-  const decodedId = decodeURIComponent(id!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState(true);
@@ -263,6 +259,7 @@ const ListProductsByBrand = () => {
   return (
     <div className="w-full h-full ">
       <div className="flex w-full relative">
+        {/* Lọc */}
         <aside
           id="logo-sidebar"
           className="sticky   left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-32 "
@@ -564,24 +561,19 @@ const ListProductsByBrand = () => {
         <div className="w-full">
           {/* Nội dung */}
           <div className="mx-auto  flex flex-col  my-4 items-center ">
-            <span className=" text-4xl ">{decodedId}</span>
+            <span className=" text-3xl font-medium">{item}</span>
           </div>
           <div className="w-full  mx-auto">
             <div className="px-2 ">
-              {breadcrumbs.map(({ breadcrumb, match }: any, index) => (
-                <React.Fragment key={index}>
-                  <NavLink
-                    to={match.url}
-                    style={{
-                      color: "#999",
-                      fontSize: 13,
-                    }}
-                  >
-                    {index === 2 ? decodedId : breadcrumb}
-                  </NavLink>
-                  {index !== breadcrumbs.length - 1 && " / "}
-                </React.Fragment>
-              ))}
+              <span
+                className="cursor-pointer hover:text-[#FFBA00]"
+                onClick={() => {
+                  navigate(path.home);
+                }}
+              >
+                Trang chủ
+              </span>{" "}
+              / <span className="text-[#FFBA00]">{item}</span>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-8 px-2">
               {dataProduct.map((item, index) => {

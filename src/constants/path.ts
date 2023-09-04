@@ -6,9 +6,9 @@ const path = {
   profile: "/profile",
   community: "/community",
   cart: "/cart",
-  category: "/category",
+  // category: "/category",
   product: "/product",
-  listProductsByBrand: "/danh-muc/:id",
+  listProductsByBrand: "/:category",
   payment: "/payment",
   invoice: "/invoice",
 } as const;

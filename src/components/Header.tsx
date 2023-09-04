@@ -8,11 +8,16 @@ import axios from "axios";
 import API from "../api";
 import { IType } from "../types/product.type";
 import { useData } from "../context/app.context";
+import slugify from "slugify";
 
 const Header = () => {
   const navigate = useNavigate();
   const { sharedData } = useData();
-  console.log("2", sharedData);
+  const toSlug = (text: string) => {
+    return slugify(text, {
+      lower: true,
+    });
+  };
 
   const listHeaderBrand = [
     "Giày Adidas",
@@ -30,6 +35,9 @@ const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<number>(1);
   const [showToast, setShowToast] = React.useState<boolean>(false);
+  const [selectedCategory, setSelectedCategory] = useState("default");
+  console.log("selectedCategory", selectedCategory);
+
   const handleHover = (isHovering: boolean) => {
     if (!showModal) {
       setShowTable(isHovering);
@@ -48,6 +56,10 @@ const Header = () => {
     }
   };
 
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(category);
+  };
+
   useEffect(() => {
     // getDataBrand();
   }, []);
@@ -61,105 +73,105 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const CategoryTable = () => {
-    const categories = [
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-      {
-        title: "Dòng giày nổi bật",
-        data: [
-          "Air Jordan",
-          "Converse",
-          "Air Force 1",
-          "Ultraboost",
-          "Nike Dunk",
-          "Yeezy",
-          "Air Max",
-          "Run Star Hike",
-        ],
-      },
-    ];
+  // const CategoryTable = () => {
+  //   const categories = [
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //     {
+  //       title: "Dòng giày nổi bật",
+  //       data: [
+  //         "Air Jordan",
+  //         "Converse",
+  //         "Air Force 1",
+  //         "Ultraboost",
+  //         "Nike Dunk",
+  //         "Yeezy",
+  //         "Air Max",
+  //         "Run Star Hike",
+  //       ],
+  //     },
+  //   ];
 
-    return (
-      <div className="w-full absolute z-40 bg-[#fff] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-        {categories.map((item, index) => (
-          <div key={index}>
-            <span className="text-base text-black font-normal border-b-2 border-solid border-[#000] pb-1">
-              {item.title}
-            </span>
-            <div className="grid grid-cols-2 gap-1 mt-1">
-              {item.data.map((e, i) => {
-                return <a href="#">{e}</a>;
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="w-full absolute z-40 bg-[#fff] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+  //       {categories.map((item, index) => (
+  //         <div key={index}>
+  //           <span className="text-base text-black font-normal border-b-2 border-solid border-[#000] pb-1">
+  //             {item.title}
+  //           </span>
+  //           <div className="grid grid-cols-2 gap-1 mt-1">
+  //             {item.data.map((e, i) => {
+  //               return <a href="#">{e}</a>;
+  //             })}
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
   return (
     <div
       className={`${
@@ -172,7 +184,7 @@ const Header = () => {
             <div className="w-[20%]">
               <a href="/" className="flex items-center w-fit ">
                 <img src={Images.iconLogo} className="h-10  mr-3" />
-                <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                <span className="self-center text-2xl font-semibold whitespace-nowrap ">
                   BeeShoes
                 </span>
               </a>
@@ -188,7 +200,7 @@ const Header = () => {
             >
               <button
                 type="button"
-                className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 "
                 id="user-menu-button"
                 aria-expanded="false"
                 data-dropdown-toggle="user-dropdown"
@@ -204,7 +216,7 @@ const Header = () => {
               {!!showDropdown && (
                 <div className="z-50  fixed top-6 ml-8">
                   <div
-                    className="  text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                    className="  text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow  "
                     id="user-dropdown"
                   >
                     <ul className="py-2" aria-labelledby="user-menu-button">
@@ -213,7 +225,7 @@ const Header = () => {
                           onClick={() => {
                             setShowModal(true);
                           }}
-                          className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
+                          className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
                         >
                           Đăng nhập
                         </a>
@@ -224,7 +236,7 @@ const Header = () => {
                           onClick={() => {
                             setShowModal(true);
                           }}
-                          className=" hover:text-[#FABA00]  cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          className=" hover:text-[#FABA00]  cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
                         >
                           Đăng ký
                         </a>
@@ -232,7 +244,7 @@ const Header = () => {
                       <li>
                         <a
                           href={path.invoice}
-                          className="hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
+                          className="hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
                         >
                           Đơn mua
                         </a>
@@ -240,7 +252,7 @@ const Header = () => {
                       <li>
                         <a
                           href="#"
-                          className=" hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          className=" hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
                         >
                           Cài đặt
                         </a>
@@ -248,7 +260,7 @@ const Header = () => {
                       <li>
                         <a
                           href="#"
-                          className="hover:text-[#FABA00]  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 flex"
+                          className="hover:text-[#FABA00]  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  flex"
                         >
                           Thoát
                           <img src={Images.iconLogout} className="w-4 ml-3" />
@@ -266,12 +278,6 @@ const Header = () => {
               <ul className="flex flex-col flex-1 list-none font-medium  md:p-0 mt-2 border  md:flex-row md:space-x-8 md:mt-0 md:border-0  items-center justify-around ">
                 <li className="flex-[3]">
                   <form>
-                    {/* <label
-                      htmlFor="default-search"
-                      className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                    >
-                      Search
-                    </label> */}
                     <div className="relative w-full">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
                         <svg
@@ -370,21 +376,21 @@ const Header = () => {
             </div>
           </div>
         </nav>
-        <div
-        // onMouseEnter={() => {
-        //   handleHover(true);
-        // }}
-        // onMouseLeave={() => {
-        //   handleHover(false);
-        // }}
-        >
-          <nav className="  bg-white">
+        <div>
+          <nav className="  bg-[#f5f5f5]">
             <div className="max-w-screen-xl px-4 py-3 mx-auto">
               <div className="flex items-center">
                 <ul className="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
                   <a
+                    onClick={() => {
+                      setSelectedCategory("default");
+                    }}
                     href="/"
-                    className="block py-2 pl-3 pr-4 text-[#ffba00]  rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                    className={`block py-2 pl-3 pr-4   rounded md:bg-transparent md:text-blue-700 md:p-0 ${
+                      selectedCategory === "default"
+                        ? "text-[#ffba00]"
+                        : "text-gray-900"
+                    }`}
                     aria-current="page"
                   >
                     Trang chủ
@@ -392,15 +398,45 @@ const Header = () => {
                   {!!listHeaderBrand &&
                     // listBrandHeader.length &&
                     listHeaderBrand.map((item, index) => {
+                      console.log("category", toSlug(item));
                       return (
-                        <li key={index}>
-                          <Link
-                            to={`/danh-muc/${encodeURIComponent(item)}`}
-                            className="text-gray-900 dark:text-white hover:underline"
+                        <li
+                          onClick={() => {
+                            handleCategoryClick(item);
+                          }}
+                          key={index}
+                          className="relative tracking-wider btn4 leading-none overflow-hidden   "
+                        >
+                          <span
+                            className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00] ${
+                              selectedCategory === item ? "bg-[#FFBA00]" : null
+                            } `}
+                          />
+                          <span
+                            className={`cursor-pointer   hover:text-[#FFBA00] ${
+                              selectedCategory === item
+                                ? "text-[#FFBA00] "
+                                : "text-gray-900"
+                            }`}
+                            onClick={() => {
+                              navigate(`${toSlug(item)}`, {
+                                state: { item },
+                              });
+                            }}
+                          >
+                            {item}
+                          </span>
+                          {/* <Link
+                            to={{
+                              pathname: `${toSlug(item)}`,
+                              search: `?item=${encodeURIComponent(item)}`,
+                            }}
+                            // to={`/danh-muc/${encodeURIComponent(item)}`}
+                            className="text-gray-900  hover:underline"
                             aria-current="page"
                           >
                             {item}
-                          </Link>
+                          </Link> */}
                         </li>
                       );
                     })}
@@ -416,11 +452,11 @@ const Header = () => {
             }}
           >
             {sharedData === true || typeModal === 1 ? (
-              <section className="bg-gray-50 dark:bg-gray-900 ">
+              <section className="bg-gray-50  ">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
                   <a
                     href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
                   >
                     <img
                       className="w-20 h-20 mr-2 object-contain"
@@ -429,16 +465,16 @@ const Header = () => {
                     />
                     BeeShoes
                   </a>
-                  <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4 ">
+                  <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0  ">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
                         Đăng nhập ngay
                       </h1>
                       <form className="space-y-4 md:space-y-6" action="#">
                         <div>
                           <label
                             htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00]"
                           >
                             Số điện thoại hoặc Email
                           </label>
@@ -446,7 +482,7 @@ const Header = () => {
                             type="text"
                             name="email"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
                             placeholder=""
                             required
                           />
@@ -454,7 +490,7 @@ const Header = () => {
                         <div>
                           <label
                             htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Mật khẩu
                           </label>
@@ -463,7 +499,7 @@ const Header = () => {
                             name="password"
                             id="password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5   "
                             required
                           />
                         </div>
@@ -474,13 +510,13 @@ const Header = () => {
                                 id="remember"
                                 aria-describedby="remember"
                                 type="checkbox"
-                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-purple-600 dark:ring-offset-gray-800"
+                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00] "
                               />
                             </div>
                             <div className="ml-3 text-sm">
                               <label
                                 htmlFor="remember"
-                                className="text-gray-500 dark:text-gray-300"
+                                className="text-[#FFBA00] "
                               >
                                 Nhớ mật khẩu
                               </label>
@@ -491,7 +527,7 @@ const Header = () => {
                               setTypeModal(3);
                               setShowToast(false);
                             }}
-                            className="text-sm font-medium text-purple-600 hover:underline dark:text-purple-500"
+                            className="text-sm font-medium text-[#FFBA00]  hover:underline "
                           >
                             Quên mật khẩu?
                           </a>
@@ -501,18 +537,18 @@ const Header = () => {
                             setShowToast(true);
                           }}
                           type="submit"
-                          className="w-full text-white bg-purple-400 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                          className="w-full text-white bg-[#FFBA00] hover:bg-[#c3ff00] focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                         >
                           Đăng nhập
                         </button>
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-light text-gray-500 ">
                           Bạn chưa có tài khoản?{" "}
                           <a
                             onClick={() => {
                               setTypeModal(2);
                               setShowToast(false);
                             }}
-                            className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                            className="font-medium text-[#FFBA00] hover:underline "
                           >
                             Đăng ký ngay
                           </a>
@@ -523,11 +559,11 @@ const Header = () => {
                 </div>
               </section>
             ) : typeModal === 2 ? (
-              <section className="bg-gray-50 dark:bg-gray-900">
+              <section className="bg-gray-50 ">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
                   <a
                     href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 "
                   >
                     <img
                       className="w-20 h-20 mr-2 object-contain"
@@ -536,16 +572,16 @@ const Header = () => {
                     />
                     BeeShoes
                   </a>
-                  <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4">
+                  <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0  -gray-700 mb-4">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
                         Tạo tài khoản
                       </h1>
                       <form className="space-y-4 md:space-y-6" action="#">
                         <div>
                           <label
                             htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Số điện thoại hoặc Email
                           </label>
@@ -553,14 +589,14 @@ const Header = () => {
                             type="text"
                             name="email"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
                             required
                           />
                         </div>
                         <div>
                           <label
                             htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Mật khẩu
                           </label>
@@ -569,14 +605,14 @@ const Header = () => {
                             name="password"
                             id="password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
                             required
                           />
                         </div>
                         <div>
                           <label
                             htmlFor="confirm-password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Nhập lại mật khẩu
                           </label>
@@ -585,7 +621,7 @@ const Header = () => {
                             name="confirm-password"
                             id="confirm-password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
                             required
                           />
                         </div>
@@ -595,18 +631,18 @@ const Header = () => {
                               id="terms"
                               aria-describedby="terms"
                               type="checkbox"
-                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-purple-600 dark:ring-offset-gray-800"
+                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00]"
                               required
                             />
                           </div>
                           <div className="ml-3 text-sm">
                             <label
                               htmlFor="terms"
-                              className="font-light text-gray-500 dark:text-gray-300"
+                              className="font-light text-gray-500 "
                             >
                               Tôi đồng ý với các{" "}
                               <a
-                                className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                                className="font-medium text-[#FFBA00] hover:underline "
                                 href="#"
                               >
                                 điều khoản
@@ -616,7 +652,7 @@ const Header = () => {
                         </div>
                         <button
                           type="submit"
-                          className="w-full text-white bg-purple-600 hover:bg--700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                          className="w-full text-white bg-[#FFBA00] hover:bg-[#FFBA00] focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                           onClick={() => {
                             setTypeModal(2);
                             setShowToast(true);
@@ -624,14 +660,14 @@ const Header = () => {
                         >
                           Tạo tài khoản
                         </button>
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-light text-gray-500 ">
                           Bạn đã có tài khoản?{" "}
                           <a
                             onClick={() => {
                               setTypeModal(1);
                               setShowToast(false);
                             }}
-                            className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                            className="font-medium text-[#FFBA00] hover:underline "
                           >
                             Đăng nhập ngay
                           </a>
@@ -642,11 +678,11 @@ const Header = () => {
                 </div>
               </section>
             ) : (
-              <section className="bg-gray-50 dark:bg-gray-900">
+              <section className="bg-gray-50 ">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
                   <a
                     href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 "
                   >
                     <img
                       className="w-20 h-20 mr-2 object-contain"
@@ -655,16 +691,16 @@ const Header = () => {
                     />
                     BeeShoes
                   </a>
-                  <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 mb-4">
+                  <div className="w-full bg-white rounded-lg shadow ">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
                         Quên mật khẩu
                       </h1>
                       <form className="space-y-4 md:space-y-6" action="#">
                         <div>
                           <label
                             htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Số điện thoại hoặc Email
                           </label>
@@ -672,14 +708,14 @@ const Header = () => {
                             type="text"
                             name="email"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
                             required
                           />
                         </div>
                         <div>
                           <label
                             htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 "
                           >
                             Mật khẩu
                           </label>
@@ -688,14 +724,14 @@ const Header = () => {
                             name="password"
                             id="password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
                             required
                           />
                         </div>
                         <div>
                           <label
                             htmlFor="confirm-password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
                           >
                             Nhập lại mật khẩu
                           </label>
@@ -704,7 +740,7 @@ const Header = () => {
                             name="confirm-password"
                             id="confirm-password"
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
                             required
                           />
                         </div>
@@ -714,18 +750,18 @@ const Header = () => {
                               id="terms"
                               aria-describedby="terms"
                               type="checkbox"
-                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-purple-600 dark:ring-offset-gray-800"
+                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00]   "
                               required
                             />
                           </div>
                           <div className="ml-3 text-sm">
                             <label
                               htmlFor="terms"
-                              className="font-light text-gray-500 dark:text-gray-300"
+                              className="font-light text-gray-500 "
                             >
                               Tôi đồng ý với các{" "}
                               <a
-                                className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                                className="font-medium text-[#FFBA00] hover:underline "
                                 href="#"
                               >
                                 điều khoản
@@ -735,7 +771,7 @@ const Header = () => {
                         </div>
                         <button
                           type="submit"
-                          className="w-full text-white bg-purple-600 hover:bg--700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+                          className="w-full text-white bg-[#FFBA00] hover:bg--700 focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                           onClick={() => {
                             setTypeModal(3);
                             setShowToast(true);
@@ -743,14 +779,14 @@ const Header = () => {
                         >
                           Gửi xác nhận
                         </button>
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-light text-gray-500 ">
                           Bạn đã có tài khoản?{" "}
                           <a
                             onClick={() => {
                               setTypeModal(1);
                               setShowToast(false);
                             }}
-                            className="font-medium text-purple-600 hover:underline dark:text-purple-500"
+                            className="font-medium text-[#FFBA00]600 hover:underline "
                           >
                             Đăng nhập ngay
                           </a>

@@ -54,51 +54,6 @@ const HomePage = () => {
       console.log("res.data", res.data);
     }
   };
-  // const Tab01 = () => {
-  //   return (
-  //     <div className="mt-9">
-  //       <div className="w-full grid grid-cols-2 gap-2  mt-2">
-  //         {dataProduct.map((item, index) => {
-  //           return (
-  //             <div
-  //               className="w-[85%] bg-teal-300 mx-auto my-8 p-6 rounded-xl shadow-xl  relative pl-60"
-  //               key={index}
-  //             >
-  //               <div className="absolute -left-[15%] h-full  top-0  flex items-center object-cover">
-  //                 <img
-  //                   src={item.imageSrc}
-  //                   className="w-[300px] h-[220px] rounded-xl scale-75 hover:scale-95 ease-in duration-500"
-  //                 />
-  //               </div>
-  //               <h1 className="text-xl  font-black text-slate-900">
-  //                 {item.name}
-  //               </h1>
-  //               <span className="text-xl mt-2 mr-1 inline-block font-medium">
-  //                 3,990,000 đ
-  //               </span>
-  //               <span className="text-xl mt-2 ml-1 inline-block font-thin line-through text-[#fff]">
-  //                 3,990,000 đ
-  //               </span>
-  //               <div className="flex gap-5 mt-4">
-  //                 <button
-  //                   className="bg-slate-900 text-xs text-white px-2 py-2  rounded-md font-black hover:scale-105 ease-out duration-500"
-  //                   onClick={() => {
-  //                     navigate(path.product, { state: item });
-  //                   }}
-  //                 >
-  //                   Mua Ngay
-  //                 </button>
-  //                 <button className="text-slate-900 text-xs bg-white px-3 py-2  rounded-md font-black hover:scale-105 ease-out duration-500 ">
-  //                   Thêm Vào Giỏ Hàng
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           );
-  //         })}
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   const ShowModalHome = () => {
     return (
@@ -167,47 +122,7 @@ const HomePage = () => {
           </span>
         </div>
       </div>
-      <Line />
-      {/* Một số hãng giày nổi bật */}
-      <div className="grid grid-rows-3 grid-flow-col gap-4 mt-4 mx-auto  h-[515px] mb-10">
-        <div className="row-span-3 relative ">
-          <img
-            src={Images.bannerAdidas}
-            className="w-[455px] h-[515px] object-cover rounded-xl"
-          />
-          <button
-            type="button"
-            className=" absolute bottom-[8%] left-[50%] -translate-x-1/2  text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-          >
-            Giày Adidas
-          </button>
-        </div>
-        <div className=" h-[515px] flex flex-col justify-between">
-          <div className="col-span-2  relative">
-            <img
-              src={Images.bannerNike}
-              className="w-[455px] h-[249px] object-cover rounded-xl"
-            />
-            <button className="absolute  bottom-[10%] left-[50%] -translate-x-1/2  inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
-              <span className=" px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Purple to pink
-              </span>
-            </button>
-          </div>
-          <div className=" col-span-2  relative">
-            <img
-              src={Images.bannerNike}
-              className="w-[455px] h-[249px] object-cover rounded-xl"
-            />
-            <button className="absolute  bottom-[10%] left-[50%] -translate-x-1/2  inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">
-              <span className=" px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-                Purple to pink
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Sản phẩm mới */}
+
       <Line />
       {/* Danh sách  thương hiệu  */}
 
@@ -300,40 +215,7 @@ const HomePage = () => {
 
               <div className="grid grid-cols-4 gap-4 mx-auto mt-8 px-2">
                 {dataProduct.map((item, index) => {
-                  return (
-                    // <div className="w-64 h-fit group mx-auto" key={i}>
-                    //   <div className="relative overflow-hidden">
-                    //     <img
-                    //       className="h-64 w-full object-cover"
-                    //       src={Images.giay03}
-                    //     />
-                    //     <div className="absolute h-full w-full bg-black/20 flex items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex-col">
-                    //       <button
-                    //         className="bg-black text-white w-full mb-2 py-2 "
-                    //         onClick={() => navigate(path.cart)}
-                    //       >
-                    //         Thêm vào giỏ hàng
-                    //       </button>
-                    //       <button
-                    //         className="bg-black text-white  w-full py-2"
-                    //         onClick={() => navigate("/product")}
-                    //       >
-                    //         Mua ngay
-                    //       </button>
-                    //     </div>
-                    //   </div>
-                    //   <h2 className="mt-3 text-sm text-[#000] capitalize font-semibold">
-                    //     Giày Nike Air Force 1 Low Shadow Sunset Pulse (W)
-                    //   </h2>
-                    //   <span className="text-xl mt-2 mr-1 inline-block font-medium">
-                    //     3,990,000 đ
-                    //   </span>
-                    //   <span className="text-xl mt-2 ml-1 inline-block font-thin line-through text-[#ccc]">
-                    //     3,990,000 đ
-                    //   </span>
-                    // </div>
-                    <ProductStanding product={item} />
-                  );
+                  return <ProductStanding product={item} key={index} />;
                 })}
               </div>
             </div>
@@ -341,7 +223,7 @@ const HomePage = () => {
         })}
       {/* Tin tức nổi bật */}
       <div className=" w-full pt-5 mt-3">
-        <p className=" text-3xl font-bold text-center uppercase mt-5">
+        <p className=" text-3xl font-bold text-center uppercase mt-5 text-[#FFBA00]">
           ------- Tin tức nổi bật -------
         </p>
         <p className="text-[#999] italic  text-sm font-semibold text-center uppercase ">
@@ -353,7 +235,7 @@ const HomePage = () => {
             <div className="lg:flex items-stretch ">
               <div className="lg:w-1/2">
                 <div className="sm:flex items-center justify-between xl:gap-x-8 gap-x-6">
-                  <div className="sm:w-1/2 relative">
+                  <div className="sm:w-1/2 relative  group ">
                     <div>
                       <p className="p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                         12 April 2021
@@ -397,11 +279,11 @@ const HomePage = () => {
                     </div>
                     <img
                       src={Images.banner05}
-                      className="w-full h-[257px] object-cover"
+                      className="w-full h-[257px] group-hover:scale-110 transition-transform duration-300  object-cover"
                       alt="chair"
                     />
                   </div>
-                  <div className="sm:w-1/2 sm:mt-0 mt-4 relative">
+                  <div className="sm:w-1/2 sm:mt-0 mt-4 relative group">
                     <div>
                       <p className="p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                         12 April 2021
@@ -442,12 +324,12 @@ const HomePage = () => {
                     </div>
                     <img
                       src={Images.banner03}
-                      className="w-full object-cover h-[257px]"
+                      className="w-full object-cover h-[257px] group-hover:scale-110 transition-transform duration-300"
                       alt="wall design"
                     />
                   </div>
                 </div>
-                <div className="relative">
+                <div className="relative group">
                   <div>
                     <p className="md:p-10 p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                       12 April 2021
@@ -488,12 +370,12 @@ const HomePage = () => {
                   <img
                     src={Images.banner04}
                     alt="sitting place"
-                    className="w-full mt-8 md:mt-6 hidden sm:block  h-[466.44px] object-cover"
+                    className="w-full mt-8 md:mt-6 hidden sm:block  h-[466.44px] object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
               </div>
               <div className="lg:w-1/2 xl:ml-8 lg:ml-4 lg:mt-0 md:mt-6 mt-4 lg:flex flex-col justify-between">
-                <div className="relative">
+                <div className="relative group">
                   <div>
                     <p className="md:p-10 p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                       12 April 2021
@@ -534,11 +416,11 @@ const HomePage = () => {
                   <img
                     src={Images.bannerAdidas}
                     alt="sitting place"
-                    className="w-full sm:block hidden h-[466.44px] object-cover"
+                    className="w-full sm:block hidden h-[466.44px] object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
                 <div className="sm:flex items-center justify-between xl:gap-x-8 gap-x-6 md:mt-6 mt-4">
-                  <div className="relative w-full">
+                  <div className="relative w-full group">
                     <div>
                       <p className="p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                         12 April 2021
@@ -578,11 +460,11 @@ const HomePage = () => {
                     </div>
                     <img
                       src="https://i.ibb.co/3yvZBpm/img-5.png"
-                      className="w-full h-[257px] object-cover"
+                      className="w-full h-[257px] object-cover group-hover:scale-110 transition-transform duration-300"
                       alt="chair"
                     />
                   </div>
-                  <div className="relative w-full sm:mt-0 mt-4">
+                  <div className="relative w-full sm:mt-0 mt-4 group">
                     <div>
                       <p className="p-6 text-xs font-medium leading-3 text-white absolute top-0 right-0">
                         12 April 2021
@@ -622,7 +504,7 @@ const HomePage = () => {
                     </div>
                     <img
                       src="https://i.ibb.co/gDdnJb5/img-6.png"
-                      className="w-full h-[257px] object-cover"
+                      className="w-full h-[257px] object-cover group-hover:scale-110 transition-transform duration-300"
                       alt="wall design"
                     />
                   </div>
