@@ -43,11 +43,11 @@ const ProductItem =
     return (
       <div className="max-w-7xl mx-auto p-8">
         <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center">
-          <div className="flex flex-col gap-6 lg:w-2/4">
-            <div className="flex flex-row justify-between h-24">
+          <div className="flex flex-row gap-3 lg:w-3/4">
+            <div className="flex flex-col  h-auto  justify-between ">
               <img
                 src={images.img1}
-                alt=""
+                alt="123"
                 className="w-24 h-24 rounded-md cursor-pointer"
                 onClick={() => setActiveImage(images.img1)}
               />

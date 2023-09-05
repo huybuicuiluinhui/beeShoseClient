@@ -411,7 +411,7 @@ const Header = () => {
                             className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
                           />
                           <span
-                            className={`cursor-pointer   hover:text-[#FFBA00] ${
+                            className={`cursor-pointer  hover:text-[#FFBA00] ${
                               selectedCategory === item
                                 ? "text-[#FFBA00]  "
                                 : "text-gray-900"
@@ -424,17 +424,6 @@ const Header = () => {
                           >
                             {item}
                           </span>
-                          {/* <Link
-                            to={{
-                              pathname: `${toSlug(item)}`,
-                              search: `?item=${encodeURIComponent(item)}`,
-                            }}
-                            // to={`/danh-muc/${encodeURIComponent(item)}`}
-                            className="text-gray-900  hover:underline"
-                            aria-current="page"
-                          >
-                            {item}
-                          </Link> */}
                         </li>
                       );
                     })}

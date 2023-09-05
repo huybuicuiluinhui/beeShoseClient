@@ -82,7 +82,7 @@ const ProductPage = () => {
       // product={location.state}
       />
       {/* Mô tả và đánh giá */}
-      <div className="w-full p-4 ">
+      <div className="w-full p-4 mb-32">
         <div className="flex space-x-10 w-full justify-center">
           {/* Tab buttons */}
           <button
@@ -110,8 +110,8 @@ const ProductPage = () => {
           {activeTab === 0 && <Tab01 />}
           {activeTab === 1 && <Tab02 />}
         </div>
-        <p className="text-3xl font-bold text-center uppercase my-5 text-[#FFBA00]">
-          ------- Có thể bạn quan tâm -------
+        <p className="text-base font-thin  uppercase my-5 text-[#FFBA00]">
+          Sản phẩm tương tự
         </p>
         <SliderListProduct />
       </div>

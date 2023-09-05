@@ -59,14 +59,18 @@ const SliderListBrand = () => {
         {dataBrand.map((item, index) => {
           return (
             <div
-              className="flex flex-col w-full items-center justify-center my-3 mb-10 h-auto "
+              className="cursor-pointer flex flex-col w-full items-center justify-center my-3 mb-2 h-auto group relative "
               key={index}
             >
-              <img
-                src={item.img}
-                className="w-[200px] h-[150px] object-contain mx-auto"
-              />
-              <p className="text-center font-semibold">{item.name}</p>
+              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
+                <img
+                  src={item.img}
+                  className="w-[200px] h-[150px] object-contain mx-auto"
+                />
+                <p className="text-center font-semibold group-hover:text-[#FFBA00] ">
+                  {item.name}
+                </p>
+              </div>
             </div>
           );
         })}

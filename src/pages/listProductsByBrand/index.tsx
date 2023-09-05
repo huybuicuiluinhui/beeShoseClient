@@ -266,7 +266,7 @@ const ListProductsByBrand = () => {
           aria-label="Sidebar"
         >
           <span className="text-xl font-bold text-[#FFBA00]">Lọc sản phẩm</span>
-          <div className="h-full px-2 py-4 overflow-y-auto ">
+          <div className="h-full px-2 py-4 overflow-y-scroll     ">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
                 onClick={handleDropdownToggle}
@@ -498,7 +498,7 @@ const ListProductsByBrand = () => {
                             />
                             <label
                               htmlFor={`default-radio-${item.id}`}
-                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                              className="ml-2 text-sm font-medium text-gray-900 "
                             >
                               {item.priceRange}
                             </label>

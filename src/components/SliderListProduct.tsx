@@ -35,7 +35,7 @@ const SliderListProduct = () => {
   };
 
   return (
-    <div className="w-full flex px-4">
+    <div className="w-full flex px-4 my-2 mb-5 ">
       <button onClick={() => prev()}>
         <a
           href="#pablo"
@@ -50,7 +50,7 @@ const SliderListProduct = () => {
             return (
               <div
                 key={product.id}
-                className="group relative px-5 "
+                className="group relative px-5  "
                 onClick={() => {
                   navigate(path.product);
                 }}
@@ -69,9 +69,12 @@ const SliderListProduct = () => {
                 </div>
                 <div className="mt-4 flex justify-between">
                   <div>
-                    <h3 className="text-sm text-gray-700">
+                    <h3 className="text-sm text-gray-700 group-hover:font-semibold">
                       <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0  "
+                        />
                         {product.name}
                       </a>
                     </h3>
@@ -79,7 +82,7 @@ const SliderListProduct = () => {
                       {product.color}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-red-500">
                     {product.price}
                   </p>
                 </div>
