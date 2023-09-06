@@ -119,7 +119,7 @@ const ProductItem =
                 </button>
               </div>
               <button
-                className="bg-[#FFBA00] text-white font-semibold py-3 px-10 rounded-xl h-full "
+                className="bg-[#FFBA00] text-white font-semibold py-3 px-5 rounded-xl h-full "
                 onClick={() => navigate(path.cart)}
               >
                 Thêm vào giỏ hàng
