@@ -91,7 +91,7 @@ const HomePage = () => {
   }, [showModal]);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
-      {!!showBanner && <BannerShow handleShow={handleShow} />}
+      {/* {!!showBanner && <BannerShow handleShow={handleShow} />} */}
       {showModal && <ShowModalHome />}
       <SliderHome />
       {/* Thông tin ưu đãi */}

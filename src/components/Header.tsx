@@ -36,8 +36,6 @@ const Header = () => {
   const [typeModal, setTypeModal] = useState<number>(1);
   const [showToast, setShowToast] = React.useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState("default");
-  console.log("selectedCategory", selectedCategory);
-
   const handleHover = (isHovering: boolean) => {
     if (!showModal) {
       setShowTable(isHovering);
@@ -220,6 +218,16 @@ const Header = () => {
                     id="user-dropdown"
                   >
                     <ul className="py-2" aria-labelledby="user-menu-button">
+                      <li
+                        className=""
+                        onClick={() => {
+                          navigate(path.information);
+                        }}
+                      >
+                        <a className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   ">
+                          Tài khoản của tôi
+                        </a>
+                      </li>
                       <li className="">
                         <a
                           onClick={() => {
@@ -398,7 +406,7 @@ const Header = () => {
                   {!!listHeaderBrand &&
                     // listBrandHeader.length &&
                     listHeaderBrand.map((item, index) => {
-                      console.log("category", toSlug(item));
+                      // console.log("category", toSlug(item));
                       return (
                         <li
                           onClick={() => {

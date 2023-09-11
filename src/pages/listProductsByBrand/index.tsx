@@ -27,7 +27,7 @@ interface ShoseBrand {
 const ListProductsByBrand = () => {
   const location = useLocation();
   const item = location.state.item;
-  console.log("categorySlug", item);
+  // console.log("categorySlug", item);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState(true);

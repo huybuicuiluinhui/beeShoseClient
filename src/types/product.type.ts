@@ -21,6 +21,15 @@ export interface IType {
   updateAt: null;
   updateBy: null;
 }
+
+export interface IOrderType {
+  customers: string;
+  amount: number;
+  status: number;
+  totalMoney: number;
+  date: string;
+  id: string;
+}
 // export interface IProduct{
 //   createAt: string,
 //   updateAt:string ,

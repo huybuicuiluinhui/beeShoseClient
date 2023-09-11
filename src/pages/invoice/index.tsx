@@ -25,7 +25,7 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 0
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(0)}
@@ -35,17 +35,17 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 1
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(1)}
         >
-          Chờ thanh toán
+          Đang xử lý
         </button>
         <button
           className={`px-4 py-2  ${
             activeTab === 2
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(2)}
@@ -55,7 +55,7 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 3
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(3)}
@@ -65,7 +65,7 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 4
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(4)}
@@ -75,7 +75,7 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 5
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(5)}
@@ -85,7 +85,7 @@ const Invoice = () => {
         <button
           className={`px-4 py-2  ${
             activeTab === 6
-              ? "text-[#333]  font-bold text-base border-b-2  border-[#f11a28] border-solid"
+              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
           }`}
           onClick={() => handleTabClick(6)}

@@ -1,11 +1,11 @@
-import React from "react";
-import { IOrderType } from "../../../types/product.type";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import path from "../../../constants/path";
-const InvoiceAll = () => {
-  const navigate = useNavigate();
+import { useNavigate } from "react-router-dom";
+import { IOrderType } from "../../../types/product.type";
 
-  const dataReturn: IOrderType[] = [
+const HistoryOrder = () => {
+  const navigate = useNavigate();
+  const dataOrder: IOrderType[] = [
     {
       customers: "customers 1",
       amount: 1,
@@ -76,9 +76,10 @@ const InvoiceAll = () => {
   ];
   return (
     <div className="w-full h-full">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg my-4">
+      <p className="uppercase font-bold mt-4">Lịch sử đơn hàng</p>
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
                 Mã ID đơn hàng
@@ -98,16 +99,15 @@ const InvoiceAll = () => {
               <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
                 Ngày tạo
               </th>
-              <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]"></th>
+              {/* <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
+                <span className="sr-only">Edit</span>
+              </th> */}
             </tr>
           </thead>
           <tbody>
-            {dataReturn.map((item, index) => {
+            {dataOrder.map((item, index) => {
               return (
-                <tr
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-[#FFBA00] dark:hover:bg-gray-600 group"
-                  key={index}
-                >
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-[#FFBA00] dark:hover:bg-gray-600 group">
                   <th
                     scope="row"
                     className="px-6 py-4 font-thin text-gray-900 whitespace-nowrap dark:text-white group-hover:font-semibold group-hover:text-black"
@@ -132,9 +132,7 @@ const InvoiceAll = () => {
                       ? "Hoàn thành"
                       : item.status === 5
                       ? "Đã hủy"
-                      : item.status === 6
-                      ? "Trả hàng"
-                      : null}
+                      : "Trả hàng"}
                   </td>
                   <td className="px-6 py-4 group-hover:font-semibold group-hover:text-black">
                     {item.totalMoney} đ
@@ -149,7 +147,7 @@ const InvoiceAll = () => {
                       }}
                       className="cursor-pointer font-medium text-blue-600 dark:text-blue-500 hover:underline"
                     >
-                      Xem chi tiết
+                      Xem
                     </a>
                   </td>
                 </tr>
@@ -162,4 +160,4 @@ const InvoiceAll = () => {
   );
 };
 
-export default InvoiceAll;
+export default HistoryOrder;
