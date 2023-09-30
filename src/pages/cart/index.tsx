@@ -7,33 +7,33 @@ import ShippingProcess from "../../components/shippingProcess";
 const CartPage = () => {
   const navigate = useNavigate();
   return (
-    <div className="container mx-auto mt-2">
+    <div className="container mx-auto ">
       <ShippingProcess type={1} />
-      <div className="flex shadow-md my-10">
+      <div className="flex shadow-md my-5">
         <div className="w-3/4 bg-white px-10 py-10">
-          <div className="flex justify-between border-b pb-8">
-            <h1 className="font-semibold text-2xl uppercase text-[#FFBA00]">
-              Giỏ hàng
-            </h1>
-            <h2 className="font-semibold text-2xl uppercase text-[#FFBA00]">
-              3 sản phẩm
-            </h2>
-          </div>
+          {/* <div className="flex justify-between border-b pb-8"> */}
+          <h1 className="font-semibold text-2xl uppercase text-[#FFBA00]">
+            Giỏ hàng của bạn
+          </h1>
+          {/* </div> */}
+          <span className="font-medium text-sm  text-[#FFBA00]">
+            (3 sản phẩm)
+          </span>
           <div className="flex mt-10 mb-5">
-            <h3 className="font-semibold text-gray-600 text-xs uppercase w-2/5">
+            <h3 className="font-semibold text-gray-600 text-xs  w-2/5">
               Thông tin chi tiết sản phẩm
             </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5 text-center">
+            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
               Số lượng
             </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5 text-center">
+            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
               Giá
             </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs uppercase w-1/5 text-center">
+            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
               Tổng tiền
             </h3>
           </div>
-          <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
+          <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5 border-b-[2px] border-dotted w-full border-[#ffba00]">
             <div className="flex w-2/5">
               {/* product */}
               <div className="w-20">
@@ -43,9 +43,7 @@ const CartPage = () => {
                 />
               </div>
               <div className="flex flex-col justify-between ml-4 flex-grow">
-                <span className="font-bold text-sm text-[#FFBA00]">
-                  Giày adidas
-                </span>
+                <span className="font-bold text-sm ">Giày adidas</span>
                 <span className="text-red-500 text-xs">Adidas</span>
                 <a
                   href="#"
@@ -57,18 +55,19 @@ const CartPage = () => {
             </div>
             <div className="flex justify-center w-1/5">
               <svg
-                className="fill-current text-gray-600 w-3"
+                className="fill-current text-gray-600 w-7 border px-2"
                 viewBox="0 0 448 512"
               >
                 <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
               </svg>
-              <input
+              {/* <input
                 className="mx-2 border text-center w-10"
                 type="text"
                 defaultValue={1}
-              />
+              /> */}
+              <span className="border w-7 px-2  ">1</span>
               <svg
-                className="fill-current text-gray-600 w-3"
+                className="fill-current text-gray-600  w-7 px-2  border"
                 viewBox="0 0 448 512"
               >
                 <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
@@ -81,104 +80,7 @@ const CartPage = () => {
               40.000.000đ
             </span>
           </div>
-          <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
-            <div className="flex w-2/5">
-              {" "}
-              {/* product */}
-              <div className="w-20">
-                <img
-                  className="h-auto w-[80%] object-contain"
-                  src={Images.giay01}
-                />
-              </div>
-              <div className="flex flex-col justify-between ml-4 flex-grow">
-                <span className="font-bold text-sm  text-[#FFBA00]">
-                  Giày nike
-                </span>
-                <span className="text-red-500 text-xs">Nai kì</span>
-                <a
-                  href="#"
-                  className="font-semibold hover:text-red-500 text-gray-500 text-xs"
-                >
-                  Xóa
-                </a>
-              </div>
-            </div>
-            <div className="flex justify-center w-1/5">
-              <svg
-                className="fill-current text-gray-600 w-3"
-                viewBox="0 0 448 512"
-              >
-                <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
-              <input
-                className="mx-2 border text-center w-10"
-                type="text"
-                defaultValue={1}
-              />
-              <svg
-                className="fill-current text-gray-600 w-3"
-                viewBox="0 0 448 512"
-              >
-                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
-            </div>
-            <span className="text-center w-1/5 font-semibold text-sm">
-              400.000.000đ
-            </span>
-            <span className="text-center w-1/5 font-semibold text-sm">
-              400.000.000đ
-            </span>
-          </div>
-          <div className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
-            <div className="flex w-2/5">
-              {" "}
-              {/* product */}
-              <div className="w-20">
-                <img
-                  className="h-auto w-[80%] object-contain"
-                  src={Images.giay01}
-                />
-              </div>
-              <div className="flex flex-col justify-between ml-4 flex-grow">
-                <span className="font-bold text-sm text-[#FFBA00]">
-                  Giày balen
-                </span>
-                <span className="text-red-500 text-xs">Ukaraine</span>
-                <a
-                  href="#"
-                  className="font-semibold hover:text-red-500 text-gray-500 text-xs"
-                >
-                  Xóa
-                </a>
-              </div>
-            </div>
-            <div className="flex justify-center w-1/5">
-              <svg
-                className="fill-current text-gray-600 w-3"
-                viewBox="0 0 448 512"
-              >
-                <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
-              <input
-                className="mx-2 border text-center w-10"
-                type="text"
-                defaultValue={1}
-              />
-              <svg
-                className="fill-current text-gray-600 w-3"
-                viewBox="0 0 448 512"
-              >
-                <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
-              </svg>
-            </div>
-            <span className="text-center w-1/5 font-semibold text-sm">
-              40.000.000đ
-            </span>
-            <span className="text-center w-1/5 font-semibold text-sm">
-              40.000.000đ
-            </span>
-          </div>
+
           <a
             href="#"
             className="flex font-semibold text-[#FFBA00] text-sm mt-10"

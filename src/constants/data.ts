@@ -1,6 +1,6 @@
-import { ProductType } from "./../types/product.type";
 import Images from "../static";
-const dataProduct: ProductType[] = [
+import { Product } from "../types/product.type";
+export const dataProduct = [
   {
     id: 1,
     name: "Giày Nike Air Force 1 Low Shadow Sunset Pulse (W)",
@@ -102,4 +102,66 @@ const dataProduct: ProductType[] = [
     off: "25%",
   },
 ];
-export default dataProduct;
+export const dataBrand = [
+  {
+    img: Images.iconLogoNike,
+    name: "Nike",
+  },
+
+  {
+    img: Images.iconAdidas,
+    name: "Adidas",
+  },
+  {
+    img: Images.iconJordan,
+    name: "Jordan",
+  },
+  {
+    img: Images.iconLogoNike,
+    name: "Nike",
+  },
+
+  {
+    img: Images.iconAdidas,
+    name: "Adidas",
+  },
+  {
+    img: Images.iconJordan,
+    name: "Jordan",
+  },
+  {
+    img: Images.iconLogoNike,
+    name: "Nike",
+  },
+
+  {
+    img: Images.iconAdidas,
+    name: "Adidas",
+  },
+  {
+    img: Images.iconJordan,
+    name: "Jordan",
+  },
+];
+export const dataSize: Product[] = [
+  {
+    id: 1,
+    name: "31",
+  },
+  {
+    id: 2,
+    name: "32",
+  },
+  {
+    id: 3,
+    name: "33",
+  },
+  {
+    id: 4,
+    name: "34",
+  },
+  {
+    id: 5,
+    name: "35",
+  },
+];

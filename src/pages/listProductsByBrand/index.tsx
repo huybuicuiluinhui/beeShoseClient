@@ -1,17 +1,12 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import path from "../../constants/path";
-// import Slider from "rc-slider";
 import "rc-slider/assets/index.css"; // Import CSS cho slider
-import ProductItem from "../../components/ProductItem";
-import ProductPage from "../product";
-import Images from "../../static";
 import axios from "axios";
 import API from "../../api";
-import { IType } from "../../types/product.type";
-import dataProduct from "../../constants/data";
+import { IProduct, Product } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
-
+import NavPage from "../../components/NavPage";
 interface ShoeSize {
   size: number;
   selected: boolean;
@@ -24,15 +19,18 @@ interface ShoseBrand {
   brand: string;
   selected: boolean;
 }
+
 const ListProductsByBrand = () => {
   const location = useLocation();
-  const item = location.state.item;
-  // console.log("categorySlug", item);
+  const param: Product = location.state;
   const navigate = useNavigate();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-  const [isDropdownOpen2, setIsDropdownOpen2] = useState(true);
-  const [isDropdownOpen3, setIsDropdownOpen3] = useState(true);
-  const [isDropdownOpen4, setIsDropdownOpen4] = useState(true);
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalPage] = useState<number>(1);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
+  const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
+  const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
+  const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [priceRange2, setPriceRange2] = useState([
     {
@@ -65,127 +63,27 @@ const ListProductsByBrand = () => {
     []
   );
   const [selectedBrands, setSelectedBrands] = useState<ShoseBrand[]>([]);
-  const [shoeSizes, setShoesSize] = useState<IType[]>([
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 1,
-      name: "31",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 2,
-      name: "32",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 3,
-      name: "33",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 4,
-      name: "34",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 5,
-      name: "35",
-      updateAt: null,
-      updateBy: null,
-    },
-  ]);
-  const [materials, setMaterials] = useState<IType[]>([
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 1,
-      name: "Da",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 2,
-      name: "Vải",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 3,
-      name: "Da PU",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 4,
-      name: "Simili",
-      updateAt: null,
-      updateBy: null,
-    },
-    {
-      createAt: null,
-      createBy: null,
-      deleted: null,
-      id: 5,
-      name: "PVC",
-      updateAt: null,
-      updateBy: null,
-    },
-  ]);
-  const [brands, setBrands] = useState([
-    {
-      id: 1,
-      name: "adidas",
-    },
-    {
-      id: 2,
-      name: "Converse",
-    },
-    {
-      id: 3,
-      name: "Jordan",
-    },
-    {
-      id: 4,
-      name: "Namilia",
-    },
-    {
-      id: 5,
-      name: "New Balance",
-    },
-    {
-      id: 6,
-      name: "Nike",
-    },
-  ]);
+  const [shoeSizes, setShoesSize] = useState<Product[]>();
+  const [materials, setMaterials] = useState<Product[]>();
+  const [brands, setBrands] = useState<Product[]>();
+  const [listShoes, setListShoes] = useState<IProduct[]>();
+  const [isCheckedSize, setIsCheckedSize] = useState<boolean>(false);
+  const [isCheckedBrand, setIsCheckedBrand] = useState<boolean>(false);
+  const [isCheckedSole, setIsCheckedSole] = useState<boolean>(false);
+  // ----------------------------------------------------------------
 
+  const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCheckedSize(event.target.checked);
+  };
+
+  const handleChangeBrand = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCheckedBrand(event.target.checked);
+  };
+  const handleChangeSole = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCheckedSole(event.target.checked);
+  };
+
+  // ----------------------------------------------------------------
   const handleSizeSelect = (size: number) => {
     setSelectedSizes((prevSizes) => {
       const existingSize = prevSizes.find((s) => s.size === size);
@@ -219,10 +117,11 @@ const ListProductsByBrand = () => {
   const handlePriceChange = (value: any) => {
     setPriceRange(value);
   };
+  // ----------------------------------------------------------------
+
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
   const handleDropdownTogglePrice = () => {
     setIsDropdownOpen2(!isDropdownOpen2);
   };
@@ -232,29 +131,58 @@ const ListProductsByBrand = () => {
   const handleDropdownToggleBrand = () => {
     setIsDropdownOpen4(!isDropdownOpen4);
   };
+  // ----------------------------------------------------------------
   const getDataSize = async () => {
     const res = await axios({
       method: "get",
       url: API.getSize(),
     });
     if (res.status) {
-      setShoesSize(res.data);
+      setShoesSize(res?.data?.data);
     }
   };
+
+  // call dữ liệu
+  //  theo chất liệu
   const getDataSole = async () => {
     const res = await axios({
       method: "get",
       url: API.getSole(),
     });
     if (res.status) {
-      setMaterials(res.data);
+      setMaterials(res.data?.data);
     }
   };
+  //  theo thương hiệu
+  const getBrand = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getBrand(),
+    });
+    if (res.status) {
+      setBrands(res?.data?.data);
+    }
+  };
+  // lấy thương hiệu chọn
+  const getDataBrandChoose = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getBrandChoose(param?.id, page, 10),
+    });
+    if (res.status) {
+      setListShoes(res?.data?.data);
+      setTotalPage(res.data?.totalPages);
+    }
+  };
+  useEffect(() => {
+    getDataBrandChoose();
+  }, [param?.id, page]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // getDataSize();
-    // getDataSole();
+    getDataSize();
+    getDataSole();
+    getBrand();
   }, []);
   return (
     <div className="w-full h-full ">
@@ -262,10 +190,12 @@ const ListProductsByBrand = () => {
         {/* Lọc */}
         <aside
           id="logo-sidebar"
-          className="sticky   left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-32 "
+          className="sticky  left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-32 "
           aria-label="Sidebar"
         >
-          <span className="text-xl font-bold text-[#FFBA00]">Lọc sản phẩm</span>
+          <span className="text-xl font-semibold text-gray-700">
+            Lọc sản phẩm
+          </span>
           <div className="h-full px-2 py-4 overflow-y-scroll     ">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
@@ -274,7 +204,9 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400">kích thước size</p>
+                <p className="font-thin text-gray-400 text-xs ">
+                  kích thước size
+                </p>
                 <svg
                   className="w-4 h-4 ml-2"
                   aria-hidden="true"
@@ -310,6 +242,7 @@ const ListProductsByBrand = () => {
                             onClick={() => handleSizeSelect(Number(size.name))}
                           >
                             <input
+                              onChange={handleChangeSize}
                               id={`apple + ${size.id}`}
                               type="checkbox"
                               checked={isSelected}
@@ -336,7 +269,7 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400">Thương hiệu</p>
+                <p className="font-thin text-gray-400 text-xs">Thương hiệu</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -374,6 +307,7 @@ const ListProductsByBrand = () => {
                             onClick={() => handleBrandsSelect(brand.name)}
                           >
                             <input
+                              onChange={handleChangeBrand}
                               id={`brand-${brand.id}`}
                               type="checkbox"
                               checked={isSelected}
@@ -400,7 +334,7 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400">Chất liệu</p>
+                <p className="font-thin text-gray-400 text-xs">Chất liệu</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -438,6 +372,7 @@ const ListProductsByBrand = () => {
                             onClick={() => handleMaterialsSelect(material.name)}
                           >
                             <input
+                              onChange={handleChangeSole}
                               id={`material-${material.id}`}
                               type="checkbox"
                               checked={isSelected}
@@ -465,7 +400,7 @@ const ListProductsByBrand = () => {
                   type="button"
                 >
                   <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                  <p className="font-thin text-gray-400">khoảng giá</p>
+                  <p className="font-thin text-gray-400 text-xs">khoảng giá</p>
                   <svg
                     className="w-4 h-4 ml-2"
                     aria-hidden="true"
@@ -558,37 +493,66 @@ const ListProductsByBrand = () => {
             </div>
           </div>
         </aside>
+        {/* danh sách sản phẩm */}
         <div className="w-full">
-          {/* Nội dung */}
           <div className="mx-auto  flex flex-col  my-4 items-center ">
-            <span className=" text-3xl font-medium">{item}</span>
+            <span className=" text-3xl font-medium">{param?.name}</span>
           </div>
-          <div className="w-full  mx-auto">
-            <div className="px-2 ">
-              <span
-                className="cursor-pointer hover:text-[#FFBA00]"
-                onClick={() => {
-                  navigate(path.home);
-                }}
-              >
-                Trang chủ
-              </span>{" "}
-              / <span className="text-[#FFBA00]">{item}</span>
+          <div className="w-full  mx-auto ">
+            <div className="w-full flex justify-between ">
+              <div className="px-2">
+                <span
+                  className="cursor-pointer hover:text-[#FFBA00]"
+                  onClick={() => {
+                    navigate(path.home);
+                  }}
+                >
+                  Trang chủ
+                </span>{" "}
+                / <span className="text-[#FFBA00]">{param?.name}</span>
+              </div>
+              <div className="">
+                <div>
+                  <label htmlFor="underline_select" className="sr-only">
+                    Underline select
+                  </label>
+                  <select
+                    id="underline_select"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                  >
+                    <option selected value="US">
+                      Mới nhất
+                    </option>
+                    <option value="CA">Theo thứ tự giá từ thấp tới cao</option>
+                    <option value="FR">Theo thứ tự giá từ cao tới thấp</option>
+                    <option value="DE">Theo thứ tự phổ biến</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-8 px-2">
-              {dataProduct.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      navigate(path.product);
-                    }}
-                  >
-                    <ProductStanding product={item} />
-                  </div>
-                );
-              })}
+              {!!listShoes &&
+                !!listShoes.length &&
+                listShoes.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        navigate(path.product, { state: item.id });
+                      }}
+                    >
+                      <ProductStanding product={item} />
+                    </div>
+                  );
+                })}
             </div>
+            {totalPage === 1 ? (
+              ""
+            ) : (
+              <div className="my-10">
+                <NavPage totalPages={totalPage} page={page} setPage={setPage} />
+              </div>
+            )}
           </div>
         </div>
       </div>

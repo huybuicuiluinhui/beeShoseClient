@@ -81,9 +81,9 @@ const WaitForPay = () => {
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
+              {/* <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
                 Mã ID đơn hàng
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3 hover:text-[#FFBA00]">
                 Khách hàng
               </th>
@@ -108,12 +108,12 @@ const WaitForPay = () => {
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-[#FFBA00] dark:hover:bg-gray-600 group"
                   key={index}
                 >
-                  <th
+                  {/* <th
                     scope="row"
                     className="px-6 py-4 font-thin text-gray-900 whitespace-nowrap dark:text-white group-hover:font-semibold group-hover:text-black"
                   >
                     #{item.id}
-                  </th>
+                  </th> */}
 
                   <td className="px-6 py-4 group-hover:font-semibold group-hover:text-black">
                     {item.customers}

@@ -1,46 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Images from "../static";
-import ModalComponent from "./Modal";
-import SimpleToast from "./Toast";
 import path from "../constants/path";
 import axios from "axios";
 import API from "../api";
-import { IType } from "../types/product.type";
-import { useData } from "../context/app.context";
+import { Product } from "../types/product.type";
 import slugify from "slugify";
+import FormLogin from "../pages/loginAndRegister";
+import { toSlug } from "../utils/format";
+import { useShoppingCart } from "../context/shoppingCart.context";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { sharedData } = useData();
-  const toSlug = (text: string) => {
-    return slugify(text, {
-      lower: true,
-    });
-  };
-
-  const listHeaderBrand = [
-    "Giày Adidas",
-    "Giày Thể Thao",
-    "Giày Nike",
-    "Giày Puma",
-    "Giày New Balance",
-    "Giày Puma",
-    "Giày Convert",
-  ];
-  const [listBrandHeader, setListBrandHeader] = useState<IType[]>();
+  const { cartQuantity } = useShoppingCart();
+  const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
   const [isHeaderSticky, setIsHeaderSticky] = useState<boolean>(false);
   const [showDropdown, setIsShowDropdown] = useState<boolean>(false);
-  const [showTable, setShowTable] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<number>(1);
-  const [showToast, setShowToast] = React.useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState("default");
-  const handleHover = (isHovering: boolean) => {
-    if (!showModal) {
-      setShowTable(isHovering);
-    }
-  };
+  const [selectedCategory, setSelectedCategory] = useState("");
   const onShowDropdown = (isShowDropDown: boolean) => {
     setIsShowDropdown(isShowDropDown);
   };
@@ -50,16 +28,16 @@ const Header = () => {
       url: API.getBrand(),
     });
     if (res.status) {
-      setListBrandHeader(res.data);
+      setListBrandHeader(res.data?.data);
     }
   };
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-  };
+  // const handleCategoryClick = (category: string) => {
+  //   setSelectedCategory(category);
+  // };
 
   useEffect(() => {
-    // getDataBrand();
+    getDataBrand();
   }, []);
   useEffect(() => {
     const handleScroll = () => {
@@ -71,105 +49,6 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  // const CategoryTable = () => {
-  //   const categories = [
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //     {
-  //       title: "Dòng giày nổi bật",
-  //       data: [
-  //         "Air Jordan",
-  //         "Converse",
-  //         "Air Force 1",
-  //         "Ultraboost",
-  //         "Nike Dunk",
-  //         "Yeezy",
-  //         "Air Max",
-  //         "Run Star Hike",
-  //       ],
-  //     },
-  //   ];
-
-  //   return (
-  //     <div className="w-full absolute z-40 bg-[#fff] grid grid-cols-4 gap-4 px-3 py-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-  //       {categories.map((item, index) => (
-  //         <div key={index}>
-  //           <span className="text-base text-black font-normal border-b-2 border-solid border-[#000] pb-1">
-  //             {item.title}
-  //           </span>
-  //           <div className="grid grid-cols-2 gap-1 mt-1">
-  //             {item.data.map((e, i) => {
-  //               return <a href="#">{e}</a>;
-  //             })}
-  //           </div>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
   return (
     <div
       className={`${
@@ -210,7 +89,6 @@ const Header = () => {
                   alt="user photo"
                 />
               </button>
-              {/* Dropdown menu */}
               {!!showDropdown && (
                 <div className="z-50  fixed top-6 ml-8">
                   <div
@@ -231,6 +109,7 @@ const Header = () => {
                       <li className="">
                         <a
                           onClick={() => {
+                            setTypeModal(1);
                             setShowModal(true);
                           }}
                           className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
@@ -242,6 +121,7 @@ const Header = () => {
                       <li>
                         <a
                           onClick={() => {
+                            setTypeModal(2);
                             setShowModal(true);
                           }}
                           className=" hover:text-[#FABA00]  cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
@@ -307,7 +187,7 @@ const Header = () => {
                       <input
                         type="search"
                         id="default-search"
-                        className="placeholder:text-[#FABA00] block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500  "
+                        className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
                         placeholder="Tìm kiếm sản phẩm tại đây....."
                         required
                       />
@@ -356,27 +236,29 @@ const Header = () => {
                   }}
                 >
                   <div className=" flex justify-center items-center my-auto ">
-                    <div className=" relative">
-                      <div className=" absolute left-3 -top-[50%]">
-                        <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
-                          3
-                        </p>
+                    {cartQuantity > 0 && (
+                      <div className=" relative">
+                        <div className=" absolute left-3 -top-[50%]">
+                          <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
+                            {cartQuantity}
+                          </p>
+                        </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="file:  h-6 w-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                          />
+                        </svg>
                       </div>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="file:  h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                        />
-                      </svg>
-                    </div>
+                    )}
                     <span className="ml-3 hover:text-red-600">Giỏ hàng </span>
                   </div>
                 </li>
@@ -387,7 +269,7 @@ const Header = () => {
         <div>
           <nav className="  bg-[#f5f5f5]">
             <div className="max-w-screen-xl px-4 py-3 mx-auto">
-              <div className="flex items-center">
+              <div className="flex items-center ">
                 <ul className="flex flex-row font-medium mt-0 mr-6 space-x-8 text-sm">
                   <a
                     onClick={() => {
@@ -403,15 +285,14 @@ const Header = () => {
                   >
                     Trang chủ
                   </a>
-                  {!!listHeaderBrand &&
-                    // listBrandHeader.length &&
-                    listHeaderBrand.map((item, index) => {
-                      // console.log("category", toSlug(item));
+                  {!!listBrandHeader &&
+                    listBrandHeader.length &&
+                    listBrandHeader.map((item, index) => {
                       return (
                         <li
-                          onClick={() => {
-                            handleCategoryClick(item);
-                          }}
+                          // onClick={() => {
+                          //   handleCategoryClick(item.name);
+                          // }}
                           key={index}
                           className="relative tracking-wider btn4 leading-none overflow-hidden   "
                         >
@@ -420,17 +301,17 @@ const Header = () => {
                           />
                           <span
                             className={`cursor-pointer  hover:text-[#FFBA00] ${
-                              selectedCategory === item
+                              selectedCategory === item.name
                                 ? "text-[#FFBA00]  "
                                 : "text-gray-900"
                             }`}
                             onClick={() => {
-                              navigate(`${toSlug(item)}`, {
-                                state: { item },
+                              navigate(`${toSlug(item.name)}`, {
+                                state: item,
                               });
                             }}
                           >
-                            {item}
+                            {item.name}
                           </span>
                         </li>
                       );
@@ -439,370 +320,14 @@ const Header = () => {
               </div>
             </div>
           </nav>
-          {/* {showTable && <CategoryTable />} */}
-          <ModalComponent
-            isVisible={showModal}
-            onClose={() => {
-              setShowModal(false);
-            }}
-          >
-            {sharedData === true || typeModal === 1 ? (
-              <section className="bg-gray-50  ">
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
-                  <a
-                    href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900"
-                  >
-                    <img
-                      className="w-20 h-20 mr-2 object-contain"
-                      src={Images.iconLogo}
-                      alt="logo"
-                    />
-                    BeeShoes
-                  </a>
-                  <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0  ">
-                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
-                        Đăng nhập ngay
-                      </h1>
-                      <form className="space-y-4 md:space-y-6" action="#">
-                        <div>
-                          <label
-                            htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00]"
-                          >
-                            Số điện thoại hoặc Email
-                          </label>
-                          <input
-                            type="text"
-                            name="email"
-                            id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
-                            placeholder=""
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Mật khẩu
-                          </label>
-                          <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5   "
-                            required
-                          />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-start">
-                            <div className="flex items-center h-5">
-                              <input
-                                id="remember"
-                                aria-describedby="remember"
-                                type="checkbox"
-                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00] "
-                              />
-                            </div>
-                            <div className="ml-3 text-sm">
-                              <label
-                                htmlFor="remember"
-                                className="text-[#FFBA00] "
-                              >
-                                Nhớ mật khẩu
-                              </label>
-                            </div>
-                          </div>
-                          <a
-                            onClick={() => {
-                              setTypeModal(3);
-                              setShowToast(false);
-                            }}
-                            className="text-sm font-medium text-[#FFBA00]  hover:underline "
-                          >
-                            Quên mật khẩu?
-                          </a>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setShowToast(true);
-                          }}
-                          type="submit"
-                          className="w-full text-white bg-[#FFBA00] hover:bg-[#c3ff00] focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                        >
-                          Đăng nhập
-                        </button>
-                        <p className="text-sm font-light text-gray-500 ">
-                          Bạn chưa có tài khoản?{" "}
-                          <a
-                            onClick={() => {
-                              setTypeModal(2);
-                              setShowToast(false);
-                            }}
-                            className="font-medium text-[#FFBA00] hover:underline "
-                          >
-                            Đăng ký ngay
-                          </a>
-                        </p>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ) : typeModal === 2 ? (
-              <section className="bg-gray-50 ">
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
-                  <a
-                    href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 "
-                  >
-                    <img
-                      className="w-20 h-20 mr-2 object-contain"
-                      src={Images.iconLogo}
-                      alt="logo"
-                    />
-                    BeeShoes
-                  </a>
-                  <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0  -gray-700 mb-4">
-                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
-                        Tạo tài khoản
-                      </h1>
-                      <form className="space-y-4 md:space-y-6" action="#">
-                        <div>
-                          <label
-                            htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Số điện thoại hoặc Email
-                          </label>
-                          <input
-                            type="text"
-                            name="email"
-                            id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Mật khẩu
-                          </label>
-                          <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="confirm-password"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Nhập lại mật khẩu
-                          </label>
-                          <input
-                            type="confirm-password"
-                            name="confirm-password"
-                            id="confirm-password"
-                            placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5 "
-                            required
-                          />
-                        </div>
-                        <div className="flex items-start">
-                          <div className="flex items-center h-5">
-                            <input
-                              id="terms"
-                              aria-describedby="terms"
-                              type="checkbox"
-                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00]"
-                              required
-                            />
-                          </div>
-                          <div className="ml-3 text-sm">
-                            <label
-                              htmlFor="terms"
-                              className="font-light text-gray-500 "
-                            >
-                              Tôi đồng ý với các{" "}
-                              <a
-                                className="font-medium text-[#FFBA00] hover:underline "
-                                href="#"
-                              >
-                                điều khoản
-                              </a>
-                            </label>
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          className="w-full text-white bg-[#FFBA00] hover:bg-[#FFBA00] focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                          onClick={() => {
-                            setTypeModal(2);
-                            setShowToast(true);
-                          }}
-                        >
-                          Tạo tài khoản
-                        </button>
-                        <p className="text-sm font-light text-gray-500 ">
-                          Bạn đã có tài khoản?{" "}
-                          <a
-                            onClick={() => {
-                              setTypeModal(1);
-                              setShowToast(false);
-                            }}
-                            className="font-medium text-[#FFBA00] hover:underline "
-                          >
-                            Đăng nhập ngay
-                          </a>
-                        </p>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ) : (
-              <section className="bg-gray-50 ">
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto  lg:py-0">
-                  <a
-                    href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 "
-                  >
-                    <img
-                      className="w-20 h-20 mr-2 object-contain"
-                      src={Images.iconLogo}
-                      alt="logo"
-                    />
-                    BeeShoes
-                  </a>
-                  <div className="w-full bg-white rounded-lg shadow ">
-                    <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                      <h1 className="text-xl font-bold leading-tight tracking-tight text-[#FFBA00] md:text-2xl ">
-                        Quên mật khẩu
-                      </h1>
-                      <form className="space-y-4 md:space-y-6" action="#">
-                        <div>
-                          <label
-                            htmlFor="email"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Số điện thoại hoặc Email
-                          </label>
-                          <input
-                            type="text"
-                            name="email"
-                            id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-gray-900 "
-                          >
-                            Mật khẩu
-                          </label>
-                          <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="confirm-password"
-                            className="block mb-2 text-sm font-medium text-[#FFBA00] "
-                          >
-                            Nhập lại mật khẩu
-                          </label>
-                          <input
-                            type="confirm-password"
-                            name="confirm-password"
-                            id="confirm-password"
-                            placeholder="••••••••"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-[#FFBA00] focus:border-[#FFBA00] block w-full p-2.5      "
-                            required
-                          />
-                        </div>
-                        <div className="flex items-start">
-                          <div className="flex items-center h-5">
-                            <input
-                              id="terms"
-                              aria-describedby="terms"
-                              type="checkbox"
-                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-[#FFBA00] checked:bg-[#FFBA00]   "
-                              required
-                            />
-                          </div>
-                          <div className="ml-3 text-sm">
-                            <label
-                              htmlFor="terms"
-                              className="font-light text-gray-500 "
-                            >
-                              Tôi đồng ý với các{" "}
-                              <a
-                                className="font-medium text-[#FFBA00] hover:underline "
-                                href="#"
-                              >
-                                điều khoản
-                              </a>
-                            </label>
-                          </div>
-                        </div>
-                        <button
-                          type="submit"
-                          className="w-full text-white bg-[#FFBA00] hover:bg--700 focus:ring-4 focus:outline-none focus:ring-[#FFBA00] font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                          onClick={() => {
-                            setTypeModal(3);
-                            setShowToast(true);
-                          }}
-                        >
-                          Gửi xác nhận
-                        </button>
-                        <p className="text-sm font-light text-gray-500 ">
-                          Bạn đã có tài khoản?{" "}
-                          <a
-                            onClick={() => {
-                              setTypeModal(1);
-                              setShowToast(false);
-                            }}
-                            className="font-medium text-[#FFBA00]600 hover:underline "
-                          >
-                            Đăng nhập ngay
-                          </a>
-                        </p>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            )}
-          </ModalComponent>
         </div>
       </header>
-      {typeModal === 1 && showToast === true ? (
-        <SimpleToast typeToast="success" message="Đăng nhập thành công" />
-      ) : (
-        typeModal === 2 &&
-        showToast === true && (
-          <SimpleToast typeToast="success" message="Đăng ký thành công" />
-        )
-      )}
+      <FormLogin
+        showModal={showModal}
+        setShowModal={setShowModal}
+        typeModal={typeModal}
+        setTypeModal={setTypeModal}
+      />
     </div>
   );
 };

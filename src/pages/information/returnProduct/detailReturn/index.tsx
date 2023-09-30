@@ -169,6 +169,9 @@ const DetailReturn = () => {
           Gửi yêu cầu
         </button>
       </div>
+      {showToast && (
+        <SimpleToast typeToast="success" message="Gửi yêu cầu thành công" />
+      )}
     </div>
   );
 };

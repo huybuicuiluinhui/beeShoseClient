@@ -1,134 +1,358 @@
-import React, { useState } from "react";
-import { ProductType } from "../types/product.type";
+import React, { useEffect, useState } from "react";
+import { IDetailProduct, IInforShoe, Product } from "../types/product.type";
 import { useNavigate } from "react-router-dom";
 import path from "../constants/path";
-interface ProductItemProps {
-  product: ProductType;
-}
-const ProductItem =
-  //: React.FC<ProductItemProps>
-  (
-    {
-      // product
+import ReactImageMagnify from "react-image-magnify";
+import axios from "axios";
+import API from "../api";
+import {
+  convertToCurrencyString,
+  findProductIdByName,
+  renderColor,
+} from "../utils/format";
+import SimpleToast from "./Toast";
+import { useShoppingCart } from "../context/shoppingCart.context";
+const ProductItem = ({
+  product,
+  shoeId,
+  inforShoe,
+}: {
+  inforShoe: IInforShoe;
+  product: IDetailProduct[];
+  shoeId: number;
+}) => {
+  const navigate = useNavigate();
+  const imgArr = [];
+  for (let i = 0; i < product.length; i++) {
+    imgArr.push(product[i].images ? product[i].images.split(",") : []);
+  }
+  const [activeImg, setActiveImage] = useState<string>(imgArr[0][0]);
+  const [chooseSize, setChooseSize] = useState<any>();
+  const [chooseColor, setChooseColor] = useState<any>();
+  const [chooseSizeName, setChooseSizeName] = useState<string | number>();
+  const [chooseColorName, setChooseColorName] = useState<string>();
+  const [amount, setAmount] = useState(1);
+  const [allSizeData, setAllSizeData] = useState<Product[]>([]);
+  const [allColorData, setAllColorData] = useState<Product[]>([]);
+  const [price, setPrice] = useState<number | undefined>(0);
+  const [amountShoe, setAmountShoe] = useState<number>();
+  const [showToast, setShowToast] = React.useState<boolean>(false);
+  const [idAddToCart, setIdAddToCart] = useState<number>();
+  const { getItemQuantity, openCart, addMultipleToCart } = useShoppingCart();
+  const getDataSize = async () => {
+    let combinedData: Product[] = [];
+    let currentPage = 1;
+    while (true) {
+      try {
+        const response = await axios.get(API.getSizePage(currentPage));
+        const data = response.data.data;
+
+        if (data.length === 0) {
+          break;
+        }
+
+        combinedData = [...combinedData, ...data];
+        currentPage++;
+
+        if (currentPage >= response.data.totalPages) {
+          break;
+        }
+      } catch (error) {
+        console.error(error);
+        break;
+      }
     }
-  ) => {
-    const navigate = useNavigate();
-    const [images, setImages] = useState({
-      img1: "https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_440/e44d151a-e27a-4f7b-8650-68bc2e8cd37e/scarpa-da-running-su-strada-invincible-3-xk5gLh.png",
-      img2: "https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_440/e44d151a-e27a-4f7b-8650-68bc2e8cd37e/scarpa-da-running-su-strada-invincible-3-xk5gLh.png",
-      img3: "https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_440/44fc74b6-0553-4eef-a0cc-db4f815c9450/scarpa-da-running-su-strada-invincible-3-xk5gLh.png",
-      img4: "https://static.nike.com/a/images/f_auto,b_rgb:f5f5f5,w_440/d3eb254d-0901-4158-956a-4610180545e5/scarpa-da-running-su-strada-invincible-3-xk5gLh.png",
+
+    setAllSizeData(combinedData);
+    setChooseSize(findProductIdByName(product[0]?.size, allSizeData));
+  };
+  const getDataColor = async () => {
+    let combinedData: Product[] = [];
+    let currentPage = 1;
+
+    while (true) {
+      try {
+        const response = await axios.get(API.getColorPage(currentPage));
+        const data = response.data.data;
+
+        if (data.length === 0) {
+          break;
+        }
+
+        combinedData = [...combinedData, ...data];
+        currentPage++;
+
+        if (currentPage >= response.data.totalPages) {
+          break;
+        }
+      } catch (error) {
+        console.error(error);
+        break;
+      }
+    }
+
+    setAllColorData(combinedData);
+    setChooseColor(findProductIdByName(product[0]?.color, allColorData));
+  };
+
+  const getPriceDetailShoe = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getPriceDetailShoe(inforShoe.name, chooseSize, chooseColor),
     });
-
-    const [activeImg, setActiveImage] = useState(images.img1);
-
-    const [amount, setAmount] = useState(1);
-    const [dataSize, setDataSize] = useState([
-      "31",
-      "32",
-      "33",
-      "34",
-      "35",
-      "36",
-      "37",
-      "38",
-      "39",
-      "40",
-      "41",
-      "42",
-      "43",
-      "44",
-    ]);
-
-    return (
-      <div className="max-w-7xl mx-auto p-8">
-        <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center">
-          <div className="flex flex-row gap-3 lg:w-3/4">
-            <div className="flex flex-col  h-auto  justify-between ">
-              <img
-                src={images.img1}
-                alt="123"
-                className="w-24 h-24 rounded-md cursor-pointer"
-                onClick={() => setActiveImage(images.img1)}
-              />
-              <img
-                src={images.img2}
-                alt=""
-                className="w-24 h-24 rounded-md cursor-pointer"
-                onClick={() => setActiveImage(images.img2)}
-              />
-              <img
-                src={images.img3}
-                alt=""
-                className="w-24 h-24 rounded-md cursor-pointer"
-                onClick={() => setActiveImage(images.img3)}
-              />
-              <img
-                src={images.img4}
-                alt=""
-                className="w-24 h-24 rounded-md cursor-pointer"
-                onClick={() => setActiveImage(images.img4)}
-              />
-            </div>
-            <img
-              src={activeImg}
-              alt=""
-              className="w-full h-full aspect-square object-cover rounded-xl"
-            />
+    if (res.status) {
+      if (res?.data?.totalPages === 0) {
+        setPrice(0);
+      }
+      if (res?.data?.data[0]?.price) {
+        setPrice(res?.data?.data[0].price);
+        setAmountShoe(res?.data?.data[0].quantity);
+        setIdAddToCart(res?.data?.data[0].id);
+      }
+    }
+  };
+  useEffect(() => {
+    getDataSize();
+    getDataColor();
+  }, []);
+  useEffect(() => {
+    setChooseSize(findProductIdByName(product[0]?.size, allSizeData));
+    setChooseSizeName(product[0]?.size);
+    setChooseColor(findProductIdByName(product[0]?.color, allColorData));
+    setChooseColorName(product[0]?.color);
+  }, [product, allSizeData, allColorData]);
+  useEffect(() => {
+    setAmountShoe(0);
+    if (chooseColor && chooseSize) {
+      getPriceDetailShoe();
+    }
+  }, [inforShoe.name, chooseSize, chooseColor]);
+  return (
+    <div className="max-w-7xl mx-auto p-8">
+      <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center">
+        <div className="flex flex-row gap-3 lg:w-3/4">
+          <div className="flex flex-col  h-auto  justify-between mr-5 ">
+            {!!imgArr &&
+              !!imgArr.length &&
+              imgArr.map((item, index) => {
+                return (
+                  <div key={index}>
+                    {!!item &&
+                      !!item.length &&
+                      item.map((child: string, childIndex: number) => {
+                        return (
+                          <img
+                            key={childIndex}
+                            src={child}
+                            alt="123"
+                            className={`w-24 h-24 rounded-md cursor-pointer object-contain border-[1px]  border-[#FFBA00] mb-2 ${
+                              child.includes(activeImg)
+                                ? "border-solid"
+                                : "border-dashed"
+                            }`}
+                            onClick={() => setActiveImage(child)}
+                          />
+                        );
+                      })}
+                  </div>
+                );
+              })}
           </div>
-          {/* ABOUT */}
-          <div className="flex flex-col gap-4 lg:w-2/4">
-            <div>
-              <span className=" text-violet-600 font-semibold">
-                Hãng giày Nike
-              </span>
-              <h1 className="text-3xl font-thin">
-                Giày Air Jordan 1 Low GS ‘Rabbit’ DZ6333 083
-              </h1>
+          {/* <div className="w-[400px] h-[500px]  ">
+            <div className="w-[80%]">
+              <ReactImageMagnify
+                {...{
+                  smallImage: {
+                    isFluidWidth: true,
+                    src: activeImg,
+                    width: 140,
+                    height: 162,
+                  },
+                  largeImage: {
+                    src: activeImg,
+                    width: 836,
+                    height: 1100,
+                  },
+                }}
+              />
             </div>
-            <p className="text-gray-700"></p>
-            <h6 className="text-base font-bold">Giá: 3.000.000đ</h6>
-            <div className="flex">
-              <span>Size:</span>
-              <div className="flex items-center w-full flex-wrap">
-                {dataSize &&
-                  dataSize.map((e, i) => {
-                    return (
-                      <div className="px-1 py-[2px] mx-2 border-solid border-2 border-[#dcdcdc] mb-1 ">
-                        {e}
-                      </div>
-                    );
-                  })}
+          </div> */}
+          <img
+            src={activeImg}
+            alt=""
+            className="w-[80%] h-auto aspect-square object-contain rounded-xl"
+          />
+        </div>
+        {/* Thong tin */}
+        <div className="flex flex-col gap-2 lg:w-2/4">
+          <div>
+            <span
+              className="cursor-pointer hover:text-[#FFBA00] text-xs font-thin"
+              onClick={() => {
+                navigate(path.home);
+              }}
+            >
+              Trang chủ
+            </span>{" "}
+            /{" "}
+            <span className="text-xs font-thin">
+              Danh mục: {inforShoe?.brand.name}
+            </span>
+            /{" "}
+            <span className="text-[#FFBA00] text-xs font-thin">
+              {inforShoe?.name}
+            </span>
+          </div>
+          <span className="text-3xl font-medium text-black  ">
+            {inforShoe?.name}
+          </span>
+          <h6 className="text-2xl font-semibold text-[#942319]">
+            {!!price
+              ? `${convertToCurrencyString(price)}`
+              : "Sản phẩm hiện hết hàng"}
+          </h6>
+          <span className="text-sm font-semibold ">Chọn kích thước</span>
+          <div className="flex items-center w-full flex-wrap ">
+            {!!product &&
+              product.map((e, i) => {
+                return (
+                  <div
+                    key={i}
+                    onClick={() => {
+                      setChooseSize(findProductIdByName(e.size, allSizeData));
+                      setChooseSizeName(e.size);
+                    }}
+                    className={`cursor-pointer px-1 py-[2px] mx-2 border-solid border-[1px] border-[#dcdcdc] rounded mb-1 ${
+                      chooseSizeName === e.size
+                        ? "border-[#ffba00] border-2 text-[#212529]"
+                        : ""
+                    }`}
+                  >
+                    {e.size}
+                  </div>
+                );
+              })}
+          </div>
+          <span className="text-sm font-semibold ">Chọn màu sắc :</span>
+          <div className="flex w-full items-center">
+            <div className="flex items-center  flex-wrap">
+              {!!product &&
+                product.map((e, i) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        setChooseColor(
+                          findProductIdByName(e.color, allColorData)
+                        );
+                        setChooseColorName(e.color);
+                      }}
+                      className={` cursor-pointer px-1 py-[2px] mx-2 border-solid border-[1px] border-[#dcdcdc] mb-1  rounded
+                      
+                      ${
+                        chooseColorName === e.color
+                          ? "border-[#ffba00] border-2 text-[#212529]"
+                          : ""
+                      }`}
+                    >
+                      {e.color}
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div className="flex justify-between ">
+            <div className="flex flex-row items-center gap-10 mr-10">
+              {/* <span className="text-sm font-semibold ">Số lượng</span> */}
+              <div className="flex flex-row  ">
+                <div className=" border-l-[1px] border-t-[1px] border-b-[1px] border-[#e9e9e9] w-full flex items-center justify-center">
+                  <span className=" px-3 rounded-lg w-8">{amount}</span>
+                </div>
+                <div className="flex flex-col">
+                  <button
+                    className="w-8  h-[50%]  border-[1px] border-[#e9e9e9] "
+                    onClick={() => setAmount((prev) => prev + 1)}
+                  >
+                    <span className="leading-[5px]">+</span>
+                  </button>
+                  <button
+                    className="w-8 h-[50%] border-[1px] border-[#e9e9e9] "
+                    onClick={() => {
+                      setAmount((prev) => {
+                        if (prev > 1) {
+                          return prev - 1;
+                        } else {
+                          return 1;
+                        }
+                      });
+                    }}
+                  >
+                    <span>-</span>
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="flex flex-row items-center gap-12">
-              <span>Số lượng</span>
-              <div className="flex flex-row items-center">
-                <button
-                  className="w-8 "
-                  onClick={() => setAmount((prev) => prev - 1)}
-                >
-                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD5UlEQVR4nO1aOW8UMRT+EFdQEHeAEsqICPgTQLiPLgG6RNBAVkDLUQNVpEj8hi2BbMaekBESII5wNSQhUHEUCOgIIEAfsv0yGbHXzGZ2dzbiSZZW++znz37P9jsG+E8LlOhhHT0cocI1KgxTY5IaX6nxU5r5PWF5po+Pw7yNtcgCMUAbNU5SQ1PjDzWYsP2mhqLCCRawvPELeIAV1DhPjY8RUD+oMUaFi1YzGp1mxzmOpbaZ3+Y/x7tEhUDGuPEKH6hwzmxOYxbhYz8V3kYAPKFGH32sTiwrwBpq9FNjPCLvDRX21tuMbkQ08JQKu1OT76ObGs8j8odS1w4DbLbA3QTf6OMM81ic6iRmnjwWU2OACjOhtkexKR3hClutut0izK3TlYrgSnOOYjsVpmTOaYNhfgIL6AgFKjxmgA2poa029217OdyTud8aq5jPmXDmpPCACu2po62GQaGdGg9DM6vlzEQO9oR57OqCNA4OH+sjZjaUdPD+8GA34EzEPDMzFpOP7viP3ew74eMMMkLUyIWHP46JUeNC+E7U4YqtlRhgCTVeCLZc5c4FLLeugunsYRcyRtTYJwv5WFEr1nmTGwIZJBKLwpvUR2/5jgq+rLgPGSUqnJLNHikfTzi3+kctDmCDH8qfVPhVEicVjoo27iDjRI27opWDxUyF68K8iIwTFa7Ipl8txRwW5iFknDhnPTdLMV8LsxMZJ45gm2CdLGZqfJH3o2l+VVwyXrgs5FMx02U6yDyWVRWUPMmQqKHa/ObhljzBgl7Il5YxrQI6ypvWgjnsSq5fH4eRcaLGsUrXr3sQNS6hpR9Ez2YADXMMreKieDhQzhlzTmOANcgo0Tm3zmksYFXpTiah7LTSj4wSNU6LTzhcvpOH47KQcWQ1sFJ4Jhh7qoW676XjHmSM6OGAYHtXtQxhU/tOdc8yl3xQeCnYzsYZ0BbJ9Q4gI8S5DZ6KXRQy9QkZNGOSY3VHWR3PTip8F0zJShm2PjG7Az7W1w1lPL9qWrAMJhfgTOyJmNjDpiSxA6ykxiPB8KjmOqPsxmRYViigI3W0lR+++2E5br4FH1vomVPtFD3sSA1t+Tl3RuZ8zRFsSUfwKDaFZuay4jlzHaYivPiKPRcebGNOChvTnqQtvABce5FW9dW+2K5a/DJS3R2sa+1dqq/T/1R3T9XyFYOcg9MRt4PWlFKsFsfRTi7izlBifuNeX7Z5JxPFmWpTHstsc5WnLgmKLktflyeYdTsUzjbnCwjjm/noNQllCQGSJRqMK+4i056mLKAUmYSyycWaqI0at6SU/Tn8qMb8VnhlwlPbx/QtF0/8J7Q+/QUDyJbeajfx9gAAAABJRU5ErkJggg==" />
-                </button>
-                <span className="py-4 px-2 rounded-lg">{amount}</span>
-                <button
-                  className="w-8"
-                  onClick={() => setAmount((prev) => prev + 1)}
-                >
-                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD+0lEQVR4nO1aS08UQRD+DCoYjSKKeNQj0Sh/wvcTb6DeIHhRN+hV9KyeSEz8DXv0sUz1oBNBCQgiXARETyoHI95EjJoy3V07THBnX/TCrLGSSTbbPVVfdVdX12OA//SPEntoYA9nmXCHCY9ZYZoVvrLCD3n07ykzpuf4OMOPsB1JIA5QxwoXWUGxwm9W4BKfX6xATLjAGdSuvgJD2MQK11hhLgJqkRWeMuGG2RmFZr3iPIYN5tG/9X92rIcJgbxj3yd8YkK3XpzVUcLHCSa8jwAYZYUO9rGtZF4B6lmhkxXGIvzeMeFYpc3ofmQHXjHhsDP+Po6ywusI/3vOd4cD7DbArYBv7OMyp1HjVIiWk0YNK1xlwkK42/1ocsOcsNdst1VCe539Thjnk9mPA0yYEZmzGsPKGGbQGDIkvOQAO52hLST7kXEOz0X2e20VKzkT1pwIQ0zY7BxtIQyEzawwHJpZOWcmcrCn9GVXEaTF4PCxI2Jm90p9+UR4sFfhTBR5ZhYMJh9Hi7/ssveEj8tICLFCKjz8xZgYK1wP74kKuNhyiQOsZ4UJwZbKPzmDWhMq6MkeDiFhxArHRZG5vLtigjfxEEggMWNd6El9tMdPtFGs1rjDmXDtPglDzvgRumSx++LzCRtWL5YTAMYKltjJ8UX5gwk/c+JkQqsIfeJKaCUU0cQKz2RXTmE5MeGuDN5A0hUh3BK+t3MNPpbB01WgSKvwfZBr8K0MNidekT7sE77TuQTOy/3RkHhFAuwUvp9zCdSVDuY0NpbMmDBYRuEhm9oOliwvg9psnSA5iigMuFZkvmpMK4PGeNP6Zw47ifv1caYKLsRz+dyvvRAVeqr7QvRMBVAPPq2aEMXDybhgzAaNAeoTGzR6Jri1QWMGW+OEkgjudCbYuuYBZ/wULgnGTPwkD+dl0hiSmlgRxgVjW6FU96NMPIKEEXs4Kdg+FGxDmNK+DR3GE1d8IEwKtivFvFAXqfVeRUKIlxZ4puimkO5PyEsLujhWcZSF8bQw4btgKq2VYfoT2RXwsaNiKIuLq2YFS2/pDKyJjYqJDa9JETvAFlYYEQwjZfcZZTWmw7ZCBo3O0ea/+F6E7biVNnxMo2dpa2fYw0FnaONltkRkvuU+7HHDuB9NoZnZqnhKu0MnzP92sd3hwdbmRNjlWkhd6ADsM+Gq+2pubNstnoykwL0V7b1L93V2WXe3q5yvGOQcXIqEHWxMyWG3uJjdSUXCGZacX4fXN03dSWdxutuUxkbz2M7TfkmKbspcWyfIhh2EK2vzBYSOzXy064KypAClVlB+SmbatiYK5CJdUNa1WJ21scJDaWV/CT+q0b8Jb3R6aubouXH5xH9C9dMfKIO1odr18XMAAAAASUVORK5CYII=" />
-                </button>
+            <div className="flex justify-between w-full ">
+              <div
+                className=" cursor-pointer bg-[#0161e7] text-white font-semibold  flex  items-center justify-center  w-[49%]"
+                onClick={
+                  // () =>
+
+                  () => {
+                    if (!!idAddToCart) {
+                      console.log("first", getItemQuantity(idAddToCart));
+                      addMultipleToCart(idAddToCart, amount);
+                      setShowToast(true);
+                      // navigate(path.cart)
+                      openCart();
+                    }
+                  }
+                }
+              >
+                <span>Thêm vào giỏ hàng</span>
               </div>
+
               <button
-                className="bg-[#FFBA00] text-white font-semibold py-3 px-5 rounded-xl h-full "
+                className="bg-[#fe662b] text-white font-semibold  w-[49%]  "
                 onClick={() => navigate(path.cart)}
               >
-                Thêm vào giỏ hàng
+                Mua ngay
               </button>
             </div>
           </div>
+
+          <div className="w-full h-[1px] bg-gray-300" />
+          <div className="flex justify-between">
+            <span className="font-semibold text-sm">
+              Mã : <span className="font-normal">{inforShoe?.id}</span>{" "}
+            </span>
+            <span className="font-semibold text-sm">
+              Danh mục :{" "}
+              <span className="font-normal">{inforShoe?.category?.name}</span>{" "}
+            </span>
+            <span className="font-semibold text-sm">
+              Thương hiệu :{" "}
+              <span className="font-normal">{inforShoe?.brand?.name}</span>{" "}
+            </span>
+          </div>
+          <div className="h-8">
+            {!!amountShoe && (
+              <span className="font-semibold text-sm">
+                Số lượng hàng có sẵn :{" "}
+                <span className="font-normal">{amountShoe}</span>{" "}
+              </span>
+            )}
+          </div>
         </div>
       </div>
-    );
-  };
+      {showToast && (
+        <SimpleToast
+          typeToast="success"
+          message="Thêm vào giỏ hàng thành công"
+        />
+      )}
+    </div>
+  );
+};
 
 export default ProductItem;

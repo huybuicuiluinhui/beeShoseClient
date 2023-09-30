@@ -1,12 +1,10 @@
 import path from "path";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useData } from "../context/app.context";
 interface BannerShowType {
   handleShow: () => void;
 }
 const BannerShow = ({ handleShow }: BannerShowType) => {
-  const { setSharedData } = useData();
   return (
     <div
       id="marketing-banner"
@@ -30,7 +28,6 @@ const BannerShow = ({ handleShow }: BannerShowType) => {
       <div className="flex items-center flex-shrink-0 ">
         <a
           href={"#"}
-          onClick={() => setSharedData(true)}
           className="px-5 py-2 mr-2 text-xs font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 bg-[#FFBA00]"
         >
           Đăng nhập

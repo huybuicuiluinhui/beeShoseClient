@@ -6,40 +6,49 @@ import HistoryOrder from "./historyOrder";
 import { useLocation } from "react-router-dom";
 import Address from "./address";
 import ReturnProduct from "./returnProduct";
-
+import { IDataAside } from "../../types/product.type";
+type IDataAsideOmit = Omit<IDataAside, "imgHover"> | IDataAside;
 const Information = () => {
-  const dataAside = [
+  const [isHovered, setIsHovered] = useState<number>(0);
+  const [chooseTab, setChooseTab] = useState<number>(1);
+  const dataAside: IDataAside[] = [
     {
+      id: 1,
       name: "Trang tài khoản",
-      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA8UlEQVR4nN3RzSrEURzG8c9sMIOahXELXuIiyNJCalLugsEWV0ApF0CSlOy4BKyUjbwUxR5ZsaCjs5j07+907Oapp07Pefqefr9DJ2gUi1jAyH9hK/jAdXQ4L+fCJvGJmbZsNmYTOcB9HBTkh9jLAZ5ioyDfxEkOcB03qLZlNdxhLQfYj3ucYT76ImZ9MjWIXbziBTto5MJqWMI53qPDufVrDUkaxi2esIrp6LC757jboTSUn5EecYTegvuQHeMBAynAbVyiu6TTgyts/QULkDc0Ex6eix/VVVYax1fiKI3YHSsr1TGFSgKwErv1hG4n6xsERy4ZpAjEKQAAAABJRU5ErkJggg==",
+      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nOXV24uNURgG8J8MjaYGhWimoSRKStQkOU0ykxzKKUU5RynmAqGUs5BjEYkc4oqc4kIyN5Qbf4UL9/4BtOpRu5m9Ne297zy1Wt/3vqv3+b738Cz+R4xAJ6bluenYhuc4i9N5XtOs4GPxFNur+E7hCRY0SvAWs2r4R2F0iKbUS9KHh4NsnViI43iHy+jBfg3gfAJvSB3OYS/mxl+CH8axRgt+Apdq+LvwDXsaIVmOH2nbahiHn1ihAfTjJtqwGx2xd+S9Lf5yrm4sw2O0JnBL7C15b41/qQZxBN01fGVGDmkCygzcq+Er9smahC24UzF0Zb+LtYPOXcHFeknKZA+kyC+yD8ReMCZp6096D6Zew8b0BH6fuZC9TPzmzNAbrMTIrNV4Hd+SfwWfivu4hldJ0aek6Ssm4WO6rB29eJTVE+0ravGhFsHOEPwt6o4QXc3wFe2agQOR/Dm4nb9oSUPMjBztq0awqYoWtVdI+vdBDdEX/ZpdYZ+XupQP2FiN5EEOlVosThp687Ulhb8qCr4uROuxtSLGLqxKBkp9hqDI+9Ea6wx+Z+9O8cfnOr6V+t3A9dgm5E4agiKG84exuiL95ea8kEusNMPE/GnprGc4WY2kHhTtepn0ls4qLb+oWcErURT5Cz4PHsQ/+nZWwSUOVrQAAAAASUVORK5CYII=",
     },
     {
+      id: 2,
       name: "Đơn hàng",
-      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAZ0lEQVR4nGNgQAA5BgYGYzKxHAMWMIuBgWEdlCYFr4PSWA0E2UYqMB4QA6uJ8Go1KQZqEBERGgPq5RFo4BIoBoGzOPCSAU+H1UjiVEmHGkgaKE6HGtQ2sJraXiYFGNPVQKoWsFSpAgBhXU8TZP3i0AAAAABJRU5ErkJggg==",
+      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgUlEQVR4nO2UQQqAIBBF3xXa2kbwgF4h6hS1ETqBO68XgYsorEYGWuQDEUacN/6F0KjEAyswK6w197swABYdbO73jcQDSSmuVIprJyi9JNQcToWJR03JchONmkRKaBIJLS4RP4vLAT3Q5d0JaiKJyZfNoaF5UXuURKWvPr7NtcGZDTlhQ6jNuo6FAAAAAElFTkSuQmCC",
     },
     {
+      id: 3,
       name: "Yêu cầu trả hàng",
-      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR4nNXUMQrCQBCF4e8K6XMLL5DOOoWHSGlnY5RcQrygBzCdgsrCVkKWrKwYH7xqhp8Zdufxz6qxmnCoZemAZ8IP9DnAER2qCXexZ7bCFE2i3sSeYsAw5bEk8IS2JHCLGzafAnc4v/mCO9aLABZf+euPUmH46cceZ5zeNQfYxwBIhcNeporG13L0Aj8EOmU9tB8HAAAAAElFTkSuQmCC",
+      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAACBElEQVR4nO3US4hPYRgG8N/MoEFNGvJXFoaNUCywRHYol5oFC8qlJCkUxq2UELmNS2HjGimixl0RQrkMaWo2srCQy8rGUvRNr5ymc+Z/TFnx1Ok753yX53svz8N//EYNmjHTX8JkPMAVfMNNjO3tYX0xGpPQgApO434QPMUFvI5/hzGo7OFjcAZv8R0/sAH78QkfcB7PsAVDsA5fY6ya57ToYdywA2sxIeZacRLPg3gPNuMlVmI+NlYj2RfPcRxA/27zv0iOxHgKe9Ev5ucVkdREbq/GxuWRljy0Yive4SjWYEFmvpAk4QmmRKHPRjqGF5DMiAYYlUOyGC1FJDsxK95booNqc9aNw6OoRUOGJBX+GO6gqYhkWtxyfUSSR5BN7yK0x6FteIG5qiAV7iPOoU45DMS26MbBJfd0RVOWIItUm/dl7aUuumMHNoUgq2FkaGQVDlZbnMJ9HNpYEl1yN1RehKYgGB/pTurvEcmHZkcL3wiiVOCLEV0eruMehsb3tYK278KwcNSEOaHituiwEbjdw76OiCSNn8NWCm37RGZjStvuzHx7zp5K6KU5hDwR9ehTRFIJQ0yYHobYmSnsrW63T1p6hV1xgalK4lLkvj4EtjDSdTlSmBT9Jpz3S4gveVejP0BjRHMIS7EsvpMZiu5ZjRXhXQP0ErXRYdvDv8roxL+BnxgabXXypBZNAAAAAElFTkSuQmCC",
     },
     {
+      id: 4,
       name: "Địa chỉ",
-      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAABGUlEQVR4nNXQzyqEYRQG8J9kIQtbygo7YWHFSpK1LP0ZUrOZHZsJN+AiZikLiY1QYzULa27ABagJzUaJ9NWZTONL32s3Tz11znnOed7zHnodCzjDUzCL5/9rto8vXGA3eIlP7KWaLcVgKUfbDm0xxfAWJx35cLCNU9ykGL5hNeJRvOIFI1FbizzJsP3dCXwEx6NWikcK4xrnHfkMpjvyTLsqbsdKHH42R5sKbVki7mLTbmS1eqpZe5N3lP2gHLVMK4R+7KCKORyihclgFh+EVo3e/r8Mj9CML9UwgAbug42o1aKnGTO5GMQzKl31MTziIeJOVGImm/2FjXhxqOh9oreJ9TxxK25UT2QLm3mGfbHlcSKzmWy2R/ANegNLcSOaMcIAAAAASUVORK5CYII=",
+      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABoklEQVR4nM3Vu2sVURDH8Y9RUTBRi2hjsPBRCLGw9vU32IiVCL7qCEFMoTbiXyCCqKUG0U5EI6iNhali7wPBFIkWouCjEGVkVtbN3U3uZgu/sJydM3Pnd86c2XP5j9iPScziB97jNvZ1kXwVruI1TmIEq3M8hTe4knGtCYEHGKzxx/zDFGpdolcNAgVDeIu9WjCZJSrYiil8yTHsgtO41UZkNmtf8BhnsQ7nUqi8gGiGvvmONSX7c6l0Q2kXrMW3NiLROTtK9lTuIIQmKjvZmR3YN9FVh2vO5FHlTI7gfhuROMw7S4y9V2mSJbMZnzC8SNxwxm3Skps4v0jMRVy3DHZhDutr/BvSH3HLInZzqcZ3GTd0wBZ8wLbK/PacD39fxMp+lZ7nWIEzeJLvBdHOY/n+rPK7yNOTAbzDaA/fSkzjaNrH8CLnq4xmnsi3gIOYadjlbszjQI57GmJfZtwCrmFcMxP4mddLE+OZ7x/iIvxYuXV7MYALdaUoMZL5yhesQ3mwXfI08/7lLo53LHIi8/4hvuavlRbs6on/mI0dL743vwFlJ2cTAiiC5gAAAABJRU5ErkJggg==",
     },
+
     {
+      id: 5,
       name: "Thoát",
-      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAjUlEQVR4nNXUMQrCQBCF4e8K6XMLL5DOOoWHSGlnY5RcQrygBzCdgsrCVkKWrKwYH7xqhp8Zdufxz6qxmnCoZemAZ8IP9DnAER2qCXexZ7bCFE2i3sSeYsAw5bEk8IS2JHCLGzafAnc4v/mCO9aLABZf+euPUmH46cceZ5zeNQfYxwBIhcNeporG13L0Aj8EOmU9tB8HAAAAAElFTkSuQmCC",
+      img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABQklEQVR4nOXVS0pcURDG8R/oQIlLyEQ7GwhOxAcoandEpxm4AHsk8YEgDkV0B5KZRHTiAhJnKroBcQfuwVac2HKgAk3TfW+8eiXgBzW4nLrnTz1OFR9N/fiGOjaxjCoG3uLyCo7QQLODPeAXvhQFbOARTzjDCqYxjEms4rIFtvBSwM/4+RojOb7jOEXtpREkwG98UoIqkaLrsgBJx1GDvBR10hy20SunTRtR5CLaiTSfZIFq4fSjIKQ3AJmgejjMZFw0he8ZtojbLNBWHH7tAvjc5UFmWfU9Iulpv6Aah+lll1aTftzhvCBk91+6SwzD5DhaADKPvTxA0lC8+Ju3GuPdtB7R/CkbtB+gFNFYju9EkSn8V2uRugS7iP0x27ZPrlr2SapJIQ3iMLqu2cHucRDT+9XqiyiWWnZ8+i5tHfyfegbdCmXLx2hOTwAAAABJRU5ErkJggg==",
     },
   ];
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  console.log(chooseTab, isHovered);
   const [selectedCategory, setSelectedCategory] = useState("Trang tài khoản");
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
   return (
-    <div className="w-full h-full bg-white flex relative pb-20">
+    <div className="w-full h-full bg-white flex relative  min-h-screen">
       <aside
         id="logo-sidebar"
         className="sticky   left-0  w-64 transition-transform -translate-x-full sm:translate-x-0 mt-10  "
@@ -52,30 +61,39 @@ const Information = () => {
         />
         <p className="text-sm font-thin ">
           Xin chào
-          <span className="font-bold text-[#FFBA00]"> userName</span>
+          <span className="font-bold text-gray-800"> userName</span>
         </p>
         <div className="h-full py-4 ">
           <div className="flex flex-col items-start justify-center  w-full ">
             {dataAside.map((item, index) => {
               return (
                 <div
-                  className="relative tracking-wider btn4 leading-none overflow-hidden mt-2 pb-2"
+                  className="relative tracking-wider btn4 leading-none overflow-hidden mt-2 pb-2 w-[85%] cursor-pointer mb-10 "
                   onClick={() => {
                     handleCategoryClick(item.name);
+                    setChooseTab(item.id);
                   }}
                   key={index}
                 >
                   <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  " />
-                  {/* <img src={item.img} />{" "} */}
-                  <span
-                    className={`font-normal ml-5 hover:text-[#FFBA00] my-2 ${
-                      selectedCategory === item.name
-                        ? "text-[#FFBA00]  "
-                        : "text-gray-900"
-                    }`}
+                  <div
+                    className=" block "
+                    onMouseEnter={() => setIsHovered(item.id)}
+                    onMouseLeave={() => setIsHovered(0)}
                   >
-                    {item.name}
-                  </span>
+                    <img src={item.img} />{" "}
+                    {chooseTab === index + 1 || isHovered === index + 1 ? (
+                      <span
+                        className={`font-normal ml-10 my-2 ${
+                          selectedCategory === item.name
+                            ? "text-[#FFBA00]  "
+                            : "text-gray-900"
+                        }`}
+                      >
+                        {item.name}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
               );
             })}

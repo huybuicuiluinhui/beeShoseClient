@@ -6,7 +6,6 @@ const path = {
   profile: "/profile",
   community: "/community",
   cart: "/cart",
-  // category: "/category",
   product: "/product",
   listProductsByBrand: "/:category",
   payment: "/payment",

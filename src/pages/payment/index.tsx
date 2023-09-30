@@ -1,70 +1,138 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Images from "../../static";
 import { Toast } from "flowbite-react";
 import SimpleToast from "../../components/Toast";
 import ShippingProcess from "../../components/shippingProcess";
 import path from "../../constants/path";
 import { useNavigate } from "react-router-dom";
+import * as request from "../../utils/http";
+import axios from "axios";
+interface Province {
+  ProvinceID: number;
+  ProvinceName: string;
+}
+
+interface District {
+  DistrictID: number;
+  DistrictName: string;
+}
+
+interface Ward {
+  WardCode: number;
+  WardName: string;
+}
 
 const PaymentPage = () => {
   const navigate = useNavigate();
   const [radioChoose, setRadioChoose] = React.useState<string>("option1");
   const [showToast, setShowToast] = React.useState<boolean>(false);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<number>();
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [selectedDistrict, setSelectedDistrict] = useState<number>();
+  const [wards, setWards] = useState<Ward[]>([]);
+  const [selectedWard, setSelectedWard] = useState<number>();
+
+  console.log(provinces);
+  const configApi = {
+    headers: {
+      Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
+      "Content-Type": "application/json",
+      ShopId: 124173,
+    },
+  };
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+        configApi
+      );
+      setProvinces(response.data.data);
+    } catch (error) {
+      console.error("Error fetching provinces:", error);
+    }
+  };
+
+  // Hàm lấy danh sách các quận huyện theo tỉnh
+  const fetchDistrictsByProvince = async (provinceId: number) => {
+    try {
+      const response = await axios.get(
+        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
+        configApi
+      );
+      setDistricts(response.data.data);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
+
+  // Hàm lấy danh sách các phường xã theo quận huyện
+  const fetchWardsByDistrict = async (districtId: number) => {
+    try {
+      const response = await axios.get(
+        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
+        configApi
+      );
+      setWards(response.data.data);
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+    }
+  };
+
+  // Sử dụng useEffect để gọi hàm lấy danh sách tỉnh khi component được mount
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
+
+  // Sử dụng useEffect để gọi hàm lấy danh sách quận huyện khi selectedProvince thay đổi
+  useEffect(() => {
+    if (selectedProvince) {
+      fetchDistrictsByProvince(selectedProvince);
+    }
+  }, [selectedProvince]);
+
+  // Sử dụng useEffect để gọi hàm lấy danh sách phường xã khi selectedDistrict thay đổi
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetchWardsByDistrict(selectedDistrict);
+    }
+  }, [selectedDistrict]);
+
   const handleChange = (event: any) => {
     setRadioChoose(event.target.value);
   };
-  // console.log("showToast", showToast);
 
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
       <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 shadow-md my-10">
-        <div className="px-4 pt-8">
-          <p className="text-xl font-medium text-red-500">Thông báo</p>
+        <div className="px-4 ">
+          <p className="text-xl font-medium text-gray-600">Thông báo</p>
           <p className="text-gray-400">
             Kiểm tra các mặt hàng của bạn. Và chọn một phương thức vận chuyển
             phù hợp.
           </p>
-          <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
-            <div className="flex flex-col rounded-lg bg-white sm:flex-row items-center">
+          <div className="mt-8 space-y-3 rounded-lg border bg-white  border-[#ffba00]">
+            <div className="flex px-6 py-2 border-b-[2px] border-dotted w-full border-[#ffba00]">
+              {/* product */}
               <img
-                className="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                src="https://images.unsplash.com/flagged/photo-1556637640-2c80d3201be8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+                className="h-auto w-[20%] object-contain"
+                src={Images.giay01}
               />
-              <div className="flex w-full flex-col px-4 py-4">
-                <span className="font-semibold text-[#FFBA00]   ">
-                  Nike Air Max Pro 8888 - Super Light
-                </span>
-                <div className="flex justify-between">
-                  <span className="float-right text-gray-400">Giày Nike</span>
-                  <span className="float-right text-gray-400">Size: 30.5</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-lg font-bold text-red-500">
-                    100.000.000đ
+              <div className="w-full">
+                <div className="flex flex-col justify-between ml-4 flex-grow w-full h-full">
+                  <span className="font-bold text-sm underline ">
+                    Giày adidas
                   </span>
-                  <span className="text-lg font-bold text-[#FFBA00]">SL:5</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col rounded-lg bg-white sm:flex-row items-center">
-              <img
-                className="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c25lYWtlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-              />
-              <div className="flex w-full flex-col px-4 py-4">
-                <span className="font-semibold text-[#FFBA00]">
-                  Nike Air Max Pro 8888 - Super Light
-                </span>
-                <div className="flex justify-between">
-                  <span className="float-right text-gray-400">Giày Nike</span>
-                  <span className="float-right text-gray-400">Size: 30.5</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-lg font-bold text-red-500">
-                    100.000.000đ
-                  </span>
-                  <span className="text-lg font-bold text-[#FFBA00]">SL:5</span>
+                  <span className="text-red-500 text-xs">Adidas</span>
+                  <div className="w-full flex">
+                    <span className=" w-[50%]  text-xs font-semibold ">
+                      Số lượng: 1
+                    </span>
+                    <span className="text-center  font-semibold text-sm w-[50%]">
+                      40.000.000đ
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -124,9 +192,7 @@ const PaymentPage = () => {
         </div>
         {/* Thanh toán */}
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-          <p className="text-xl font-medium  text-[#FFBA00]">
-            Chi tiết thanh toán
-          </p>
+          <p className="text-xl font-medium  ">Chi tiết thanh toán</p>
           <p className="text-gray-400">
             Hoàn thành đơn đặt hàng của bạn bằng cách cung cấp chi tiết thanh
             toán của bạn.
@@ -166,14 +232,19 @@ const PaymentPage = () => {
               <div className="relative z-0  w-[45%] ">
                 <div>
                   <select
+                    value={selectedProvince}
+                    onChange={(e: any) => setSelectedProvince(e.target.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
-                    <option selected>Choose a country</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
+                    {provinces.map((province) => (
+                      <option
+                        key={province.ProvinceID}
+                        value={province.ProvinceID}
+                      >
+                        {province.ProvinceName}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -187,14 +258,19 @@ const PaymentPage = () => {
               <div className="relative z-0  w-[45%] ">
                 <div>
                   <select
+                    value={selectedDistrict}
+                    onChange={(e: any) => setSelectedDistrict(e.target.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
-                    <option selected>Choose a country</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
+                    {districts.map((district) => (
+                      <option
+                        key={district.DistrictID}
+                        value={district.DistrictID.toString()}
+                      >
+                        {district.DistrictName}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -211,14 +287,20 @@ const PaymentPage = () => {
               <div className="relative z-0  w-[45%] ">
                 <div>
                   <select
+                    value={selectedWard}
+                    //  value={selectedDistrict}
+                    onChange={(e: any) => setSelectedWard(e.target.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
-                    <option selected>Choose a country</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option>
+                    {wards.map((ward) => (
+                      <option
+                        key={ward.WardCode}
+                        value={ward.WardCode.toString()}
+                      >
+                        {ward.WardName}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

@@ -1,12 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
-import {
-  Routes,
-  Route,
-  RouteObject,
-  NavLink,
-  useRoutes,
-} from "react-router-dom";
+import { RouteObject, useRoutes } from "react-router-dom";
 import HomePage from "./pages/home/index";
 import ProductPage from "./pages/product/index";
 import path from "./constants/path";
@@ -22,6 +16,7 @@ import DetailOrder from "./pages/information/detailOrder";
 import AddAddress from "./pages/information/addAddress";
 import ReturnProduct from "./pages/information/returnProduct";
 import DetailReturn from "./pages/information/returnProduct/detailReturn";
+import { ShoppingCartProvider } from "./context/shoppingCart.context";
 
 function App() {
   let routes: RouteObject[] = [
@@ -46,16 +41,17 @@ function App() {
     },
   ];
   let element = useRoutes(routes);
-
   return (
-    <div className="bg-white min-h-screen">
-      <div className="w-full max-w-7xl mx-auto px-4  ">
-        <Header />
-        <div className="w-full  flex flex-col flex-1 ">{element}</div>
-        <ScrollToTopButton />
-        <Footer />
+    <ShoppingCartProvider>
+      <div className="bg-white min-h-screen">
+        <div className="w-full max-w-7xl mx-auto  min-w-[6xl]">
+          <Header />
+          <div className="w-full  flex flex-col flex-1 ">{element}</div>
+          <ScrollToTopButton />
+          <Footer />
+        </div>
       </div>
-    </div>
+    </ShoppingCartProvider>
   );
 }
 

@@ -5,18 +5,18 @@ interface TypeProcess {
 const ShippingProcess = ({ type }: TypeProcess) => {
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center border-b border-[#FFBA00] bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
-        <p className="text-2xl font-bold text-[#FFBA00]">
+      <div className="flex flex-col items-center border-b border-[#FFBA00] bg-white py-2 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
+        <p className="text-lg font-semibold text-[#FFBA00]">
           Thông tin vận chuyển
         </p>
-        <div className="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base ">
+        <div className="mt-2 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base ">
           <div className="relative">
             <ul className="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
               {type === 1 ? (
                 <li className="flex items-center space-x-3 text-left sm:space-x-4">
                   <a
                     className="flex h-6 w-6 items-center justify-center rounded-full bg-[#FFBA00] text-xs font-semibold text-white ring ring-[#FFBA00] ring-offset-2"
-                    href="#"
+                    // href="#"
                   >
                     1
                   </a>
@@ -144,7 +144,7 @@ const ShippingProcess = ({ type }: TypeProcess) => {
                     3
                   </a>
                   <span className="font-semibold text-gray-500">
-                    Thành công
+                    Đặt hàng thành công
                   </span>
                 </li>
               ) : (
