@@ -4,9 +4,18 @@ import { Toast } from "flowbite-react";
 import SimpleToast from "../../components/Toast";
 import ShippingProcess from "../../components/shippingProcess";
 import path from "../../constants/path";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as request from "../../utils/http";
 import axios from "axios";
+import {
+  IIForDetailShoe,
+  IListDeatilShoe,
+  IVoucher,
+} from "../../types/product.type";
+import { convertToCurrencyString } from "../../utils/format";
+import { useShoppingCart } from "../../context/shoppingCart.context";
+import { formatCurrency } from "../../utils/formatCurrency";
+import API from "../../api";
 interface Province {
   ProvinceID: number;
   ProvinceName: string;
@@ -24,7 +33,10 @@ interface Ward {
 
 const PaymentPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cartItems } = useShoppingCart();
   const [radioChoose, setRadioChoose] = React.useState<string>("option1");
+  const [voucher, setVoucher] = useState<IVoucher[]>();
   const [showToast, setShowToast] = React.useState<boolean>(false);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
@@ -32,8 +44,29 @@ const PaymentPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<number>();
+  const [arrShoes, setArrShoes] = useState<any[]>(
+    location?.state?.infoShoeList
+  );
+  const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
+  const getDetailShoe = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getAllShoeDetail(),
+    });
+    if (res.status) {
+      setListDetailShoe(res?.data?.data);
+    }
+  };
+  const getVoucher = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getVoucher(),
+    });
+    if (res.status) {
+      setVoucher(res?.data.data);
+    }
+  };
 
-  console.log(provinces);
   const configApi = {
     headers: {
       Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
@@ -81,7 +114,9 @@ const PaymentPage = () => {
 
   // Sử dụng useEffect để gọi hàm lấy danh sách tỉnh khi component được mount
   useEffect(() => {
+    getDetailShoe();
     fetchProvinces();
+    getVoucher();
   }, []);
 
   // Sử dụng useEffect để gọi hàm lấy danh sách quận huyện khi selectedProvince thay đổi
@@ -112,35 +147,64 @@ const PaymentPage = () => {
             Kiểm tra các mặt hàng của bạn. Và chọn một phương thức vận chuyển
             phù hợp.
           </p>
-          <div className="mt-8 space-y-3 rounded-lg border bg-white  border-[#ffba00]">
-            <div className="flex px-6 py-2 border-b-[2px] border-dotted w-full border-[#ffba00]">
-              {/* product */}
-              <img
-                className="h-auto w-[20%] object-contain"
-                src={Images.giay01}
-              />
-              <div className="w-full">
-                <div className="flex flex-col justify-between ml-4 flex-grow w-full h-full">
-                  <span className="font-bold text-sm underline ">
-                    Giày adidas
-                  </span>
-                  <span className="text-red-500 text-xs">Adidas</span>
-                  <div className="w-full flex">
-                    <span className=" w-[50%]  text-xs font-semibold ">
-                      Số lượng: 1
-                    </span>
-                    <span className="text-center  font-semibold text-sm w-[50%]">
-                      40.000.000đ
-                    </span>
+          {!!arrShoes && !!arrShoes.length ? (
+            <div className="mt-8 space-y-3 rounded-lg border bg-white  border-[#ffba00]">
+              {arrShoes.map((item, index) => {
+                return (
+                  <div
+                    className={`flex px-6 py-2 w-full  ${
+                      index === arrShoes.length
+                    } ? "": "border-b-[2px] border-dotted  border-[#ffba00]`}
+                  >
+                    {/* product */}
+                    {
+                      <img
+                        className="h-auto w-[20%] object-cpnatin"
+                        src={item?.infoShoe?.images[0]?.name}
+                      />
+                    }
+                    <div className="w-full">
+                      <div
+                        className="flex flex-col justify-between ml-4 flex-grow w-full h-full cursor-pointer"
+                        onClick={() => {
+                          navigate(path.product, { state: item?.infoShoe?.id });
+                        }}
+                      >
+                        <span className="font-bold text-sm underline ">
+                          {item?.infoShoe?.shoe?.name}-
+                          {item?.infoShoe?.color?.name}-
+                          {item?.infoShoe?.size?.name}
+                        </span>
+                        <span className="text-red-500 text-xs">
+                          {item?.infoShoe?.shoe?.brand?.name}
+                        </span>
+                        <div className="w-full flex">
+                          <span className=" w-[50%]  text-xs font-semibold ">
+                            x{item?.quantity}
+                          </span>
+                          <span className="text-center  font-semibold text-sm w-[50%]">
+                            {convertToCurrencyString(
+                              item?.infoShoe?.price * item?.quantity
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex items-center justify-center w-56 h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+              <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+                loading...
               </div>
             </div>
-          </div>
+          )}
           <p className="mt-8 text-lg font-medium text-[#FFBA00]">
             Phương thức giao hàng
           </p>
-          <form className="mt-5 grid gap-6">
+          <form className="mt-5 grid gap-6 mb-10">
             <div className="relative">
               <input
                 className="peer hidden"
@@ -356,7 +420,7 @@ const PaymentPage = () => {
                   id="helper-radio-text"
                   className="text-xs font-normal text-gray-500 dark:text-gray-300"
                 >
-                  Được miễn phí vận chuyển với các đơn hàng trên 1 tỷ
+                  Miễn phí cho đơn hàng trên 1tr đồng
                 </p>
               </div>
             </div>
@@ -465,28 +529,60 @@ const PaymentPage = () => {
                 <p className="text-sm font-medium text-gray-900">
                   Tổng tiền hàng
                 </p>
-                <p className="font-semibold text-gray-900">100.000.000đ</p>
+                {!!listDetailShoe && (
+                  <p className="font-normal text-gray-900">
+                    {formatCurrency(
+                      cartItems.reduce((total, cartItem) => {
+                        const item = listDetailShoe.find(
+                          (i) => i.id === cartItem.id
+                        );
+                        return total + (item?.price || 0) * cartItem.quantity;
+                      }, 0)
+                    )}
+                  </p>
+                )}
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">
                   Tổng phí vận chuyển
                 </p>
-                <p className="font-semibold text-gray-900">8.000đ</p>
+                <p className="font-normal text-gray-900">8.000đ</p>
               </div>
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">
-                  Giảm giá phí vận chuyển
-                </p>
-                <p className="font-semibold text-gray-900">8.000đ</p>
-              </div>
+              {!!listDetailShoe && !!location?.state?.totalPercent ? (
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">
+                    Giảm giá voucher
+                  </p>
+                  <p className="font-normal text-gray-900">
+                    - {formatCurrency(location?.state?.totalPercent)}
+                  </p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-900">
+                    Giảm giá voucher
+                  </p>
+                  <p className="font-normal text-gray-900">
+                    - {formatCurrency(0)}
+                  </p>
+                </div>
+              )}
             </div>
             <div className="mt-6 flex items-center justify-between">
               <p className="text-sm font-medium text-gray-900">
                 Tổng thanh toán
               </p>
-              <p className="text-2xl font-semibold text-red-500">
-                100.000.000đ
-              </p>
+              {!!listDetailShoe && !!location?.state?.totalPercent ? (
+                <p className="text-2xl font-semibold text-red-500">
+                  {formatCurrency(
+                    location?.state?.total - location?.state?.totalPercent
+                  )}
+                </p>
+              ) : (
+                <p className="text-2xl font-semibold text-red-500">
+                  {formatCurrency(location?.state?.total)}
+                </p>
+              )}
             </div>
           </div>
           <button

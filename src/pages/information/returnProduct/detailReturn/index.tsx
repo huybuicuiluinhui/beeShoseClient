@@ -163,7 +163,6 @@ const DetailReturn = () => {
           className=" bg-[#FFBA00] px-28 py-4 rounded text-base font-semibold "
           onClick={() => {
             toast.success("Gửi yêu  cầu thành công");
-            console.log("ahihihih");
           }}
         >
           Gửi yêu cầu

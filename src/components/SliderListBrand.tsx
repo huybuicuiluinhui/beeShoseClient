@@ -26,7 +26,7 @@ const SliderListBrand = () => {
   const getDataBrand = async () => {
     const res = await axios({
       method: "get",
-      url: API.getBrand(),
+      url: API.getBrandAllPage(1, 1000000),
     });
     if (res.status) {
       setListBrandHeader(res.data?.data);

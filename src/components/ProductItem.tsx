@@ -12,6 +12,8 @@ import {
 } from "../utils/format";
 import SimpleToast from "./Toast";
 import { useShoppingCart } from "../context/shoppingCart.context";
+import ModalComponent from "./Modal";
+import Images from "../static";
 const ProductItem = ({
   product,
   shoeId,
@@ -23,9 +25,24 @@ const ProductItem = ({
 }) => {
   const navigate = useNavigate();
   const imgArr = [];
+  const uniqueColors: any[] = [];
+  const uniqueSizes: any[] = [];
   for (let i = 0; i < product.length; i++) {
     imgArr.push(product[i].images ? product[i].images.split(",") : []);
   }
+  for (let i = 0; i < product.length; i++) {
+    const color = product[i].color;
+    if (!uniqueColors.includes(color)) {
+      uniqueColors.push(color);
+    }
+  }
+  for (let i = 0; i < product.length; i++) {
+    const size = product[i].size;
+    if (!uniqueSizes.includes(size)) {
+      uniqueSizes.push(size);
+    }
+  }
+
   const [activeImg, setActiveImage] = useState<string>(imgArr[0][0]);
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
@@ -38,7 +55,9 @@ const ProductItem = ({
   const [amountShoe, setAmountShoe] = useState<number>();
   const [showToast, setShowToast] = React.useState<boolean>(false);
   const [idAddToCart, setIdAddToCart] = useState<number>();
-  const { getItemQuantity, openCart, addMultipleToCart } = useShoppingCart();
+  const [code, setCode] = useState<string>();
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const { openCart, addMultipleToCart } = useShoppingCart();
   const getDataSize = async () => {
     let combinedData: Product[] = [];
     let currentPage = 1;
@@ -108,6 +127,7 @@ const ProductItem = ({
         setPrice(res?.data?.data[0].price);
         setAmountShoe(res?.data?.data[0].quantity);
         setIdAddToCart(res?.data?.data[0].id);
+        setCode(res?.data.data[0].code);
       }
     }
   };
@@ -129,9 +149,9 @@ const ProductItem = ({
   }, [inforShoe.name, chooseSize, chooseColor]);
   return (
     <div className="max-w-7xl mx-auto p-8">
-      <div className="flex flex-col justify-between lg:flex-row gap-16 lg:items-center">
+      <div className="flex flex-col  justify-between lg:flex-row gap-16 lg:items-center ">
         <div className="flex flex-row gap-3 lg:w-3/4">
-          <div className="flex flex-col  h-auto  justify-between mr-5 ">
+          <div className="flex flex-col     mr-5 ">
             {!!imgArr &&
               !!imgArr.length &&
               imgArr.map((item, index) => {
@@ -167,6 +187,9 @@ const ProductItem = ({
                     src: activeImg,
                     width: 140,
                     height: 162,
+                    style: {
+                      objectFit: "contain", // Đặt thuộc tính object-fit ở đây
+                    },
                   },
                   largeImage: {
                     src: activeImg,
@@ -180,11 +203,11 @@ const ProductItem = ({
           <img
             src={activeImg}
             alt=""
-            className="w-[80%] h-auto aspect-square object-contain rounded-xl"
+            className="w-[65%] h-auto aspect-square object-contain rounded-xl"
           />
         </div>
         {/* Thong tin */}
-        <div className="flex flex-col gap-2 lg:w-2/4">
+        <div className="flex flex-col gap-2 lg:w-2/4 ">
           <div>
             <span
               className="cursor-pointer hover:text-[#FFBA00] text-xs font-thin"
@@ -194,9 +217,12 @@ const ProductItem = ({
             >
               Trang chủ
             </span>{" "}
-            /{" "}
-            <span className="text-xs font-thin">
-              Danh mục: {inforShoe?.brand.name}
+            /
+            <span
+              className="text-xs font-thin"
+              onClick={() => navigate(path.listProductsByBrand)}
+            >
+              {inforShoe?.brand.name}
             </span>
             /{" "}
             <span className="text-[#FFBA00] text-xs font-thin">
@@ -211,24 +237,35 @@ const ProductItem = ({
               ? `${convertToCurrencyString(price)}`
               : "Sản phẩm hiện hết hàng"}
           </h6>
-          <span className="text-sm font-semibold ">Chọn kích thước</span>
+          <div className="w-full flex justify-between items-center">
+            <span className="text-sm font-semibold ">Chọn kích thước</span>
+            <div
+              className="flex cursor-pointer"
+              onClick={() => {
+                setShowModal(!showModal);
+              }}
+            >
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABVklEQVR4nO2Uy0rDUBCGTxfudCcFBcUZQUFw5QuIC8G9guuCM6EvYEEUQUF3PoRvIF7eQRdeXqLYzARb3Gpk0qSm2JpEGgRx4CyS+fm/MxeOc38y0GtWkfQYWe6R5bz3nzW0k/d7YADpFrB2EjGy3o4MACybSPLWFcrFPPurKxSO5TX4Nh+1heUlElHQKGzgMvLAepTcPK8BFmkRkjxY0tpSDoD11ZJL9edxV0ZAvDmLNX+iFACSPBpgjmQ9WxssA0sLOKjnB7CcxEO+zNICyVWsPcgNmKn500Da7q6p7DsXVr6qwkrqIrpAncncgKgKT7eR5d0MgOUGd3TDhm4HPX8NWK6TTQGWvULmaUivEh50RK3CT5AeFobMUmsqfuyekCSwFQbWu8jYa1aji6SgP4JkVkq62w+R03/I0LAZ9C3CkNd4ZBAgbbsyAilomDmwnpUC+JX4AHXtSTRt48bdAAAAAElFTkSuQmCC" />
+              <span className="underline text-[#2267ed] text-sm font-semibold">
+                Hướng dẫn chọn size
+              </span>
+            </div>
+          </div>
           <div className="flex items-center w-full flex-wrap ">
-            {!!product &&
-              product.map((e, i) => {
+            {!!uniqueSizes &&
+              uniqueSizes.map((e, i) => {
                 return (
                   <div
                     key={i}
                     onClick={() => {
-                      setChooseSize(findProductIdByName(e.size, allSizeData));
-                      setChooseSizeName(e.size);
+                      setChooseSize(findProductIdByName(e, allSizeData));
+                      setChooseSizeName(e);
                     }}
-                    className={`cursor-pointer px-1 py-[2px] mx-2 border-solid border-[1px] border-[#dcdcdc] rounded mb-1 ${
-                      chooseSizeName === e.size
-                        ? "border-[#ffba00] border-2 text-[#212529]"
-                        : ""
+                    className={`min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-[#ffba00] rounded mb-1 ${
+                      chooseSizeName === e ? "bg-[#ffba00]  text-[#212529]" : ""
                     }`}
                   >
-                    {e.size}
+                    {e}
                   </div>
                 );
               })}
@@ -236,26 +273,20 @@ const ProductItem = ({
           <span className="text-sm font-semibold ">Chọn màu sắc :</span>
           <div className="flex w-full items-center">
             <div className="flex items-center  flex-wrap">
-              {!!product &&
-                product.map((e, i) => {
+              {!!uniqueColors &&
+                uniqueColors.map((e, i) => {
                   return (
                     <div
                       key={i}
                       onClick={() => {
-                        setChooseColor(
-                          findProductIdByName(e.color, allColorData)
-                        );
-                        setChooseColorName(e.color);
+                        setChooseColor(findProductIdByName(e, allColorData));
+                        setChooseColorName(e);
                       }}
-                      className={` cursor-pointer px-1 py-[2px] mx-2 border-solid border-[1px] border-[#dcdcdc] mb-1  rounded
-                      
-                      ${
-                        chooseColorName === e.color
-                          ? "border-[#ffba00] border-2 text-[#212529]"
-                          : ""
-                      }`}
+                      className={` min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-[#ffba00] mb-1 rounded
+            
+            ${chooseColorName === e ? "bg-[#ffba00]  text-[#212529]" : ""}`}
                     >
-                      {e.color}
+                      {e}
                     </div>
                   );
                 })}
@@ -294,17 +325,19 @@ const ProductItem = ({
             </div>
             <div className="flex justify-between w-full ">
               <div
-                className=" cursor-pointer bg-[#0161e7] text-white font-semibold  flex  items-center justify-center  w-[49%]"
+                className={`cursor-pointer  text-white font-semibold  flex  items-center justify-center  w-[49%] 
+                ${!!price ? "bg-[#0161e7]" : "bg-[#0161e7af]"}
+                `}
                 onClick={
                   // () =>
 
                   () => {
-                    if (!!idAddToCart) {
-                      console.log("first", getItemQuantity(idAddToCart));
+                    if (!!idAddToCart && !!price) {
                       addMultipleToCart(idAddToCart, amount);
-                      setShowToast(true);
-                      // navigate(path.cart)
+                      // setShowToast(true);
                       openCart();
+                    } else {
+                      alert("Bạn cần chọn sản phẩm khác");
                     }
                   }
                 }
@@ -314,7 +347,15 @@ const ProductItem = ({
 
               <button
                 className="bg-[#fe662b] text-white font-semibold  w-[49%]  "
-                onClick={() => navigate(path.cart)}
+                onClick={() => {
+                  if (!!idAddToCart && !!price) {
+                    addMultipleToCart(idAddToCart, amount);
+                    setShowToast(true);
+                    navigate(path.payment);
+                  } else {
+                    alert("Bạn cần chọn sản phẩm khác");
+                  }
+                }}
               >
                 Mua ngay
               </button>
@@ -324,22 +365,27 @@ const ProductItem = ({
           <div className="w-full h-[1px] bg-gray-300" />
           <div className="flex justify-between">
             <span className="font-semibold text-sm">
-              Mã : <span className="font-normal">{inforShoe?.id}</span>{" "}
+              Mã <br />
+              <span className="font-normal text-[11px]">{code}</span>
             </span>
             <span className="font-semibold text-sm">
-              Danh mục :{" "}
-              <span className="font-normal">{inforShoe?.category?.name}</span>{" "}
+              Danh mục <br />
+              <span className="font-normal text-[11px]">
+                {inforShoe?.category?.name}
+              </span>{" "}
             </span>
             <span className="font-semibold text-sm">
-              Thương hiệu :{" "}
-              <span className="font-normal">{inforShoe?.brand?.name}</span>{" "}
+              Thương hiệu <br />
+              <span className="font-normal text-[11px]">
+                {inforShoe?.brand?.name}
+              </span>{" "}
             </span>
           </div>
           <div className="h-8">
             {!!amountShoe && (
               <span className="font-semibold text-sm">
                 Số lượng hàng có sẵn :{" "}
-                <span className="font-normal">{amountShoe}</span>{" "}
+                <span className="font-normal text-[11px]">{amountShoe}</span>{" "}
               </span>
             )}
           </div>
@@ -350,6 +396,22 @@ const ProductItem = ({
           typeToast="success"
           message="Thêm vào giỏ hàng thành công"
         />
+      )}
+      {showModal && (
+        <ModalComponent
+          isVisible={showModal}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        >
+          <section className="bg-gray-50 ">
+            <img
+              src={Images.tableSize}
+              alt=""
+              className="w-full h-auto object-contain"
+            />
+          </section>
+        </ModalComponent>
       )}
     </div>
   );

@@ -13,6 +13,7 @@ import { IProduct } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
 import { convertToCurrencyString, toSlug } from "../../utils/format";
 import NavPage from "../../components/NavPage";
+import SekeletonItemShoe from "../../components/SekeletonItemShoe";
 const Line = () => {
   return (
     <span className="border-b-2 border-[#f1f1f1] border-solid w-full h-[1px] my-3 " />
@@ -46,6 +47,7 @@ const HomePage = () => {
   const [productsAdidas, setProductsAdidas] = useState<IProduct[]>();
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalPagesAdidas, setTotalPagesAdidas] = useState<number>(1);
+  const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
   const today = new Date();
   const dayIndex = today.getDay(); // Lấy chỉ số ngày trong tuần (0 - Chủ Nhật, 1 - Thứ Hai, ...)
   let promotionType = "";
@@ -62,9 +64,11 @@ const HomePage = () => {
       method: "get",
       url: API.getShoe(page, 10),
     });
+    setSekeletonItemShoe(true);
     if (res.status) {
       setProducts(res?.data?.data);
       setTotalPages(res?.data?.totalPages);
+      setSekeletonItemShoe(false);
     }
   };
   const getDataShoesAdidas = async () => {
@@ -137,29 +141,52 @@ const HomePage = () => {
       </p>
       <SliderListBrand />
       <Line />
-      <p className=" text-2xl font-mono text-center uppercase  text-[#FFBA00] ">
-        SẢN PHẨM NỔI BẬT
-      </p>
+      {!!products && !!products.length && (
+        <div className="flex flex-col items-center">
+          <p className=" text-2xl font-mono text-center uppercase  text-[#FFBA00] ">
+            SẢN PHẨM NỔI BẬT
+          </p>
+          <span className="text-[#999] italic  text-sm font-semibold  uppercase mb-5 ">
+            {promotionType}
+          </span>
+          <img
+            src={Images.bannerHotDeal}
+            className="w-full h-auto object-contain"
+          />
+        </div>
+      )}
 
-      <span className="text-[#999] italic  text-sm font-semibold text-center uppercase mb-5">
-        {promotionType}
-      </span>
       <div className="w-full p-4 ">
         <div className="grid grid-cols-5 gap-0 ">
-          {!!products &&
-            !!products.length &&
-            products.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    navigate(path.product, { state: item.id });
-                  }}
-                >
-                  <ProductStanding product={item} key={index} />
-                </div>
-              );
-            })}
+          {!!products && !!products.length && sekeletonItemShoe === false
+            ? products.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      navigate(path.product, { state: item.id });
+                    }}
+                  >
+                    <ProductStanding product={item} key={index} />
+                  </div>
+                );
+              })
+            : !!sekeletonItemShoe &&
+              sekeletonItemShoe === true &&
+              Array(10)
+                .fill({})
+                .map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        navigate(path.product, { state: item.id });
+                      }}
+                    >
+                      <SekeletonItemShoe />
+                    </div>
+                  );
+                })}
         </div>
         {totalPages === 1 ? (
           ""

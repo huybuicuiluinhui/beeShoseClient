@@ -7,7 +7,7 @@ const ShippingProcess = ({ type }: TypeProcess) => {
     <div className="w-full">
       <div className="flex flex-col items-center border-b border-[#FFBA00] bg-white py-2 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
         <p className="text-lg font-semibold text-[#FFBA00]">
-          Thông tin vận chuyển
+          Trạng thái đơn hàng
         </p>
         <div className="mt-2 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base ">
           <div className="relative">

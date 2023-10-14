@@ -30,7 +30,10 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
       sliderRef.current.slickNext();
     }
   };
-
+  const imgArr = [];
+  for (let i = 0; i < products.length; i++) {
+    imgArr.push(products[i].images ? products[i].images.split(",") : []);
+  }
   const prev = () => {
     if (sliderRef.current) {
       sliderRef.current.slickPrev();
@@ -46,42 +49,46 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
       <div className="w-[95%] mx-auto ">
         <Slider {...settings} ref={sliderRef}>
           {products.map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="group relative px-5  "
-                onClick={() => {
-                  navigate(path.product, { state: item.id });
-                }}
-              >
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
-                  <div className="relative h-full w-full">
-                    <span className="text-black text-sm bg-[#fbda00] rounded-md  absolute top-[2%] left-[2%] font-medium px-1">
-                      {/* Trả góp 0% */}
-                    </span>
-                    <img
-                      src={item.images.split(",")[0]}
-                      className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
-                    />
+            if (!!item.images) {
+              return (
+                <div
+                  key={index}
+                  className="group relative px-5  "
+                  onClick={() => {
+                    navigate(path.product, { state: item.id });
+                  }}
+                >
+                  <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
+                    <div className="relative h-full w-full">
+                      <span className="text-black text-sm bg-[#fbda00] rounded-md  absolute top-[2%] left-[2%] font-medium px-1">
+                        {/* Trả góp 0% */}
+                      </span>
+                      <img
+                        src={item.images.split(",")[0]}
+                        className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="mt-4 ">
-                  <h3 className="text-sm text-gray-700 group-hover:font-semibold min-h-[40px]  line-clamp-2 ">
-                    <span aria-hidden="true" className="absolute inset-0  " />
-                    {item.name}
-                  </h3>
-
-                  <div className="flex justify-between items-center">
+                  <div className="mt-4  ">
+                    <h3 className="text-sm text-gray-700 group-hover:font-semibold   line-clamp-1 ">
+                      <span aria-hidden="true" className="absolute inset-0  " />
+                      {item.name}
+                    </h3>
                     <span className=" text-sm text-gray-500">
                       {renderColor(item)}
                     </span>
-                    <p className="text-sm font-medium text-red-500  ">
-                      {convertToCurrencyString(item.maxPrice)}
-                    </p>
+                    <div className="">
+                      <p className="text-sm font-medium text-red-500  ">
+                        {convertToCurrencyString(item.minPrice)}-
+                        {convertToCurrencyString(item.maxPrice)}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
+              );
+            } else {
+              return null;
+            }
           })}
         </Slider>
       </div>

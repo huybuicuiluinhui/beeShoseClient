@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductItem from "../../components/ProductItem";
 import Rate from "../../components/Rate";
 import SliderListProduct from "../../components/SliderListProduct";
 import axios from "axios";
 import API from "../../api";
 import { IDetailProduct, IInforShoe, IProduct } from "../../types/product.type";
+import path from "../../constants/path";
 const ProductPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
   const [inforShoe, setInforShoe] = useState<IInforShoe>();
   const [dataDetailProduct, setDataDetailProduct] =
@@ -51,11 +53,15 @@ const ProductPage = () => {
     getInfoDetailProduct();
     getShoeSole();
   }, [location.state]);
-  console.log("ahihih", inforShoe);
   const Tab01 = () => {
-    return (
+    return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">
-        <p className="font-semibold my-4">
+        <p
+          className="font-semibold my-4 cursor-pointer"
+          onClick={() => {
+            navigate(path.product, { state: inforShoe.id });
+          }}
+        >
           Mô tả sản phẩm:{" "}
           <span className="underline font-normal ">{inforShoe?.name}</span>{" "}
         </p>
@@ -70,6 +76,8 @@ const ProductPage = () => {
           <span className="font-thin ">{inforShoe?.category.name}</span>
         </p>
       </div>
+    ) : (
+      <div> </div>
     );
   };
   const Tab02 = () => {
@@ -93,7 +101,7 @@ const ProductPage = () => {
         <span className="font-semibold"> Sản phẩm không áp dụng: </span>
         <p className="font-normal">Các sản phẩm tại cửa hàng BeeShoe,...</p>
         <p className="font-normal">
-          Không áp dụng cho sản phẩm mua trực tiếp tại Supersports.
+          Không áp dụng cho sản phẩm mua trực tiếp tại BeeShoe.
         </p>
         <p className="font-semibold">
           {" "}
@@ -101,8 +109,8 @@ const ProductPage = () => {
           <span className="font-normal">
             Trong vòng 30 ngày (với sản phẩm nguyên giá) và 10 ngày (với sản
             phẩm giao ngay) kể từ ngày khách hàng nhận sản phẩm cho đến khi
-            Supersports nhận lại sản phẩm (tính theo Postmark). Xem thêm thông
-            tin tại CHÍNH SÁCH HOÀN TRẢ SẢN PHẨM
+            BeeShoe nhận lại sản phẩm (tính theo Postmark). Xem thêm thông tin
+            tại CHÍNH SÁCH HOÀN TRẢ SẢN PHẨM
           </span>
         </p>
         {/* <div className="grid grid-cols-3  ">

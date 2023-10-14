@@ -42,10 +42,10 @@ export function findProductIdByName(
   productList: Product[]
 ): number | null {
   const product = productList.find((item) => item.name === nameToCheck);
-  console.log("product", product);
   if (product) {
     return product.id;
   } else {
     return null;
   }
 }
+export function filterColor(color: string) {}

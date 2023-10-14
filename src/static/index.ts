@@ -41,6 +41,10 @@ import iconShoppingSuccess from "./icons/iconShoppingSuccess.png";
 import iconAvatar from "./icons/iconAvatar.png";
 import iconAdidas from "./icons/iconAdidas.png";
 import iconJordan from "./icons/iconJordan.png";
+import bannerHotDeal from "./bannerHotDeal.jpg";
+import BeeShoes from "./icons/BeeShoes.png";
+import tableSize from "./tableSize.png";
+import iconBox from "./icons/iconBox.gif";
 const Images = {
   banner01,
   banner02,
@@ -85,5 +89,9 @@ const Images = {
   iconDeliveryFash,
   iconShoppingSuccess,
   iconAvatar,
+  bannerHotDeal,
+  BeeShoes,
+  iconBox,
+  tableSize,
 };
 export default Images;

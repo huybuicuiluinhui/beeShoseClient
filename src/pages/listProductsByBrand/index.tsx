@@ -7,6 +7,7 @@ import API from "../../api";
 import { IProduct, Product } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
 import NavPage from "../../components/NavPage";
+import SekeletonItemShoe from "../../components/SekeletonItemShoe";
 interface ShoeSize {
   size: number;
   selected: boolean;
@@ -19,14 +20,13 @@ interface ShoseBrand {
   brand: string;
   selected: boolean;
 }
-
 const ListProductsByBrand = () => {
   const location = useLocation();
-  const param: Product = location.state;
+  const param = location.state;
+
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
@@ -67,11 +67,18 @@ const ListProductsByBrand = () => {
   const [materials, setMaterials] = useState<Product[]>();
   const [brands, setBrands] = useState<Product[]>();
   const [listShoes, setListShoes] = useState<IProduct[]>();
+  const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
+
   const [isCheckedSize, setIsCheckedSize] = useState<boolean>(false);
   const [isCheckedBrand, setIsCheckedBrand] = useState<boolean>(false);
   const [isCheckedSole, setIsCheckedSole] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
+
   // ----------------------------------------------------------------
 
+  const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
+  };
   const handleChangeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsCheckedSize(event.target.checked);
   };
@@ -135,13 +142,13 @@ const ListProductsByBrand = () => {
   const getDataSize = async () => {
     const res = await axios({
       method: "get",
-      url: API.getSize(),
+      url: API.getSizeAll(),
     });
     if (res.status) {
       setShoesSize(res?.data?.data);
     }
   };
-
+  console.log("listShoes", listShoes);
   // call dữ liệu
   //  theo chất liệu
   const getDataSole = async () => {
@@ -157,7 +164,7 @@ const ListProductsByBrand = () => {
   const getBrand = async () => {
     const res = await axios({
       method: "get",
-      url: API.getBrand(),
+      url: API.getBrandAllPage(1, 1000000),
     });
     if (res.status) {
       setBrands(res?.data?.data);
@@ -165,18 +172,44 @@ const ListProductsByBrand = () => {
   };
   // lấy thương hiệu chọn
   const getDataBrandChoose = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getBrandChoose(param?.id, page, 10),
-    });
-    if (res.status) {
-      setListShoes(res?.data?.data);
-      setTotalPage(res.data?.totalPages);
+    if (param?.status == true) {
+      const res = await axios({
+        method: "get",
+        url: API.getShoeWithCategory(param?.item?.id, page, 12),
+      });
+      if (res.status) {
+        setSekeletonItemShoe(true);
+        setListShoes(res?.data?.data);
+        setTotalPage(res.data?.totalPages);
+      }
+    } else {
+      if (!!param?.id) {
+        const res = await axios({
+          method: "get",
+          url: API.getBrandChoose(param?.id, page, 12),
+        });
+        if (res.status) {
+          setSekeletonItemShoe(true);
+          setListShoes(res?.data?.data);
+          setTotalPage(res.data?.totalPages);
+        }
+      } else {
+        const res = await axios({
+          method: "get",
+          url: API.getAllShoe(page, 12),
+        });
+        if (res.status) {
+          setSekeletonItemShoe(true);
+          setListShoes(res?.data?.data);
+          setTotalPage(res.data?.totalPages);
+        }
+      }
     }
   };
+  console.log("listShoes", listShoes);
   useEffect(() => {
     getDataBrandChoose();
-  }, [param?.id, page]);
+  }, [param, page]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -190,23 +223,19 @@ const ListProductsByBrand = () => {
         {/* Lọc */}
         <aside
           id="logo-sidebar"
-          className="sticky  left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-32 "
+          className="sticky  left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
           aria-label="Sidebar"
         >
-          <span className="text-xl font-semibold text-gray-700">
-            Lọc sản phẩm
-          </span>
-          <div className="h-full px-2 py-4 overflow-y-scroll     ">
+          <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
+          <div className=" mx-2 my-5 h-fit border-[1px] border-solid border-[#EDEDED]  ">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
                 onClick={handleDropdownToggle}
-                className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden"
+                className="flex relative btn4 self-start bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center justify-between items-center border border-white  uppercase  tracking-wider  overflow-hidden w-full"
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400 text-xs ">
-                  kích thước size
-                </p>
+                <p className="font-medium text-xs">kích thước size</p>
                 <svg
                   className="w-4 h-4 ml-2"
                   aria-hidden="true"
@@ -225,9 +254,9 @@ const ListProductsByBrand = () => {
               </button>
               {/* Dropdown menu */}
               {isDropdownOpen && (
-                <div className="  w-full  rounded-lg mt-1 ">
-                  <ul
-                    className="space-y-2 text-sm"
+                <div className="  w-full  rounded-lg mt-1  px-2">
+                  <div
+                    className="grid grid-cols-2 gap-2 "
                     aria-labelledby="dropdownDefault"
                   >
                     {!!shoeSizes?.length &&
@@ -236,28 +265,22 @@ const ListProductsByBrand = () => {
                           (s) => s.size === Number(size.name) && s.selected
                         );
                         return (
-                          <li
+                          <div
                             key={size.id}
-                            className="flex items-center  "
+                            className={`flex items-center justify-center rounded py-1 w-full hover:bg-[#ffba00] ${
+                              isSelected ? "bg-[#ffba00]" : "bg-[#EDEDED] "
+                            }   `}
                             onClick={() => handleSizeSelect(Number(size.name))}
                           >
-                            <input
-                              onChange={handleChangeSize}
-                              id={`apple + ${size.id}`}
-                              type="checkbox"
-                              checked={isSelected}
-                              className="w-4 h-4 bg-white border-gray-300 rounded text-gray-600 checked:bg-[#FFBA00]  focus:ring-0"
-                            />
-                            <label
-                              htmlFor={`apple + ${size.id}`}
-                              className="ml-2 text-sm font-medium text-gray-900 "
+                            <span
+                              className={` text-sm font-medium text-gray-900 `}
                             >
                               {size.name}
-                            </label>
-                          </li>
+                            </span>
+                          </div>
                         );
                       })}
-                  </ul>
+                  </div>
                 </div>
               )}
               {/* Theo thương hiệu */}
@@ -265,11 +288,11 @@ const ListProductsByBrand = () => {
                 onClick={handleDropdownToggleBrand}
                 id="dropdownDefault"
                 data-dropdown-toggle="dropdown"
-                className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden  "
+                className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full mt-2 "
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400 text-xs">Thương hiệu</p>
+                <p className="font-medium text-xs">Thương hiệu</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -303,7 +326,7 @@ const ListProductsByBrand = () => {
                         return (
                           <li
                             key={brand.id}
-                            className="flex items-center"
+                            className="flex items-center cursor-pointer"
                             onClick={() => handleBrandsSelect(brand.name)}
                           >
                             <input
@@ -313,12 +336,12 @@ const ListProductsByBrand = () => {
                               checked={isSelected}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-[#FFBA00]  focus:ring-0 "
                             />
-                            <label
-                              htmlFor={`brand-${brand.id}`}
+                            <span
+                              // htmlFor={`brand-${brand.id}`}
                               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                             >
                               {brand.name}
-                            </label>
+                            </span>
                           </li>
                         );
                       })}
@@ -330,11 +353,11 @@ const ListProductsByBrand = () => {
                 onClick={handleDropdownToggleMaterial}
                 id="dropdownDefault"
                 data-dropdown-toggle="dropdown"
-                className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden  "
+                className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full  mt-2"
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-thin text-gray-400 text-xs">Chất liệu</p>
+                <p className="font-medium text-xs">Chất liệu</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -368,7 +391,7 @@ const ListProductsByBrand = () => {
                         return (
                           <li
                             key={index}
-                            className="flex items-center"
+                            className="flex items-center cursor-pointer"
                             onClick={() => handleMaterialsSelect(material.name)}
                           >
                             <input
@@ -378,12 +401,12 @@ const ListProductsByBrand = () => {
                               checked={isSelected}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-[#FFBA00]  focus:ring-0"
                             />
-                            <label
-                              htmlFor={`material-${material.id}`}
+                            <span
+                              // htmlFor={`material-${material.id}`}
                               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                             >
                               {material.name}
-                            </label>
+                            </span>
                           </li>
                         );
                       })}
@@ -391,16 +414,16 @@ const ListProductsByBrand = () => {
                 </div>
               )}
 
-              <div className="mt-2 w-full">
+              <div className=" w-full">
                 <button
                   onClick={handleDropdownTogglePrice}
                   id="dropdownDefault"
                   data-dropdown-toggle="dropdown"
-                  className="relative btn4 self-start  text-black font-medium  text-sm  py-2.5 text-center inline-flex items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden  "
+                  className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full  mt-2"
                   type="button"
                 >
                   <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                  <p className="font-thin text-gray-400 text-xs">khoảng giá</p>
+                  <p className="font-medium text-xs">khoảng giá</p>
                   <svg
                     className="w-4 h-4 ml-2"
                     aria-hidden="true"
@@ -423,7 +446,10 @@ const ListProductsByBrand = () => {
                     <div>
                       {priceRange2.map((item, index) => {
                         return (
-                          <div className="flex items-center mb-4" key={item.id}>
+                          <div
+                            className="flex items-center mb-4 cursor-pointer"
+                            key={item.id}
+                          >
                             <input
                               id={`default-radio-${item.id}`}
                               type="radio"
@@ -431,12 +457,12 @@ const ListProductsByBrand = () => {
                               name="default-radio"
                               className="w-4 h-4 text-blue-600 bg-white border-gray-300 checked:bg-[#FFBA00]  focus:ring-0"
                             />
-                            <label
-                              htmlFor={`default-radio-${item.id}`}
+                            <span
+                              // htmlFor={`default-radio-${item.id}`}
                               className="ml-2 text-sm font-medium text-gray-900 "
                             >
                               {item.priceRange}
-                            </label>
+                            </span>
                           </div>
                         );
                       })}
@@ -494,59 +520,89 @@ const ListProductsByBrand = () => {
           </div>
         </aside>
         {/* danh sách sản phẩm */}
-        <div className="w-full">
+        <div className="w-full mb-10">
           <div className="mx-auto  flex flex-col  my-4 items-center ">
-            <span className=" text-3xl font-medium">{param?.name}</span>
+            {!!param.status ? (
+              <span className=" text-3xl font-medium">{param?.item?.name}</span>
+            ) : (
+              <span className=" text-3xl font-medium">{param?.name}</span>
+            )}
           </div>
           <div className="w-full  mx-auto ">
-            <div className="w-full flex justify-between ">
+            <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer hover:text-[#FFBA00]"
+                  className="cursor-pointer font-medium text-sm hover:text-[#FFBA00]"
                   onClick={() => {
                     navigate(path.home);
                   }}
                 >
                   Trang chủ
-                </span>{" "}
-                / <span className="text-[#FFBA00]">{param?.name}</span>
+                </span>
+                /
+                {!!param.status ? (
+                  <span className="text-[#FFBA00] text-sm font-medium ">
+                    {" "}
+                    {param?.item?.name}
+                  </span>
+                ) : (
+                  <span className="text-[#FFBA00] text-sm font-medium ">
+                    {param?.name}
+                  </span>
+                )}
               </div>
-              <div className="">
-                <div>
-                  <label htmlFor="underline_select" className="sr-only">
-                    Underline select
-                  </label>
-                  <select
-                    id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                  >
-                    <option selected value="US">
-                      Mới nhất
-                    </option>
-                    <option value="CA">Theo thứ tự giá từ thấp tới cao</option>
-                    <option value="FR">Theo thứ tự giá từ cao tới thấp</option>
-                    <option value="DE">Theo thứ tự phổ biến</option>
-                  </select>
-                </div>
+              {/* Lọc sản phẩm */}
+              <div>
+                <label htmlFor="underline_select" className="sr-only">
+                  Underline select
+                </label>
+                <select
+                  value={selectedOption}
+                  onChange={handleChangeSelect}
+                  id="underline_select"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none  focus:outline-none focus:ring-0 focus:border-gray-200 "
+                >
+                  <option selected value="US">
+                    Sản phẩm mới
+                  </option>
+                  <option value="CA">Giá tăng dần</option>
+                  <option value="FR">Giá giảm dần</option>
+                  <option value="DE">Bán chạy</option>
+                </select>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 mx-auto mt-8 px-2">
-              {!!listShoes &&
-                !!listShoes.length &&
-                listShoes.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        navigate(path.product, { state: item.id });
-                      }}
-                    >
-                      <ProductStanding product={item} />
-                    </div>
-                  );
-                })}
+            <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
+              {!!listShoes && !!listShoes.length
+                ? listShoes.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          navigate(path.product, { state: item.id });
+                        }}
+                      >
+                        <ProductStanding product={item} />
+                      </div>
+                    );
+                  })
+                : !!sekeletonItemShoe &&
+                  sekeletonItemShoe === true &&
+                  Array(10)
+                    .fill({})
+                    .map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            navigate(path.product, { state: item.id });
+                          }}
+                        >
+                          <SekeletonItemShoe />
+                        </div>
+                      );
+                    })}
             </div>
-            {totalPage === 1 ? (
+            {!!listShoes && !!listShoes.length && totalPage === 1 ? (
               ""
             ) : (
               <div className="my-10">

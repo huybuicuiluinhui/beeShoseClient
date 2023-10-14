@@ -17,7 +17,7 @@ import AddAddress from "./pages/information/addAddress";
 import ReturnProduct from "./pages/information/returnProduct";
 import DetailReturn from "./pages/information/returnProduct/detailReturn";
 import { ShoppingCartProvider } from "./context/shoppingCart.context";
-
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   let routes: RouteObject[] = [
     {
@@ -44,12 +44,12 @@ function App() {
   return (
     <ShoppingCartProvider>
       <div className="bg-white min-h-screen">
+        <Header />
         <div className="w-full max-w-7xl mx-auto  min-w-[6xl]">
-          <Header />
           <div className="w-full  flex flex-col flex-1 ">{element}</div>
           <ScrollToTopButton />
-          <Footer />
         </div>
+        <Footer />
       </div>
     </ShoppingCartProvider>
   );
