@@ -11,9 +11,10 @@ import axios from "axios";
 import API from "../../api";
 import { IProduct } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
-import { convertToCurrencyString, toSlug } from "../../utils/format";
+import { toSlug } from "../../utils/format";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
+import Fade from "react-reveal/Fade";
 const Line = () => {
   return (
     <span className="border-b-2 border-[#f1f1f1] border-solid w-full h-[1px] my-3 " />
@@ -103,32 +104,54 @@ const HomePage = () => {
 
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
-      {/* {!!showBanner && <BannerShow handleShow={handleShow} />} */}
       {showModal && <ShowModalHome />}
       <SliderHome />
       {/* Thông tin ưu đãi */}
       <Line />
       <div className="w-full px-5 flex justify-between  ">
         <div className="flex items-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA0klEQVR4nO2VsY5BQRhGT0ShWYlNFMpVehGleASJd1AoaL2FmmaLDea/Ept4BDUqlUQnyk9cbESW6t5RmJP8zWQmZ+YrvoFA4C3QiKKMoYymP6lRlWMjQ3J0fUl7sTDpcWw1pvRM3JCxvzm0k2OZwPzqm4/nr44oyzH3GvUVzcjKaCui9rcYCARehTpkZPQ1peJXPCN3KaGDjNbpIo83j8jH9ZZETRqru76easLn/+IxpbjQ0/gojLUcXymGfBf1eQb6oZC69KbvF3LUvQgDgZdzBEMQP1i1qaYaAAAAAElFTkSuQmCC" />{" "}
+          {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA0klEQVR4nO2VsY5BQRhGT0ShWYlNFMpVehGleASJd1AoaL2FmmaLDea/Ept4BDUqlUQnyk9cbESW6t5RmJP8zWQmZ+YrvoFA4C3QiKKMoYymP6lRlWMjQ3J0fUl7sTDpcWw1pvRM3JCxvzm0k2OZwPzqm4/nr44oyzH3GvUVzcjKaCui9rcYCARehTpkZPQ1peJXPCN3KaGDjNbpIo83j8jH9ZZETRqru76easLn/+IxpbjQ0/gojLUcXymGfBf1eQb6oZC69KbvF3LUvQgDgZdzBEMQP1i1qaYaAAAAAElFTkSuQmCC" />{" "} */}
+          <img
+            src="https://sneakerdaily.vn/wp-content/uploads/2022/09/doi-mau-doi-size-mien-phi.jpg"
+            alt=""
+            className="w-10 h-10"
+          />
           <span className="text-base text-gray-600 ml-2 font-semibold">
             Đổi mẫu, đổi size miễn phí
           </span>
         </div>
         <div className="flex items-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAsTAAALEwEAmpwYAAACeElEQVR4nO2WW4iNURTHfwwSMokHl1IelMgLD/LgEt5QeKGIhiKXQuKF8uKBPLiUWyThxRFJcs5anzouTZgmPLhEEaUYl4REqL/2nj3jnGlGzJkzT1at+tb+9rd/e6+9Lh/8l2qLjEUydlZdCywshT6UUy8nF9V4J6Oh1e6MGg1xnd9j9YHTFrqgxL4pp64i7zl1YZ0Se0GnoTL6y1knY7+MtbpIv6pCVWSIjCdy7so5IOdetDMGVw9qHJJzVjlqop2jRsY5GQe7HKoCY+Qck/FZzrSyxTOmp/FjYV6XQJVRK+O1nBPxLov0KoM20jvd8UkZr3SZgZVDnWlymvgLkfOmxROVQfMMk/NFzvoQSO3CQoA5G+K8IkMrhgZRgTkxYo3NtCMytsi4o4zZVcnTv5X/0LbudTlHkjbJuFpi/7ta/L6pZMzL7zRjabe0NmNJ6UnPyHgspzHpdRmZjLycUzL2yNgmY5UKzFOeCaFodBhEBZbL2Bifc/SJba3IgLaRNlPGmhRxy2SsTBpSYYecw3LOy7km44GMr3KU+uVtGUeVsVrGJBXpK2eXjOPJi7VxrjO8HBpyrPlFi35Mpe++jAsydsdTGjPiIqKHrjBCeabEUzn7ZNyQ80nONxlv4+nyjOsYGurnJQbJGKUrjJUxURmzwu+FnK2p7tanxX7GTRp7Zcwv7afaTs/oemeTHJPxXc6jdqH/InJGy1iRCvzL1GFOh2qUWt0hFVicXDs+ls/Q/or07TS0bAPhZMbU1Gffy3km43mIhbTBW2U/Y10twc0xGI2nMl7ImBszoTRNqgZv7q/BpR9k/OgWaCs8Y2SM/IzJ3Qb9k/wCfOx0NhkL26MAAAAASUVORK5CYII=" />{" "}
+          {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAsTAAALEwEAmpwYAAACeElEQVR4nO2WW4iNURTHfwwSMokHl1IelMgLD/LgEt5QeKGIhiKXQuKF8uKBPLiUWyThxRFJcs5anzouTZgmPLhEEaUYl4REqL/2nj3jnGlGzJkzT1at+tb+9rd/e6+9Lh/8l2qLjEUydlZdCywshT6UUy8nF9V4J6Oh1e6MGg1xnd9j9YHTFrqgxL4pp64i7zl1YZ0Se0GnoTL6y1knY7+MtbpIv6pCVWSIjCdy7so5IOdetDMGVw9qHJJzVjlqop2jRsY5GQe7HKoCY+Qck/FZzrSyxTOmp/FjYV6XQJVRK+O1nBPxLov0KoM20jvd8UkZr3SZgZVDnWlymvgLkfOmxROVQfMMk/NFzvoQSO3CQoA5G+K8IkMrhgZRgTkxYo3NtCMytsi4o4zZVcnTv5X/0LbudTlHkjbJuFpi/7ta/L6pZMzL7zRjabe0NmNJ6UnPyHgspzHpdRmZjLycUzL2yNgmY5UKzFOeCaFodBhEBZbL2Bifc/SJba3IgLaRNlPGmhRxy2SsTBpSYYecw3LOy7km44GMr3KU+uVtGUeVsVrGJBXpK2eXjOPJi7VxrjO8HBpyrPlFi35Mpe++jAsydsdTGjPiIqKHrjBCeabEUzn7ZNyQ80nONxlv4+nyjOsYGurnJQbJGKUrjJUxURmzwu+FnK2p7tanxX7GTRp7Zcwv7afaTs/oemeTHJPxXc6jdqH/InJGy1iRCvzL1GFOh2qUWt0hFVicXDs+ls/Q/or07TS0bAPhZMbU1Gffy3km43mIhbTBW2U/Y10twc0xGI2nMl7ImBszoTRNqgZv7q/BpR9k/OgWaCs8Y2SM/IzJ3Qb9k/wCfOx0NhkL26MAAAAASUVORK5CYII=" />{" "} */}
+
+          <img
+            src="https://sneakerdaily.vn/wp-content/uploads/2022/09/mua-truoc-tra-sau-mien-lai.jpg"
+            alt=""
+            className="w-10 h-10"
+          />
           <span className="text-base text-gray-600 ml-2 font-semibold">
             Mua trước, trả sau miễn lãi
           </span>
         </div>
         <div className="flex items-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAACN0lEQVR4nO2WTYhNYRjHf74ajaTZyIIsfFvZWMlGiIWsyBglFjbKRpOsLKRENqxskIWvDY3p3vM8x7iFlLob3zaifC0oakIJf73nXrcz955z58yYuyBP/eve0/uc3/s+7/P874X/8deHjKN/oCOKWDc2oHN63DLOyPgiY0VxYMzaQqoyLadCtxXRVxxoPC+kQXpyKnRLxo7iwEF62qpEV9v8GrCcUe6TMtZnJaitjD2jAp1qqpE+yLhchw7L2d+JEzZKKuOJYjYkn2NWJlBjUzqhminjVDtQEWAIGTuTU0fMqz1wtmSqzGomABhCzlk5d1Rhavbg54zAuIEDdMt5KmNvJ4D35WxtWVcr7eNaSQfoLgooAOyvu0/zLL+W8702FkPMnyhgCEUsbXGqiL7A6ggwKwIjF6hrzJSzS86B0bq1paQluuT0yjgoY6PEpLZAxSyW8UbOPTmXZLwPrlEEKGN20o3OQxkX5LyScz2MQxr4Q0MsaLzAqMg43vheYU6ygbRb5AGdc3Iu6gpTGpUyHoRxUMTCwAqLbsp5JCNOFDZQYm7TS0/IedFYM1If6ycKuZ9lrBqRa+yT8U7OMzkeHsxQzPZg0nUNN/+gyjgv52pqTZ5eKmZz02YP1w2+N3P8gofKuBu8L5RGxra66y/Lu8dUbn9ykhssD80S/n7I+CRjTX5ShemJ9xk/ZXyV8zbv/lpyDzFZzjEZ35LcUO6I3UVyQ7fOkrPodwOMJRSuqcySsVjkvxO/ANn0ziVH+E5iAAAAAElFTkSuQmCC" />{" "}
+          {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAACN0lEQVR4nO2WTYhNYRjHf74ajaTZyIIsfFvZWMlGiIWsyBglFjbKRpOsLKRENqxskIWvDY3p3vM8x7iFlLob3zaifC0oakIJf73nXrcz955z58yYuyBP/eve0/uc3/s+7/P874X/8deHjKN/oCOKWDc2oHN63DLOyPgiY0VxYMzaQqoyLadCtxXRVxxoPC+kQXpyKnRLxo7iwEF62qpEV9v8GrCcUe6TMtZnJaitjD2jAp1qqpE+yLhchw7L2d+JEzZKKuOJYjYkn2NWJlBjUzqhminjVDtQEWAIGTuTU0fMqz1wtmSqzGomABhCzlk5d1Rhavbg54zAuIEDdMt5KmNvJ4D35WxtWVcr7eNaSQfoLgooAOyvu0/zLL+W8702FkPMnyhgCEUsbXGqiL7A6ggwKwIjF6hrzJSzS86B0bq1paQluuT0yjgoY6PEpLZAxSyW8UbOPTmXZLwPrlEEKGN20o3OQxkX5LyScz2MQxr4Q0MsaLzAqMg43vheYU6ygbRb5AGdc3Iu6gpTGpUyHoRxUMTCwAqLbsp5JCNOFDZQYm7TS0/IedFYM1If6ycKuZ9lrBqRa+yT8U7OMzkeHsxQzPZg0nUNN/+gyjgv52pqTZ5eKmZz02YP1w2+N3P8gofKuBu8L5RGxra66y/Lu8dUbn9ykhssD80S/n7I+CRjTX5ShemJ9xk/ZXyV8zbv/lpyDzFZzjEZ35LcUO6I3UVyQ7fOkrPodwOMJRSuqcySsVjkvxO/ANn0ziVH+E5iAAAAAElFTkSuQmCC" />{" "} */}
+
+          <img
+            src="https://sneakerdaily.vn/wp-content/uploads/2022/09/giao-hang-doi-tra-tan-nha.jpg"
+            alt=""
+            className="w-10 h-10"
+          />
           <span className="text-base text-gray-600 ml-2 font-semibold">
             Giao hàng, đổi trả tận nhà
           </span>
         </div>
         <div className="flex items-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvUlEQVR4nO1WTSuFQRR+fETIQvIHhD/gKyksbF1LKb+AjVCyoggLVn6BpWsjXbd7ziyUYmdBSZQsLFlaUHg043Rzyb0v7yXKqdN75syZ55k575yZAf7lJ4QO7VSMUzFdUAUj2XGKYfOPe4xoZIpFCp6oYES9YxIVTKKMitus32MIFvKTZdBhgUdUJOjQX1AVza/GN5kvQcGxTbwt3+ombXYDEbOfDythWBMfBwnmQpBDX2xChz4jnPvbhEyj0m+YbydkGg1UpKl4sN25+pq4+ISKTSuBfQrO324QfpUwpGwb1dZf49tmX1NxGOwt1IZ6VOzFJxSkqLiioNO+KfN306HR7B6rue1iEI5Z6h4NYDT4D1BFwRoFN9bv/2VvfEKihIpTAz31bYtdMcALCtbp0JWDFWOFM0Z2bwAzwa+4tGPQpzwZNIOh+IQeSHBGh5bwVSQt9uTdQS7YiE84i1LuojzYuyj37aydQl2O8iXdsQi/KvydhPrT15NDu+28YzoM2iVbb331kS5kF3QwewELWvPPTLCQ88QQ7Jg/84lnBw1jPmo62qiYCu8bK+hwlAmWKFguqIqpgiv7FxRJngHWp6Pop0a7agAAAABJRU5ErkJggg==" />
+          <img
+            src="https://sneakerdaily.vn/wp-content/uploads/2022/09/hang-gia-den-tien-gap-doi.jpg"
+            alt=""
+            className="w-10 h-10"
+          />
+          {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAABvUlEQVR4nO1WTSuFQRR+fETIQvIHhD/gKyksbF1LKb+AjVCyoggLVn6BpWsjXbd7ziyUYmdBSZQsLFlaUHg043Rzyb0v7yXKqdN75syZ55k575yZAf7lJ4QO7VSMUzFdUAUj2XGKYfOPe4xoZIpFCp6oYES9YxIVTKKMitus32MIFvKTZdBhgUdUJOjQX1AVza/GN5kvQcGxTbwt3+ombXYDEbOfDythWBMfBwnmQpBDX2xChz4jnPvbhEyj0m+YbydkGg1UpKl4sN25+pq4+ISKTSuBfQrO324QfpUwpGwb1dZf49tmX1NxGOwt1IZ6VOzFJxSkqLiioNO+KfN306HR7B6rue1iEI5Z6h4NYDT4D1BFwRoFN9bv/2VvfEKihIpTAz31bYtdMcALCtbp0JWDFWOFM0Z2bwAzwa+4tGPQpzwZNIOh+IQeSHBGh5bwVSQt9uTdQS7YiE84i1LuojzYuyj37aydQl2O8iXdsQi/KvydhPrT15NDu+28YzoM2iVbb331kS5kF3QwewELWvPPTLCQ88QQ7Jg/84lnBw1jPmo62qiYCu8bK+hwlAmWKFguqIqpgiv7FxRJngHWp6Pop0a7agAAAABJRU5ErkJggg==" /> */}
+
           <span className="text-base text-gray-600 ml-2 font-semibold">
             Hàng giả, đền tiền gấp đôi
           </span>
@@ -136,14 +159,14 @@ const HomePage = () => {
       </div>
       <Line />
       {/* Danh sách  thương hiệu  */}
-      <p className=" text-2xl font-mono text-center uppercase   text-[#FFBA00]">
+      <p className=" text-2xl font-normal text-center uppercase   ">
         Danh sách thương hiệu
       </p>
       <SliderListBrand />
       <Line />
       {!!products && !!products.length && (
         <div className="flex flex-col items-center">
-          <p className=" text-2xl font-mono text-center uppercase  text-[#FFBA00] ">
+          <p className=" text-2xl font-mono text-center uppercase   ">
             SẢN PHẨM NỔI BẬT
           </p>
           <span className="text-[#999] italic  text-sm font-semibold  uppercase mb-5 ">
@@ -158,35 +181,42 @@ const HomePage = () => {
 
       <div className="w-full p-4 ">
         <div className="grid grid-cols-5 gap-0 ">
-          {!!products && !!products.length && sekeletonItemShoe === false
-            ? products.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      navigate(path.product, { state: item.id });
-                    }}
-                  >
-                    <ProductStanding product={item} key={index} />
-                  </div>
-                );
-              })
-            : !!sekeletonItemShoe &&
-              sekeletonItemShoe === true &&
-              Array(10)
-                .fill({})
-                .map((item, index) => {
+          {" "}
+          <Fade top distance="10%" duration={1500}>
+            {!!products && !!products.length && sekeletonItemShoe === false
+              ? products.map((item, index) => {
                   return (
                     <div
                       key={index}
                       onClick={() => {
-                        navigate(path.product, { state: item.id });
+                        navigate(`/product/${toSlug(item.name)}`, {
+                          state: item.id,
+                        });
                       }}
                     >
-                      <SekeletonItemShoe />
+                      <ProductStanding product={item} key={index} />
                     </div>
                   );
-                })}
+                })
+              : !!sekeletonItemShoe &&
+                sekeletonItemShoe === true &&
+                Array(10)
+                  .fill({})
+                  .map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          navigate(`/product/${toSlug(item.name)}`, {
+                            state: item.id,
+                          });
+                        }}
+                      >
+                        <SekeletonItemShoe />
+                      </div>
+                    );
+                  })}
+          </Fade>
         </div>
         {totalPages === 1 ? (
           ""
@@ -199,20 +229,24 @@ const HomePage = () => {
       <div className="w-full p-4">
         <TitleBrand title="Giày Adidas" subtitle="giày thương hiệu nổi bật" />
         <div className="grid grid-cols-5 gap-0">
-          {!!productsAdidas &&
-            !!productsAdidas.length &&
-            productsAdidas.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    navigate(path.product, { state: item.id });
-                  }}
-                >
-                  <ProductStanding product={item} key={index} />
-                </div>
-              );
-            })}
+          <Fade top distance="10%" duration={1500}>
+            {!!productsAdidas &&
+              !!productsAdidas.length &&
+              productsAdidas.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      navigate(`/product/${toSlug(item.name)}`, {
+                        state: item.id,
+                      });
+                    }}
+                  >
+                    <ProductStanding product={item} key={index} />
+                  </div>
+                );
+              })}
+          </Fade>
         </div>
         <div className="flex justify-center mt-4">
           <button
@@ -233,7 +267,7 @@ const HomePage = () => {
 
       {/* Tin tức nổi bật */}
       <div className=" w-full pt-5 mt-3">
-        <p className=" text-3xl font-mono text-center uppercase mt-5 text-[#FFBA00]">
+        <p className=" text-3xl font-mono text-center uppercase mt-5 ">
           ------- Tin tức nổi bật -------
         </p>
         <p className="text-[#999] italic  text-sm font-semibold text-center uppercase ">
@@ -524,9 +558,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
-      {/* <Responsive /> */}
-      {/* <ProductItem /> */}
     </div>
   );
 };

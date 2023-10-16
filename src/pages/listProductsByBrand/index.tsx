@@ -8,6 +8,8 @@ import { IProduct, Product } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
+import Fade from "react-reveal/Fade";
+import { toSlug } from "../../utils/format";
 interface ShoeSize {
   size: number;
   selected: boolean;
@@ -175,7 +177,7 @@ const ListProductsByBrand = () => {
     if (param?.status == true) {
       const res = await axios({
         method: "get",
-        url: API.getShoeWithCategory(param?.item?.id, page, 12),
+        url: API.getShoeWithCategory(param?.item?.id, page, 20),
       });
       if (res.status) {
         setSekeletonItemShoe(true);
@@ -186,7 +188,7 @@ const ListProductsByBrand = () => {
       if (!!param?.id) {
         const res = await axios({
           method: "get",
-          url: API.getBrandChoose(param?.id, page, 12),
+          url: API.getBrandChoose(param?.id, page, 20),
         });
         if (res.status) {
           setSekeletonItemShoe(true);
@@ -196,7 +198,7 @@ const ListProductsByBrand = () => {
       } else {
         const res = await axios({
           method: "get",
-          url: API.getAllShoe(page, 12),
+          url: API.getAllShoe(page, 20),
         });
         if (res.status) {
           setSekeletonItemShoe(true);
@@ -519,6 +521,7 @@ const ListProductsByBrand = () => {
             </div>
           </div>
         </aside>
+
         {/* danh sách sản phẩm */}
         <div className="w-full mb-10">
           <div className="mx-auto  flex flex-col  my-4 items-center ">
@@ -572,35 +575,41 @@ const ListProductsByBrand = () => {
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
-              {!!listShoes && !!listShoes.length
-                ? listShoes.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          navigate(path.product, { state: item.id });
-                        }}
-                      >
-                        <ProductStanding product={item} />
-                      </div>
-                    );
-                  })
-                : !!sekeletonItemShoe &&
-                  sekeletonItemShoe === true &&
-                  Array(10)
-                    .fill({})
-                    .map((item, index) => {
+              <Fade top distance="10%" duration={1500}>
+                {!!listShoes && !!listShoes.length
+                  ? listShoes.map((item, index) => {
                       return (
                         <div
                           key={index}
                           onClick={() => {
-                            navigate(path.product, { state: item.id });
+                            navigate(`/product/${toSlug(item.name)}`, {
+                              state: item.id,
+                            });
                           }}
                         >
-                          <SekeletonItemShoe />
+                          <ProductStanding product={item} />
                         </div>
                       );
-                    })}
+                    })
+                  : !!sekeletonItemShoe &&
+                    sekeletonItemShoe === true &&
+                    Array(10)
+                      .fill({})
+                      .map((item, index) => {
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => {
+                              navigate(`/product/${toSlug(item.name)}`, {
+                                state: item.id,
+                              });
+                            }}
+                          >
+                            <SekeletonItemShoe />
+                          </div>
+                        );
+                      })}
+              </Fade>
             </div>
             {!!listShoes && !!listShoes.length && totalPage === 1 ? (
               ""

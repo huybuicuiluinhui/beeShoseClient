@@ -13,7 +13,7 @@ const SliderListBrand = () => {
     dots: false,
     infinite: true,
     speed: 2500,
-    slidesToShow: 5,
+    slidesToShow: 7,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 1000,
@@ -48,15 +48,15 @@ const SliderListBrand = () => {
                     state: item,
                   });
                 }}
-                className="cursor-pointer flex flex-col w-full items-center justify-center my-3 mb-2 h-auto group relative "
+                className="cursor-pointer flex flex-col w-full items-center justify-center my-3 mb-2 h-auto group relative hover:scale-110 transform transition-transform ease-in-out duration-300 "
                 key={index}
               >
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
+                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 ">
                   <img
                     src={Images.iconAdidas}
-                    className="w-[200px] h-[150px] object-contain mx-auto"
+                    className="w-[100px] h-[60px] object-contain mx-auto"
                   />
-                  <p className="text-center font-semibold group-hover:text-[#FFBA00] ">
+                  <p className="text-center font-semibold group-hover:text-hover ">
                     {item.name}
                   </p>
                 </div>

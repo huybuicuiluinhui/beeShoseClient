@@ -12,7 +12,7 @@ import {
   IListDeatilShoe,
   IVoucher,
 } from "../../types/product.type";
-import { convertToCurrencyString } from "../../utils/format";
+import { convertToCurrencyString, toSlug } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
 import API from "../../api";
@@ -167,7 +167,9 @@ const PaymentPage = () => {
                       <div
                         className="flex flex-col justify-between ml-4 flex-grow w-full h-full cursor-pointer"
                         onClick={() => {
-                          navigate(path.product, { state: item?.infoShoe?.id });
+                          navigate(`product/${toSlug(item?.infoShoe?.name)}`, {
+                            state: item?.infoShoe?.id,
+                          });
                         }}
                       >
                         <span className="font-bold text-sm underline ">

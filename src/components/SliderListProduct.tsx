@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import { useNavigate } from "react-router-dom";
 import path from "../constants/path";
-import { convertToCurrencyString, renderColor } from "../utils/format";
+import { convertToCurrencyString, renderColor, toSlug } from "../utils/format";
 import axios from "axios";
 import API from "../api";
 import { IProduct } from "../types/product.type";
@@ -16,13 +16,8 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
     centerPadding: "60px",
     slidesToShow: 5,
     swipeToSlide: true,
-    afterChange: function (index) {
-      console.log(
-        `Slider Changed to: ${index + 1}, background: #222; color: #bada55`
-      );
-    },
   };
-
+  console.log(products);
   const sliderRef = React.useRef<Slider>(null);
 
   const next = () => {
@@ -55,7 +50,9 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
                   key={index}
                   className="group relative px-5  "
                   onClick={() => {
-                    navigate(path.product, { state: item.id });
+                    navigate(`/product/${toSlug(item.name)}`, {
+                      state: item.id,
+                    });
                   }}
                 >
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">

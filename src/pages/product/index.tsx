@@ -7,6 +7,7 @@ import axios from "axios";
 import API from "../../api";
 import { IDetailProduct, IInforShoe, IProduct } from "../../types/product.type";
 import path from "../../constants/path";
+import { toSlug } from "../../utils/format";
 const ProductPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -59,7 +60,9 @@ const ProductPage = () => {
         <p
           className="font-semibold my-4 cursor-pointer"
           onClick={() => {
-            navigate(path.product, { state: inforShoe.id });
+            navigate(`/product/${toSlug(inforShoe.name)}`, {
+              state: inforShoe.id,
+            });
           }}
         >
           Mô tả sản phẩm:{" "}
@@ -194,9 +197,9 @@ const ProductPage = () => {
           {activeTab === 0 && <Tab01 />}
           {activeTab === 1 && <Tab02 />}
         </div>
-        <p className="text-base font-thin  uppercase my-5 text-[#FFBA00] flex">
+        <p className="text-base font-medium  uppercase my-5 text-[#000] flex">
           Các sản phẩm tương tự
-          <div className="w-10 h-[1px] bg-[#FFBA00] self-end ml-2" />
+          <div className="w-10 h-[1px] bg-[#000] self-end ml-2" />
         </p>
         {!!dataProductSole && !!dataProductSole.length && (
           <SliderListProduct products={dataProductSole} />

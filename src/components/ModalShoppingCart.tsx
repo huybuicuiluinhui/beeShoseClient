@@ -101,11 +101,11 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
   return (
     <div>
       {isOpen ? (
-        <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10 overflow-y-auto ">
+        <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10 overflow-y-auto  ">
           <div className="w-full h-full" onClick={() => closeCart()}></div>
-          <div className="bg-white  shadow-lg h-full w-[30%] overflow-y-auto">
-            <div className="flex justify-between items-center px-4 pt-4 mb-2 ">
-              <h2 className="text-lg font-semibold  uppercase  ">Giỏ hàng</h2>
+          <div className="bg-white  shadow-lg h-full w-[30%] overflow-y-auto transform   transition-transform ease-in-out ">
+            <div className="flex justify-between items-center px-4 pt-4 mb-2  ">
+              <h2 className="text-lg font-semibold  uppercase   ">Giỏ hàng</h2>
               <div onClick={() => closeCart()} className="cursor-pointer">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVklEQVR4nGNgoBAwMjAw8BGhjg+qFkVgCQMDgygeTaJQNXzYJFYyMDBI4NC0EoccTgWihDRhUyhKrCZ0/ywh4G/qaBQlx6mi5ASOKDnRQXYCIDvJkQwARZsQRRiqQN4AAAAASUVORK5CYII=" />{" "}
               </div>
@@ -143,7 +143,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                 Xem giỏ hàng
               </button>
               <button
-                className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%]"
+                className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] animate-pulse"
                 onClick={() => [navigate(path.cart), closeCart()]}
               >
                 Thanh toán

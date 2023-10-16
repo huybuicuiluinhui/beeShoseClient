@@ -12,9 +12,7 @@ const TitleBrand = ({ title, subtitle }: TitleBrandType) => {
   return (
     <div className="w-full mt-10">
       <Line />
-      <p className=" text-2xl font-mono text-center uppercase   text-[#FFBA00]">
-        {title}
-      </p>
+      <p className=" text-2xl font-mono text-center uppercase   ">{title}</p>
       <p className="text-[#999] italic  text-sm font-semibold text-center uppercase mb-5 ">
         {subtitle}
       </p>

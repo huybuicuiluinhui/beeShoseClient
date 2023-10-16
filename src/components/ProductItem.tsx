@@ -14,6 +14,7 @@ import SimpleToast from "./Toast";
 import { useShoppingCart } from "../context/shoppingCart.context";
 import ModalComponent from "./Modal";
 import Images from "../static";
+import MyReactImageMagnify from "./ReactImageMagnify";
 const ProductItem = ({
   product,
   shoeId,
@@ -113,7 +114,6 @@ const ProductItem = ({
     setAllColorData(combinedData);
     setChooseColor(findProductIdByName(product[0]?.color, allColorData));
   };
-
   const getPriceDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -149,68 +149,15 @@ const ProductItem = ({
   }, [inforShoe.name, chooseSize, chooseColor]);
   return (
     <div className="max-w-7xl mx-auto p-8">
-      <div className="flex flex-col  justify-between lg:flex-row gap-16 lg:items-center ">
-        <div className="flex flex-row gap-3 lg:w-3/4">
-          <div className="flex flex-col     mr-5 ">
-            {!!imgArr &&
-              !!imgArr.length &&
-              imgArr.map((item, index) => {
-                return (
-                  <div key={index}>
-                    {!!item &&
-                      !!item.length &&
-                      item.map((child: string, childIndex: number) => {
-                        return (
-                          <img
-                            key={childIndex}
-                            src={child}
-                            alt="123"
-                            className={`w-24 h-24 rounded-md cursor-pointer object-contain border-[1px]  border-[#FFBA00] mb-2 ${
-                              child.includes(activeImg)
-                                ? "border-solid"
-                                : "border-dashed"
-                            }`}
-                            onClick={() => setActiveImage(child)}
-                          />
-                        );
-                      })}
-                  </div>
-                );
-              })}
-          </div>
-          {/* <div className="w-[400px] h-[500px]  ">
-            <div className="w-[80%]">
-              <ReactImageMagnify
-                {...{
-                  smallImage: {
-                    isFluidWidth: true,
-                    src: activeImg,
-                    width: 140,
-                    height: 162,
-                    style: {
-                      objectFit: "contain", // Đặt thuộc tính object-fit ở đây
-                    },
-                  },
-                  largeImage: {
-                    src: activeImg,
-                    width: 836,
-                    height: 1100,
-                  },
-                }}
-              />
-            </div>
-          </div> */}
-          <img
-            src={activeImg}
-            alt=""
-            className="w-[65%] h-auto aspect-square object-contain rounded-xl"
-          />
+      <div className="flex   justify-between lg:flex-row gap-16   infoShoe">
+        <div className="flex flex-row gap-3 lg:w-[50%] slideImg">
+          <MyReactImageMagnify img={imgArr} />
         </div>
         {/* Thong tin */}
-        <div className="flex flex-col gap-2 lg:w-2/4 ">
-          <div>
+        <div className="flex flex-col gap-2 lg:w-[50%] infoShoe2  ">
+          <div className="font-medium">
             <span
-              className="cursor-pointer hover:text-[#FFBA00] text-xs font-thin"
+              className="cursor-pointer  text-xs  text-[#909097] "
               onClick={() => {
                 navigate(path.home);
               }}
@@ -219,15 +166,12 @@ const ProductItem = ({
             </span>{" "}
             /
             <span
-              className="text-xs font-thin"
+              className="text-xs  text-[#909097]"
               onClick={() => navigate(path.listProductsByBrand)}
             >
               {inforShoe?.brand.name}
             </span>
-            /{" "}
-            <span className="text-[#FFBA00] text-xs font-thin">
-              {inforShoe?.name}
-            </span>
+            / <span className="text-[#000] text-xs ">{inforShoe?.name}</span>
           </div>
           <span className="text-3xl font-medium text-black  ">
             {inforShoe?.name}
@@ -261,8 +205,8 @@ const ProductItem = ({
                       setChooseSize(findProductIdByName(e, allSizeData));
                       setChooseSizeName(e);
                     }}
-                    className={`min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-[#ffba00] rounded mb-1 ${
-                      chooseSizeName === e ? "bg-[#ffba00]  text-[#212529]" : ""
+                    className={`min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400 rounded mb-1 ${
+                      chooseSizeName === e ? "bg-[#111111]  text-[#fff]" : ""
                     }`}
                   >
                     {e}
@@ -282,9 +226,9 @@ const ProductItem = ({
                         setChooseColor(findProductIdByName(e, allColorData));
                         setChooseColorName(e);
                       }}
-                      className={` min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-[#ffba00] mb-1 rounded
+                      className={` min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400  mb-1 rounded
             
-            ${chooseColorName === e ? "bg-[#ffba00]  text-[#212529]" : ""}`}
+            ${chooseColorName === e ? "bg-[#111111]  text-[#fff]" : ""}`}
                     >
                       {e}
                     </div>
@@ -326,7 +270,7 @@ const ProductItem = ({
             <div className="flex justify-between w-full ">
               <div
                 className={`cursor-pointer  text-white font-semibold  flex  items-center justify-center  w-[49%] 
-                ${!!price ? "bg-[#0161e7]" : "bg-[#0161e7af]"}
+                ${!!price ? "bg-[#0161e7]" : "bg-[#0161e767]"}
                 `}
                 onClick={
                   // () =>
@@ -346,7 +290,9 @@ const ProductItem = ({
               </div>
 
               <button
-                className="bg-[#fe662b] text-white font-semibold  w-[49%]  "
+                className={`bg-[#fe662b] text-white font-semibold  w-[49%] 
+                ${!!price ? "bg-[#fe662b]" : "bg-[#fe672b58]"}
+              `}
                 onClick={() => {
                   if (!!idAddToCart && !!price) {
                     addMultipleToCart(idAddToCart, amount);

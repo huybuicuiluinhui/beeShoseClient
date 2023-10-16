@@ -109,10 +109,10 @@ const Header = () => {
                 className="relative tracking-wider btn4 leading-none overflow-hidden py-3  w-fit "
               >
                 <span
-                  className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00] w-full `}
+                  className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
                 />
                 <span
-                  className={`cursor-pointer  hover:text-[#FFBA00] ${
+                  className={`cursor-pointer  hover:text-[#6756ca] ${
                     // selectedCategory === item.name
                     //   ? "text-[#FFBA00] : "
                     "text-gray-900"
@@ -138,7 +138,7 @@ const Header = () => {
       } top-0 left-0 w-full z-10`}
     >
       <header>
-        <nav className="bg-[#ffba00]  ">
+        <nav className="bg-white  ">
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 ">
             <div className="w-[5%]">
               <a href="/" className="flex items-center w-fit ">
@@ -151,99 +151,7 @@ const Header = () => {
                 </span> */}
               </a>
             </div>
-            {/* <div
-              className="flex  items-center md:order-2"
-              onMouseEnter={() => {
-                onShowDropdown(true);
-              }}
-              onMouseLeave={() => {
-                onShowDropdown(false);
-              }}
-            >
-              <button
-                type="button"
-                className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 "
-                id="user-menu-button"
-                aria-expanded="false"
-                data-dropdown-toggle="user-dropdown"
-                data-dropdown-placement="bottom"
-              >
-                <img
-                  className="w-8 h-8 rounded-full"
-                  src={Images.iconAvatar}
-                  alt="user photo"
-                />
-              </button>
-              {!!showDropdown && (
-                <div className="z-50  fixed top-6 ml-8">
-                  <div
-                    className="  text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow  "
-                    id="user-dropdown"
-                  >
-                    <ul className="py-2" aria-labelledby="user-menu-button">
-                      <li
-                        className=""
-                        onClick={() => {
-                          navigate(path.information);
-                        }}
-                      >
-                        <a className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   ">
-                          Tài khoản của tôi
-                        </a>
-                      </li>
-                      <li className="">
-                        <a
-                          onClick={() => {
-                            setTypeModal(1);
-                            setShowModal(true);
-                          }}
-                          className="hover:text-[#FABA00] cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
-                        >
-                          Đăng nhập
-                        </a>
-                      </li>
 
-                      <li>
-                        <a
-                          onClick={() => {
-                            setTypeModal(2);
-                            setShowModal(true);
-                          }}
-                          className=" hover:text-[#FABA00]  cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
-                        >
-                          Đăng ký
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href={path.invoice}
-                          className="hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
-                        >
-                          Đơn mua
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className=" hover:text-[#FABA00]  block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100   "
-                        >
-                          Cài đặt
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#"
-                          className="hover:text-[#FABA00]  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  flex"
-                        >
-                          Thoát
-                          <img src={Images.iconLogout} className="w-4 ml-3" />
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </div> */}
             <div
               className=" w-full items-center justify-between hidden  md:flex md:flex-[0.95] md:order-1"
               id="navbar-user"
@@ -288,7 +196,9 @@ const Header = () => {
                               onClick={() => {
                                 setSearchValue(result.name);
                                 setResults([]);
-                                navigate(path.product, { state: result.id });
+                                navigate(`/product/${toSlug(result.name)}`, {
+                                  state: result.id,
+                                });
                               }}
                             >
                               {result.name}
@@ -413,7 +323,7 @@ const Header = () => {
                     className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
                   >
                     <span
-                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]   `}
+                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
                     />
 
                     <a
@@ -425,7 +335,7 @@ const Header = () => {
                           },
                         });
                       }}
-                      className={`cursor-pointer  hover:text-[#FFBA00] }`}
+                      className={`cursor-pointer  hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Tất cả sản phẩm
@@ -441,12 +351,12 @@ const Header = () => {
                     className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
                   >
                     <span
-                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]   `}
+                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
                     />
 
                     <a
                       // href="/"
-                      className={`cursor-pointer  hover:text-[#FFBA00] }`}
+                      className={`cursor-pointer  hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Thương hiệu
@@ -468,10 +378,10 @@ const Header = () => {
                         className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
                       >
                         <span
-                          className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
+                          className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]  `}
                         />
                         <span
-                          className={`cursor-pointer  hover:text-[#FFBA00] ${
+                          className={`cursor-pointer  hover:text-[#6756ca] ${
                             // selectedCategory === item.name
                             //   ? "text-[#FFBA00] :  "
                             "text-gray-900"
