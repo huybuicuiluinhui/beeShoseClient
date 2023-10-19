@@ -23,9 +23,6 @@ const Header = () => {
   const [typeModal, setTypeModal] = useState<number>(1);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchValue, setSearchValue] = useState<string>();
-  // const handleCategoryClick = (category: string) => {
-  //   setSelectedCategory(category);
-  // };
   const onShowDropdown = (isShowDropDown: boolean) => {
     setIsShowDropdown(isShowDropDown);
   };
@@ -146,9 +143,6 @@ const Header = () => {
                   src={Images.BeeShoes}
                   className="w-[80px] object-cover h-auto"
                 />
-                {/* <span className="self-center text-2xl font-semibold whitespace-nowrap ">
-                  BeeShoes
-                </span> */}
               </a>
             </div>
 
@@ -189,20 +183,28 @@ const Header = () => {
                       {!!results &&
                         !!results.length &&
                         results.map((result, index) => {
+                          console.log("result.images[0]", result);
                           return (
-                            <p
-                              key={index}
-                              className="text-sm font-medium mb-2 hover:bg-[#f4f4f4] cursor-pointer"
-                              onClick={() => {
-                                setSearchValue(result.name);
-                                setResults([]);
-                                navigate(`/product/${toSlug(result.name)}`, {
-                                  state: result.id,
-                                });
-                              }}
-                            >
-                              {result.name}
-                            </p>
+                            <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
+                              <img
+                                src={result.images.split(",")[0]}
+                                alt=""
+                                className="w-10 h-10 object-cover rounded mr-2  "
+                              />
+                              <p
+                                key={index}
+                                className="text-sm font-medium mb-2  cursor-pointer "
+                                onClick={() => {
+                                  setSearchValue(result.name);
+                                  setResults([]);
+                                  navigate(`/product/${toSlug(result.name)}`, {
+                                    state: result.id,
+                                  });
+                                }}
+                              >
+                                {result.name}
+                              </p>
+                            </div>
                           );
                         })}
                     </div>
@@ -258,29 +260,28 @@ const Header = () => {
                   }}
                 >
                   <div className=" flex justify-center items-center my-auto ">
-                    {cartQuantity > 0 && (
-                      <div className=" relative">
-                        <div className=" absolute left-3 -top-[30%]">
-                          <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                            {cartQuantity}
-                          </p>
-                        </div>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="file:  h-6 w-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                          />
-                        </svg>
+                    <div className=" relative">
+                      <div className=" absolute left-3 -top-[30%]">
+                        <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
+                          {cartQuantity}
+                        </p>
                       </div>
-                    )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="file:  h-6 w-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                        />
+                      </svg>
+                    </div>
+
                     <div className="ml-3">
                       <p className="text-xs">Giỏ hàng</p>
                       <span className="text-sm font-medium">

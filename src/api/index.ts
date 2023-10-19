@@ -14,6 +14,7 @@ const API = {
   //
   getColor: () => baseUrl + `api/color`,
   getColorPage: (page: number) => baseUrl + `api/color?page=${page}`,
+  getAllColors: () => baseUrl + `api/color?page=1&sizePage=100000`,
 
   // Danh mục
   getSole: () => baseUrl + "api/sole",

@@ -22,6 +22,10 @@ interface ShoseBrand {
   brand: string;
   selected: boolean;
 }
+interface ShoeColor {
+  color: string;
+  selected: boolean;
+}
 const ListProductsByBrand = () => {
   const location = useLocation();
   const param = location.state;
@@ -64,9 +68,11 @@ const ListProductsByBrand = () => {
   const [selectedMaterials, setSelectedMaterials] = useState<ShoeMaterial[]>(
     []
   );
+  const [selecteCcolors, setSelecteCcolors] = useState<ShoeColor[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<ShoseBrand[]>([]);
   const [shoeSizes, setShoesSize] = useState<Product[]>();
   const [materials, setMaterials] = useState<Product[]>();
+  const [colors, setColors] = useState<Product[]>();
   const [brands, setBrands] = useState<Product[]>();
   const [listShoes, setListShoes] = useState<IProduct[]>();
   const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
@@ -113,6 +119,16 @@ const ListProductsByBrand = () => {
       }
     });
   };
+  const handleColorsSelect = (color: string) => {
+    setSelecteCcolors((prevColor) => {
+      const existingSize = prevColor.find((s) => s.color === color);
+      if (existingSize) {
+        return prevColor.filter((s) => s.color !== color);
+      } else {
+        return [...prevColor, { color, selected: true }];
+      }
+    });
+  };
   const handleBrandsSelect = (brand: string) => {
     setSelectedBrands((prevBrands) => {
       const existingSize = prevBrands.find((s) => s.brand === brand);
@@ -123,6 +139,7 @@ const ListProductsByBrand = () => {
       }
     });
   };
+  // console.log("selectedBrands", selectedBrands);
   const handlePriceChange = (value: any) => {
     setPriceRange(value);
   };
@@ -150,7 +167,6 @@ const ListProductsByBrand = () => {
       setShoesSize(res?.data?.data);
     }
   };
-  console.log("listShoes", listShoes);
   // call dữ liệu
   //  theo chất liệu
   const getDataSole = async () => {
@@ -172,6 +188,17 @@ const ListProductsByBrand = () => {
       setBrands(res?.data?.data);
     }
   };
+  // call theo màu sắc
+  const getDataColors = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getAllColors(),
+    });
+    if (res.status) {
+      setColors(res.data?.data);
+    }
+  };
+  // console.log("brands", brands);
   // lấy thương hiệu chọn
   const getDataBrandChoose = async () => {
     if (param?.status == true) {
@@ -208,7 +235,6 @@ const ListProductsByBrand = () => {
       }
     }
   };
-  console.log("listShoes", listShoes);
   useEffect(() => {
     getDataBrandChoose();
   }, [param, page]);
@@ -218,6 +244,7 @@ const ListProductsByBrand = () => {
     getDataSize();
     getDataSole();
     getBrand();
+    getDataColors();
   }, []);
   return (
     <div className="w-full h-full ">
@@ -231,13 +258,14 @@ const ListProductsByBrand = () => {
           <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
           <div className=" mx-2 my-5 h-fit border-[1px] border-solid border-[#EDEDED]  ">
             <div className="flex flex-col items-center justify-center  w-full ">
+              {/* Theo size */}
               <button
                 onClick={handleDropdownToggle}
                 className="flex relative btn4 self-start bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center justify-between items-center border border-white  uppercase  tracking-wider  overflow-hidden w-full"
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-medium text-xs">kích thước size</p>
+                <p className="font-medium text-xs">kích thước size —</p>
                 <svg
                   className="w-4 h-4 ml-2"
                   aria-hidden="true"
@@ -269,13 +297,18 @@ const ListProductsByBrand = () => {
                         return (
                           <div
                             key={size.id}
-                            className={`flex items-center justify-center rounded py-1 w-full hover:bg-[#ffba00] ${
-                              isSelected ? "bg-[#ffba00]" : "bg-[#EDEDED] "
+                            className={` cursor-pointer flex items-center justify-center rounded py-1 w-full hover:bg-gray-500 ${
+                              isSelected
+                                ? "bg-gray-500 text-white"
+                                : "bg-[#EDEDED] "
                             }   `}
                             onClick={() => handleSizeSelect(Number(size.name))}
                           >
                             <span
-                              className={` text-sm font-medium text-gray-900 `}
+                              className={` text-sm font-medium 
+                              ${
+                                isSelected ? " text-white" : " text-gray-900"
+                              }    `}
                             >
                               {size.name}
                             </span>
@@ -294,7 +327,7 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-medium text-xs">Thương hiệu</p>
+                <p className="font-medium text-xs">Thương hiệu —</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -325,6 +358,7 @@ const ListProductsByBrand = () => {
                         const isSelected = selectedBrands.some(
                           (s) => s.brand === brand.name && s.selected
                         );
+                        console.log("isSelected ", isSelected);
                         return (
                           <li
                             key={brand.id}
@@ -336,13 +370,78 @@ const ListProductsByBrand = () => {
                               id={`brand-${brand.id}`}
                               type="checkbox"
                               checked={isSelected}
-                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-[#FFBA00]  focus:ring-0 "
+                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-500  focus:ring-0 "
                             />
-                            <span
+                            <label
                               // htmlFor={`brand-${brand.id}`}
                               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                             >
                               {brand.name}
+                            </label>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </div>
+              )}
+              {/* theo màu sắc */}
+              <button
+                onClick={handleDropdownToggleMaterial}
+                id="dropdownDefault"
+                data-dropdown-toggle="dropdown"
+                className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full  mt-2"
+                type="button"
+              >
+                <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
+                <p className="font-medium text-xs">Màu sắc —</p>
+
+                <svg
+                  className="w-4 h-4 ml-2"
+                  aria-hidden="true"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              {/* Dropdown menu */}
+              {isDropdownOpen3 && (
+                <div className="  w-full  rounded-lg ">
+                  <ul
+                    className="space-y-2 text-sm"
+                    aria-labelledby="dropdownDefault"
+                  >
+                    {!!colors &&
+                      !!colors.length &&
+                      colors.map((color, index) => {
+                        const isSelected = selecteCcolors.some(
+                          (s) => s.color === color.name && s.selected
+                        );
+                        return (
+                          <li
+                            key={index}
+                            className="flex items-center cursor-pointer"
+                            onClick={() => handleColorsSelect(color.name)}
+                          >
+                            <input
+                              onChange={handleChangeSole}
+                              id={`material-${color.id}`}
+                              type="checkbox"
+                              checked={isSelected}
+                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-500  focus:ring-0"
+                            />
+                            <span
+                              // htmlFor={`material-${material.id}`}
+                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
+                            >
+                              {color.name}
                             </span>
                           </li>
                         );
@@ -359,7 +458,7 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-medium text-xs">Chất liệu</p>
+                <p className="font-medium text-xs">Chất liệu —</p>
 
                 <svg
                   className="w-4 h-4 ml-2"
@@ -401,7 +500,7 @@ const ListProductsByBrand = () => {
                               id={`material-${material.id}`}
                               type="checkbox"
                               checked={isSelected}
-                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-[#FFBA00]  focus:ring-0"
+                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-500  focus:ring-0"
                             />
                             <span
                               // htmlFor={`material-${material.id}`}
@@ -425,7 +524,7 @@ const ListProductsByBrand = () => {
                   type="button"
                 >
                   <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                  <p className="font-medium text-xs">khoảng giá</p>
+                  <p className="font-medium text-xs">khoảng giá —</p>
                   <svg
                     className="w-4 h-4 ml-2"
                     aria-hidden="true"
@@ -457,7 +556,7 @@ const ListProductsByBrand = () => {
                               type="radio"
                               value={item.priceRange}
                               name="default-radio"
-                              className="w-4 h-4 text-blue-600 bg-white border-gray-300 checked:bg-[#FFBA00]  focus:ring-0"
+                              className="w-4 h-4 text-blue-600 bg-white border-gray-300 checked:bg-gray-500  focus:ring-0"
                             />
                             <span
                               // htmlFor={`default-radio-${item.id}`}
@@ -535,7 +634,7 @@ const ListProductsByBrand = () => {
             <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer font-medium text-sm hover:text-[#FFBA00]"
+                  className="cursor-pointer font-medium text-sm "
                   onClick={() => {
                     navigate(path.home);
                   }}
@@ -544,14 +643,12 @@ const ListProductsByBrand = () => {
                 </span>
                 /
                 {!!param.status ? (
-                  <span className="text-[#FFBA00] text-sm font-medium ">
+                  <span className=" text-sm font-medium ">
                     {" "}
                     {param?.item?.name}
                   </span>
                 ) : (
-                  <span className="text-[#FFBA00] text-sm font-medium ">
-                    {param?.name}
-                  </span>
+                  <span className="text-sm font-medium "> {param?.name}</span>
                 )}
               </div>
               {/* Lọc sản phẩm */}

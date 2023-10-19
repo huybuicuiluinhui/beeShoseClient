@@ -42,21 +42,21 @@ const SliderHome = () => {
           })}
         </Slider>
       </div>
-      <div className="h-[450px]  ml-2 flex flex-col justify-between">
+      <div className="h-[450px]  ml-1 flex flex-col justify-between">
         <img
           src={Images.banner06}
           alt=""
-          className="w-full h-[32%] object-cover"
+          className="w-full h-[33%] object-cover"
         />
         <img
           src={Images.banner07}
           alt=""
-          className="w-full h-[32%]  object-cover "
+          className="w-full h-[33%]  object-cover "
         />
         <img
           src={Images.banner08}
           alt=""
-          className="w-full h-[32%]   object-cover"
+          className="w-full h-[33%]   object-cover"
         />
       </div>
     </div>

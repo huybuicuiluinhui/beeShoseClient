@@ -29,7 +29,7 @@ const ScrollToTopButton = () => {
           onClick={() => {
             scrollToTop();
           }}
-          className="bg-[#F5f5f5] hover:bg-white focus:ring-[#FFBA00] inline-flex items-center rounded-full p-3  text-[#FFBA00] shadow-sm transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2"
+          className="bg-[#F5f5f5] hover:bg-white focus:ring-[#FFBA00] inline-flex items-center rounded-full p-3  text-[#000] shadow-sm transition-opacity focus:outline-none focus:ring-2 focus:ring-offset-2"
         >
           <BiArrowFromBottom className="h-6 w-6" aria-hidden="true" />
         </button>

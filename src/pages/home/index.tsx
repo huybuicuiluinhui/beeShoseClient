@@ -63,7 +63,7 @@ const HomePage = () => {
   const getDataShoes = async () => {
     const res = await axios({
       method: "get",
-      url: API.getShoe(page, 10),
+      url: API.getShoe(page, 15),
     });
     setSekeletonItemShoe(true);
     if (res.status) {

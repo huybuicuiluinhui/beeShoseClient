@@ -56,8 +56,8 @@ const ProductItem = ({
   const [amountShoe, setAmountShoe] = useState<number>();
   const [showToast, setShowToast] = React.useState<boolean>(false);
   const [idAddToCart, setIdAddToCart] = useState<number>();
-  const [code, setCode] = useState<string>();
   const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [code, setCode] = useState<string>();
   const { openCart, addMultipleToCart } = useShoppingCart();
   const getDataSize = async () => {
     let combinedData: Product[] = [];
@@ -312,18 +312,20 @@ const ProductItem = ({
           <div className="flex justify-between">
             <span className="font-semibold text-sm">
               Mã <br />
-              <span className="font-normal text-[11px]">{code}</span>
+              <span className="font-normal text-[11px]">
+                {!!price ? code : ""}
+              </span>
             </span>
             <span className="font-semibold text-sm">
               Danh mục <br />
               <span className="font-normal text-[11px]">
-                {inforShoe?.category?.name}
+                {!!price ? inforShoe?.category?.name : ""}
               </span>{" "}
             </span>
             <span className="font-semibold text-sm">
               Thương hiệu <br />
               <span className="font-normal text-[11px]">
-                {inforShoe?.brand?.name}
+                {!!price ? inforShoe?.brand?.name : ""}
               </span>{" "}
             </span>
           </div>
