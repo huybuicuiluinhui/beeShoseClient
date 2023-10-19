@@ -8,6 +8,7 @@ import axios from "axios";
 import API from "../api";
 import { IIForDetailShoe, IListDeatilShoe } from "../types/product.type";
 import { convertToCurrencyString } from "../utils/format";
+import SimpleToast from "./Toast";
 type ShoppingCartProps = {
   isOpen: boolean;
 };
@@ -17,6 +18,7 @@ type CartItemProps = {
 };
 const ItemInCart = ({ id, quantity }: CartItemProps) => {
   const [infoShoe, setInfoShoe] = useState<IIForDetailShoe>();
+  const [showToast, setShowToast] = useState<boolean>();
   const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
     useShoppingCart();
   const getDetailShoeWithId = async () => {
@@ -28,6 +30,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
       setInfoShoe(res?.data);
     }
   };
+  console.log("infoShoe", showToast);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
@@ -38,7 +41,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
         src={infoShoe?.images[0]?.name}
         className="w-[90px] h-[90px] object-contain"
       />
-      <div className="w-[60%] flex flex-col gap-2">
+      <div className="w-[70%] flex flex-col gap-2">
         <p className="text-xs font-medium line-clamp-2 ">
           {infoShoe?.shoe.name}-{infoShoe?.color.name}-{infoShoe?.size.name}
         </p>
@@ -56,7 +59,15 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
             </div>
             <div
               className="border-[1px] border-gray-300 w-6 flex items-center justify-center"
-              onClick={() => [increaseCartQuantity(infoShoe.id)]}
+              onClick={() => {
+                if (quantity >= infoShoe.quantity) {
+                  console.log("ahihi");
+                  setShowToast(true);
+                  return;
+                } else {
+                  increaseCartQuantity(infoShoe.id);
+                }
+              }}
             >
               +
             </div>

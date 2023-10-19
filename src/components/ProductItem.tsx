@@ -246,8 +246,14 @@ const ProductItem = ({
                 <div className="flex flex-col">
                   <button
                     className="w-8  h-[50%]  border-[1px] border-[#e9e9e9] "
-                    onClick={() =>
-                    if   setAmount((prev) => prev + 1)}
+                    onClick={() => {
+                      if (amountShoe === amount) {
+                        alert("Số lượng sản phẩm đã đạt tối đa");
+                        return;
+                      } else {
+                        setAmount((prev) => prev + 1);
+                      }
+                    }}
                   >
                     <span className="leading-[5px]">+</span>
                   </button>

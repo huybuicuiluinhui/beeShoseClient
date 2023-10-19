@@ -81,7 +81,6 @@ const ListProductsByBrand = () => {
   const [isCheckedBrand, setIsCheckedBrand] = useState<boolean>(false);
   const [isCheckedSole, setIsCheckedSole] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
-
   // ----------------------------------------------------------------
 
   const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -248,11 +247,11 @@ const ListProductsByBrand = () => {
   }, []);
   return (
     <div className="w-full h-full ">
-      <div className="flex w-full relative">
+      <div className="flex w-full relative h-full">
         {/* Lọc */}
         <aside
           id="logo-sidebar"
-          className="sticky  left-0  w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
+          className="sticky  left-0  w-64 h-full transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
           aria-label="Sidebar"
         >
           <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
@@ -662,9 +661,7 @@ const ListProductsByBrand = () => {
                   id="underline_select"
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none  focus:outline-none focus:ring-0 focus:border-gray-200 "
                 >
-                  <option selected value="US">
-                    Sản phẩm mới
-                  </option>
+                  <option value="US">Sản phẩm mới</option>
                   <option value="CA">Giá tăng dần</option>
                   <option value="FR">Giá giảm dần</option>
                   <option value="DE">Bán chạy</option>

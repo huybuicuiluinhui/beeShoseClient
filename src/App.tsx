@@ -18,6 +18,7 @@ import ReturnProduct from "./pages/information/returnProduct";
 import DetailReturn from "./pages/information/returnProduct/detailReturn";
 import { ShoppingCartProvider } from "./context/shoppingCart.context";
 import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   let routes: RouteObject[] = [
     {
