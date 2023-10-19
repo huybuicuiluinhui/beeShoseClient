@@ -44,7 +44,7 @@ const ProductItem = ({
     }
   }
 
-  const [activeImg, setActiveImage] = useState<string>(imgArr[0][0]);
+  // const [activeImg, setActiveImage] = useState<string>(imgArr[0][0]);
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
@@ -246,7 +246,8 @@ const ProductItem = ({
                 <div className="flex flex-col">
                   <button
                     className="w-8  h-[50%]  border-[1px] border-[#e9e9e9] "
-                    onClick={() => setAmount((prev) => prev + 1)}
+                    onClick={() =>
+                    if   setAmount((prev) => prev + 1)}
                   >
                     <span className="leading-[5px]">+</span>
                   </button>
