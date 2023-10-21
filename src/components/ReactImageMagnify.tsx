@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 
-const MyReactImageMagnify = (imgArr: any) => {
+const MyReactImageMagnify = React.memo((imgArr: any) => {
   const img: any = [];
   const func = () => {
     const arrlength = imgArr?.img.length;
@@ -35,6 +35,6 @@ const MyReactImageMagnify = (imgArr: any) => {
       />
     </div>
   );
-};
+});
 
 export default MyReactImageMagnify;

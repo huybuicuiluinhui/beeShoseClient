@@ -23,15 +23,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
     autoplaySpeed: 1000,
   };
   return (
-    <div
-      className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden"
-      // onMouseEnter={() => {
-      //   setIsHovered(true);
-      // }}
-      // onMouseLeave={() => {
-      //   setIsHovered(false);
-      // }}
-    >
+    <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
       <p className=" text-xs bg-red-500 rounded-md font-medium  absolute top-[2%] left-[2%] z-[8] text-white px-2 py-1">
         Trả góp 0%
       </p>
@@ -59,7 +51,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
             // </Slider>
             <></>
           ) : (
-            <img
+            <LazyLoadImage
               src={firstImageUrl}
               className="max-h-[170px] w-full  object-contain mx-auto"
             />

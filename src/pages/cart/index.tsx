@@ -82,7 +82,6 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
           <span className="font-semibold text-sm ">
             {" "}
             {infoShoe?.shoe.name}-{infoShoe?.color?.name}-{infoShoe?.size?.name}
-            {/* -{infoShoe?.sole?.name} */}
           </span>
           <span className="text-red-500 text-xs">
             {" "}
@@ -111,7 +110,12 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
           onClick={() => {
-            increaseCartQuantity(infoShoe?.id);
+            if (quantity >= infoShoe.quantity) {
+              alert("Sản phẩm đạt số lượng tối đa");
+              return;
+            } else {
+              increaseCartQuantity(infoShoe.id);
+            }
           }}
         >
           <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
@@ -164,6 +168,7 @@ const CartPage = () => {
     getVoucher();
     getDetailShoe();
   }, []);
+  console.log("ldsfd", cartItems);
   useEffect(() => {
     if (!!listDetailShoe) {
       cartItems.reduce((total, cartItem) => {
@@ -231,7 +236,7 @@ const CartPage = () => {
           })}
 
           <a
-            href="#"
+            href={path.home}
             className="flex font-semibold text-[#BFAEE3] text-sm mt-10"
           >
             <svg
@@ -368,27 +373,58 @@ const CartPage = () => {
           </div>
           <div className="border-t ">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
-              <span>Tổng thanh toán</span>
-              {!!listDetailShoe && !!total && totalPercent ? (
+              <span>Tổng tiền</span>
+              {!!listDetailShoe && !!total && !!totalPercent ? (
                 <span className="text-red-800">
-                  {formatCurrency(total - totalPercent)}
+                  {formatCurrency(
+                    cartItems.reduce((total, cartItem) => {
+                      const item = listDetailShoe.find(
+                        (i) => i.id === cartItem.id
+                      );
+                      return total + (item?.price || 0) * cartItem.quantity;
+                    }, 0) - totalPercent
+                  )}
                 </span>
               ) : !!listDetailShoe && !!total ? (
-                <span className="text-red-800">{formatCurrency(total)}</span>
+                <span className="text-red-800">
+                  {formatCurrency(
+                    cartItems.reduce((total, cartItem) => {
+                      const item = listDetailShoe.find(
+                        (i) => i.id === cartItem.id
+                      );
+                      return total + (item?.price || 0) * cartItem.quantity;
+                    }, 0)
+                  )}
+                </span>
               ) : (
                 0
               )}
             </div>
-            <button
-              className="bg-[#fe662b] font-semibold hover:bg-red-600  py-3 text-sm text-white uppercase w-full"
-              onClick={() =>
-                navigate(path.payment, {
-                  state: { infoShoeList, total, totalPercent },
-                })
-              }
-            >
-              Mua hàng
-            </button>
+            {total === 0 || cartItems.length === 0 ? (
+              <button
+                className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"
+                onClick={() => {
+                  alert("Không có sản phẩm trong giỏ hàng ");
+                }}
+              >
+                Mua hàng
+              </button>
+            ) : (
+              <button
+                className="bg-[#fe662b] font-semibold hover:bg-red-600  py-3 text-sm text-white uppercase w-full"
+                onClick={() =>
+                  navigate(path.payment, {
+                    state: {
+                      infoShoeList,
+                      total,
+                      totalPercent,
+                    },
+                  })
+                }
+              >
+                Mua hàng
+              </button>
+            )}
           </div>
         </div>
       </div>

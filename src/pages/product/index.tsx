@@ -22,8 +22,6 @@ const ProductPage = () => {
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
-  const [rating, setRating] = useState(0);
-  const [rating2, setRating2] = useState(0);
   const getInfoDetailProduct = async () => {
     if (!!location && !id) {
       const res = await axios({
@@ -62,7 +60,6 @@ const ProductPage = () => {
         setInforShoe(res.data);
       }
     } else if (!!id) {
-      console.log("ahihihi");
       const res = await axios({
         method: "get",
         url: API.getShoeWithId(Number(id)),
@@ -92,14 +89,14 @@ const ProductPage = () => {
           <span className="underline font-normal ">{inforShoe?.name}</span>{" "}
         </p>
         <span className="font-bold my-4">Thông tin sản phẩm: </span>
-        <span className=" my-4 font-thin">{inforShoe?.description}</span>
+        <span className=" my-4 font-normal">{inforShoe?.description}</span>
         <p className="font-semibold my-4">
           Thương hiệu:{" "}
-          <span className="font-thin ">{inforShoe?.brand.name}</span>
+          <span className="font-normal ">{inforShoe?.brand.name}</span>
         </p>
         <p className="font-medium my-4">
           Danh mục:{" "}
-          <span className="font-thin ">{inforShoe?.category.name}</span>
+          <span className="font-normal ">{inforShoe?.category.name}</span>
         </p>
       </div>
     ) : (
@@ -163,38 +160,40 @@ const ProductPage = () => {
           <button
             onClick={() => handleTabClick(0)}
             className={`px-4 ${
-              activeTab === 0 ? " border-[#FFBA00] border-b-[1px]" : ""
+              activeTab === 0 ? " border-gray-700 border-b-[1px]" : ""
             } py-2 px-4 relative group btn4 leading-none overflow-hidden`}
           >
             <span className=" rounded-md font-semibold px-9 text-gray-700">
               MÔ TẢ
             </span>
             <span
-              className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
+              className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-700  `}
             />
           </button>
           <button
             onClick={() => handleTabClick(1)}
             className={`px-4 ${
-              activeTab === 1 ? " border-[#FFBA00] border-b-[1px]" : ""
+              activeTab === 1 ? " border-gray-700 border-b-[1px]" : ""
             } py-2 px-4 relative group btn4 leading-none overflow-hidden`}
           >
             <span className="rounded-md font-semibold px-9 text-gray-700">
               CHÍNH SÁCH HOÀN TRẢ
             </span>
             <span
-              className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  `}
+              className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-700  `}
             />
           </button>
         </div>
-        <div className="w-full">
+        <div className="w-full ">
           {activeTab === 0 && <Tab01 />}
           {activeTab === 1 && <Tab02 />}
         </div>
-        <p className="text-base font-medium  uppercase my-5 text-[#000] flex">
-          Các sản phẩm tương tự
-        </p>
-        <div className="w-10 h-[1px] bg-[#000] self-end ml-2" />
+        <div className="flex items-center   ">
+          <span className="text-base font-medium  uppercase my-5 text-[#000] ">
+            Các sản phẩm tương tự
+          </span>
+          <div className="w-10 h-[1px] bg-[#000]  ml-2" />
+        </div>
         {!!dataProductSole && !!dataProductSole.length && (
           <SliderListProduct products={dataProductSole} />
         )}

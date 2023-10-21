@@ -39,7 +39,7 @@ const API = {
     `api/shoe-detail?name=${name}&size=${size}&color=${color}&sizePage=100000`,
   // Lấy danh sách voucher
   getVoucher: () => baseUrl + `api/voucher?sizePage=100000`,
-  getShoeSearch: (name: string) =>
-    baseUrl + `api/shoe-detail?name=${name}&sizePage=100000`,
+  getShoeSearch: (name: string, page: number) =>
+    baseUrl + `api/shoe?name=${name}&page=${page}&sizePage=20`,
 };
 export default API;

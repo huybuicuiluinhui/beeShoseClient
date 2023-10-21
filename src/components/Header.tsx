@@ -8,7 +8,10 @@ import FormLogin from "../pages/loginAndRegister";
 import { toSlug } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
 import API from "../api";
-
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 const Header = () => {
   const navigate = useNavigate();
   const { cartQuantity, openCart } = useShoppingCart();
@@ -17,26 +20,24 @@ const Header = () => {
   const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
   const [listCategory, setListCategory] = useState<Product[]>();
   const [isHeaderSticky, setIsHeaderSticky] = useState<boolean>(false);
-  const [showDropdown, setIsShowDropdown] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<number>(1);
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [searchValue, setSearchValue] = useState<string>();
-  const onShowDropdown = (isShowDropDown: boolean) => {
-    setIsShowDropdown(isShowDropDown);
-  };
+  // const [showDropdown, setIsShowDropdown] = useState<boolean>(false);
+  // const [selectedCategory, setSelectedCategory] = useState("");
+  // const onShowDropdown = (isShowDropDown: boolean) => {
+  //   setIsShowDropdown(isShowDropDown);
+  // };
 
   const handleKeyPress = (event: any) => {
-    console.log(event.key);
     if (event.key === "Enter") {
       const key = event.target.value;
       navigate(`/search/${toSlug(event.target.value)}`, {
         state: {
           key,
-          value: results,
-          status: false,
         },
       });
+      setResults([]);
     }
   };
   const handleHover = (isHovering: boolean) => {
@@ -153,7 +154,7 @@ const Header = () => {
           <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 ">
             <div className="w-[5%]">
               <a href="/" className="flex items-center w-fit ">
-                <img
+                <LazyLoadImage
                   src={Images.BeeShoes}
                   className="w-[80px] object-cover h-auto"
                 />
@@ -201,7 +202,7 @@ const Header = () => {
                         results.map((result, index) => {
                           return (
                             <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
-                              <img
+                              <LazyLoadImage
                                 src={result.images.split(",")[0]}
                                 alt=""
                                 className="w-10 h-10 object-cover rounded mr-2  "
@@ -231,7 +232,7 @@ const Header = () => {
                     onClick={() => {}}
                   >
                     <div className="">
-                      <img
+                      <LazyLoadImage
                         width="20"
                         height="20"
                         src="https://img.icons8.com/ios/50/phone--v2.png"
@@ -255,7 +256,7 @@ const Header = () => {
                     className=" flex justify-center items-center my-auto "
                     onClick={() => {}}
                   >
-                    <img
+                    <LazyLoadImage
                       src={Images.iconBox}
                       alt=""
                       className="w-[22px] h-[22px] object-contain"
@@ -315,7 +316,7 @@ const Header = () => {
                     className=" flex justify-center items-center my-auto "
                     onClick={() => {}}
                   >
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
+                    <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
                     <div className="ml-3">
                       <p className="text-xs">Tài khoản</p>
                       <p className="text-sm font-medium">Đăng nhập/Đăng ký</p>

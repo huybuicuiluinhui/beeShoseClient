@@ -29,8 +29,7 @@ interface ShoeColor {
 const ListProductsByBrandWithSearch = () => {
   const location = useLocation();
   const param = location.state;
-  console.log("param", param.value);
-
+  console.log("param", param);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -38,6 +37,7 @@ const ListProductsByBrandWithSearch = () => {
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
   const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
+  const [isDropdownOpen5, setIsDropdownOpen5] = useState<boolean>(true);
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [priceRange2, setPriceRange2] = useState([
     {
@@ -75,6 +75,7 @@ const ListProductsByBrandWithSearch = () => {
   const [materials, setMaterials] = useState<Product[]>();
   const [colors, setColors] = useState<Product[]>();
   const [brands, setBrands] = useState<Product[]>();
+  const [listShoes, setListShoes] = useState<IProduct[]>();
   const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
   const [isCheckedSize, setIsCheckedSize] = useState<boolean>(false);
   const [isCheckedBrand, setIsCheckedBrand] = useState<boolean>(false);
@@ -136,7 +137,6 @@ const ListProductsByBrandWithSearch = () => {
       }
     });
   };
-  // console.log("selectedBrands", selectedBrands);
   const handlePriceChange = (value: any) => {
     setPriceRange(value);
   };
@@ -154,7 +154,25 @@ const ListProductsByBrandWithSearch = () => {
   const handleDropdownToggleBrand = () => {
     setIsDropdownOpen4(!isDropdownOpen4);
   };
+  const handleDropdownToggleColor = () => {
+    setIsDropdownOpen5(!isDropdownOpen5);
+  };
   // ----------------------------------------------------------------
+
+  const getShoeWithKeyParams = async (key: string) => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getShoeSearch(key, page),
+      });
+      if (res.status) {
+        console.log("resss", res.data.data);
+        setListShoes(res?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const getDataSize = async () => {
     const res = await axios({
       method: "get",
@@ -164,7 +182,6 @@ const ListProductsByBrandWithSearch = () => {
       setShoesSize(res?.data?.data);
     }
   };
-  // call dữ liệu
   //  theo chất liệu
   const getDataSole = async () => {
     const res = await axios({
@@ -172,7 +189,7 @@ const ListProductsByBrandWithSearch = () => {
       url: API.getSole(),
     });
     if (res.status) {
-      setMaterials(res.data?.data);
+      setMaterials(res?.data?.data);
     }
   };
   //  theo thương hiệu
@@ -192,7 +209,7 @@ const ListProductsByBrandWithSearch = () => {
       url: API.getAllColors(),
     });
     if (res.status) {
-      setColors(res.data?.data);
+      setColors(res?.data?.data);
     }
   };
   useEffect(() => {
@@ -202,11 +219,14 @@ const ListProductsByBrandWithSearch = () => {
     getBrand();
     getDataColors();
   }, []);
+  useEffect(() => {
+    getShoeWithKeyParams(param?.key);
+  }, [param]);
   return (
     <div className="w-full h-full ">
       <div className="flex w-full relative h-full">
         {/* Lọc */}
-        {!!param.key && param?.value?.length > 0 ? (
+        {!!listShoes && listShoes.length > 0 ? (
           <aside
             id="logo-sidebar"
             className="sticky  left-0  w-64 h-full transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
@@ -315,7 +335,6 @@ const ListProductsByBrandWithSearch = () => {
                           const isSelected = selectedBrands.some(
                             (s) => s.brand === brand.name && s.selected
                           );
-                          console.log("isSelected ", isSelected);
                           return (
                             <li
                               key={brand.id}
@@ -343,7 +362,7 @@ const ListProductsByBrandWithSearch = () => {
                 )}
                 {/* theo màu sắc */}
                 <button
-                  onClick={handleDropdownToggleMaterial}
+                  onClick={handleDropdownToggleColor}
                   id="dropdownDefault"
                   data-dropdown-toggle="dropdown"
                   className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full  mt-2"
@@ -369,7 +388,7 @@ const ListProductsByBrandWithSearch = () => {
                   </svg>
                 </button>
                 {/* Dropdown menu */}
-                {isDropdownOpen3 && (
+                {isDropdownOpen5 && (
                   <div className="  w-full  rounded-lg ">
                     <ul
                       className="space-y-2 text-sm"
@@ -587,7 +606,7 @@ const ListProductsByBrandWithSearch = () => {
             <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer font-medium text-sm "
+                  className="cursor-pointer  text-xs  text-[#909097]"
                   onClick={() => {
                     navigate(path.home);
                   }}
@@ -595,12 +614,12 @@ const ListProductsByBrandWithSearch = () => {
                   Trang chủ
                 </span>
                 /
-                {!!param?.value && param?.key ? (
+                {param?.key ? (
                   <span className=" text-sm font-medium">
-                    Kết quả tìm kiếm cho “{param?.key}”
+                    y Kết quả tìm kiếm cho “{param?.key}”
                   </span>
                 ) : (
-                  <span className="text-sm font-medium "> {param?.name}</span>
+                  <span className="text-sm font-medium "> Tất cả sản phẩm</span>
                 )}
               </div>
               {/* Lọc sản phẩm */}
@@ -623,8 +642,8 @@ const ListProductsByBrandWithSearch = () => {
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
               <Fade top distance="10%" duration={1500}>
-                {!!param?.key && !!param?.value && param?.value?.length > 0 ? (
-                  param?.value.map((e: any, i: number) => {
+                {!!listShoes && listShoes.length > 0 ? (
+                  listShoes.map((e: any, i: number) => {
                     return (
                       <div
                         key={i}
@@ -638,7 +657,7 @@ const ListProductsByBrandWithSearch = () => {
                       </div>
                     );
                   })
-                ) : !!param?.key && param.value.length === 0 ? (
+                ) : listShoes?.length === 0 ? (
                   <span className="text-center font-medium text-base text-ted">
                     Không tìm thấy sản phẩm
                   </span>
@@ -666,7 +685,7 @@ const ListProductsByBrandWithSearch = () => {
                 )}
               </Fade>
             </div>
-            {param?.value?.length === 0 ? (
+            {listShoes?.length === 0 ? (
               ""
             ) : (
               <div className="my-10">

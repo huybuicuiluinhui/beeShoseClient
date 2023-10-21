@@ -15,6 +15,10 @@ import { toSlug } from "../../utils/format";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
 import Fade from "react-reveal/Fade";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 const Line = () => {
   return (
     <span className="border-b-2 border-[#f1f1f1] border-solid w-full h-[1px] my-3 " />
@@ -111,7 +115,7 @@ const HomePage = () => {
       <div className="w-full px-5 flex justify-between  ">
         <div className="flex items-center">
           {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA0klEQVR4nO2VsY5BQRhGT0ShWYlNFMpVehGleASJd1AoaL2FmmaLDea/Ept4BDUqlUQnyk9cbESW6t5RmJP8zWQmZ+YrvoFA4C3QiKKMoYymP6lRlWMjQ3J0fUl7sTDpcWw1pvRM3JCxvzm0k2OZwPzqm4/nr44oyzH3GvUVzcjKaCui9rcYCARehTpkZPQ1peJXPCN3KaGDjNbpIo83j8jH9ZZETRqru76easLn/+IxpbjQ0/gojLUcXymGfBf1eQb6oZC69KbvF3LUvQgDgZdzBEMQP1i1qaYaAAAAAElFTkSuQmCC" />{" "} */}
-          <img
+          <LazyLoadImage
             src="https://sneakerdaily.vn/wp-content/uploads/2022/09/doi-mau-doi-size-mien-phi.jpg"
             alt=""
             className="w-10 h-10"
@@ -123,7 +127,7 @@ const HomePage = () => {
         <div className="flex items-center">
           {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAYAAABWk2cPAAAACXBIWXMAAAsTAAALEwEAmpwYAAACeElEQVR4nO2WW4iNURTHfwwSMokHl1IelMgLD/LgEt5QeKGIhiKXQuKF8uKBPLiUWyThxRFJcs5anzouTZgmPLhEEaUYl4REqL/2nj3jnGlGzJkzT1at+tb+9rd/e6+9Lh/8l2qLjEUydlZdCywshT6UUy8nF9V4J6Oh1e6MGg1xnd9j9YHTFrqgxL4pp64i7zl1YZ0Se0GnoTL6y1knY7+MtbpIv6pCVWSIjCdy7so5IOdetDMGVw9qHJJzVjlqop2jRsY5GQe7HKoCY+Qck/FZzrSyxTOmp/FjYV6XQJVRK+O1nBPxLov0KoM20jvd8UkZr3SZgZVDnWlymvgLkfOmxROVQfMMk/NFzvoQSO3CQoA5G+K8IkMrhgZRgTkxYo3NtCMytsi4o4zZVcnTv5X/0LbudTlHkjbJuFpi/7ta/L6pZMzL7zRjabe0NmNJ6UnPyHgspzHpdRmZjLycUzL2yNgmY5UKzFOeCaFodBhEBZbL2Bifc/SJba3IgLaRNlPGmhRxy2SsTBpSYYecw3LOy7km44GMr3KU+uVtGUeVsVrGJBXpK2eXjOPJi7VxrjO8HBpyrPlFi35Mpe++jAsydsdTGjPiIqKHrjBCeabEUzn7ZNyQ80nONxlv4+nyjOsYGurnJQbJGKUrjJUxURmzwu+FnK2p7tanxX7GTRp7Zcwv7afaTs/oemeTHJPxXc6jdqH/InJGy1iRCvzL1GFOh2qUWt0hFVicXDs+ls/Q/or07TS0bAPhZMbU1Gffy3km43mIhbTBW2U/Y10twc0xGI2nMl7ImBszoTRNqgZv7q/BpR9k/OgWaCs8Y2SM/IzJ3Qb9k/wCfOx0NhkL26MAAAAASUVORK5CYII=" />{" "} */}
 
-          <img
+          <LazyLoadImage
             src="https://sneakerdaily.vn/wp-content/uploads/2022/09/mua-truoc-tra-sau-mien-lai.jpg"
             alt=""
             className="w-10 h-10"
@@ -135,7 +139,7 @@ const HomePage = () => {
         <div className="flex items-center">
           {/* <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAACN0lEQVR4nO2WTYhNYRjHf74ajaTZyIIsfFvZWMlGiIWsyBglFjbKRpOsLKRENqxskIWvDY3p3vM8x7iFlLob3zaifC0oakIJf73nXrcz955z58yYuyBP/eve0/uc3/s+7/P874X/8deHjKN/oCOKWDc2oHN63DLOyPgiY0VxYMzaQqoyLadCtxXRVxxoPC+kQXpyKnRLxo7iwEF62qpEV9v8GrCcUe6TMtZnJaitjD2jAp1qqpE+yLhchw7L2d+JEzZKKuOJYjYkn2NWJlBjUzqhminjVDtQEWAIGTuTU0fMqz1wtmSqzGomABhCzlk5d1Rhavbg54zAuIEDdMt5KmNvJ4D35WxtWVcr7eNaSQfoLgooAOyvu0/zLL+W8702FkPMnyhgCEUsbXGqiL7A6ggwKwIjF6hrzJSzS86B0bq1paQluuT0yjgoY6PEpLZAxSyW8UbOPTmXZLwPrlEEKGN20o3OQxkX5LyScz2MQxr4Q0MsaLzAqMg43vheYU6ygbRb5AGdc3Iu6gpTGpUyHoRxUMTCwAqLbsp5JCNOFDZQYm7TS0/IedFYM1If6ycKuZ9lrBqRa+yT8U7OMzkeHsxQzPZg0nUNN/+gyjgv52pqTZ5eKmZz02YP1w2+N3P8gofKuBu8L5RGxra66y/Lu8dUbn9ykhssD80S/n7I+CRjTX5ShemJ9xk/ZXyV8zbv/lpyDzFZzjEZ35LcUO6I3UVyQ7fOkrPodwOMJRSuqcySsVjkvxO/ANn0ziVH+E5iAAAAAElFTkSuQmCC" />{" "} */}
 
-          <img
+          <LazyLoadImage
             src="https://sneakerdaily.vn/wp-content/uploads/2022/09/giao-hang-doi-tra-tan-nha.jpg"
             alt=""
             className="w-10 h-10"
@@ -145,7 +149,7 @@ const HomePage = () => {
           </span>
         </div>
         <div className="flex items-center">
-          <img
+          <LazyLoadImage
             src="https://sneakerdaily.vn/wp-content/uploads/2022/09/hang-gia-den-tien-gap-doi.jpg"
             alt=""
             className="w-10 h-10"
@@ -172,7 +176,7 @@ const HomePage = () => {
           <span className="text-[#999] italic  text-sm font-semibold  uppercase mb-5 ">
             {promotionType}
           </span>
-          <img
+          <LazyLoadImage
             src={Images.bannerHotDeal}
             className="w-full h-auto object-contain"
           />
@@ -189,7 +193,7 @@ const HomePage = () => {
                     <div
                       key={index}
                       onClick={() => {
-                        navigate(`/product/${toSlug(item.name)}`, {
+                        navigate(`/product/${item.id}`, {
                           state: item.id,
                         });
                       }}
@@ -204,14 +208,7 @@ const HomePage = () => {
                   .fill({})
                   .map((item, index) => {
                     return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          navigate(`/product/${toSlug(item.name)}`, {
-                            state: item.id,
-                          });
-                        }}
-                      >
+                      <div key={index}>
                         <SekeletonItemShoe />
                       </div>
                     );
@@ -237,7 +234,7 @@ const HomePage = () => {
                   <div
                     key={index}
                     onClick={() => {
-                      navigate(`/product/${toSlug(item.name)}`, {
+                      navigate(`/product/${item.id}`, {
                         state: item.id,
                       });
                     }}
@@ -321,7 +318,7 @@ const HomePage = () => {
                         </a>
                       </div>
                     </div>
-                    <img
+                    <LazyLoadImage
                       src={Images.banner05}
                       className="w-full h-[257px] group-hover:scale-110 transition-transform duration-300  object-cover"
                       alt="chair"
@@ -366,7 +363,7 @@ const HomePage = () => {
                         </a>
                       </div>
                     </div>
-                    <img
+                    <LazyLoadImage
                       src={Images.banner03}
                       className="w-full object-cover h-[257px] group-hover:scale-110 transition-transform duration-300"
                       alt="wall design"
@@ -411,7 +408,7 @@ const HomePage = () => {
                       </a>
                     </div>
                   </div>
-                  <img
+                  <LazyLoadImage
                     src={Images.banner04}
                     alt="sitting place"
                     className="w-full mt-8 md:mt-6 hidden sm:block  h-[466.44px] object-cover group-hover:scale-110 transition-transform duration-300"
@@ -457,7 +454,7 @@ const HomePage = () => {
                       </a>
                     </div>
                   </div>
-                  <img
+                  <LazyLoadImage
                     src={Images.bannerAdidas}
                     alt="sitting place"
                     className="w-full sm:block hidden h-[466.44px] object-cover group-hover:scale-110 transition-transform duration-300"
@@ -502,7 +499,7 @@ const HomePage = () => {
                         </a>
                       </div>
                     </div>
-                    <img
+                    <LazyLoadImage
                       src="https://i.ibb.co/3yvZBpm/img-5.png"
                       className="w-full h-[257px] object-cover group-hover:scale-110 transition-transform duration-300"
                       alt="chair"
@@ -546,7 +543,7 @@ const HomePage = () => {
                         </a>
                       </div>
                     </div>
-                    <img
+                    <LazyLoadImage
                       src="https://i.ibb.co/gDdnJb5/img-6.png"
                       className="w-full h-[257px] object-cover group-hover:scale-110 transition-transform duration-300"
                       alt="wall design"

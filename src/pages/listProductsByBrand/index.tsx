@@ -25,7 +25,7 @@ interface ShoseBrand {
 const ListProductsByBrand = () => {
   const location = useLocation();
   const param = location.state;
-
+  console.log("res", param);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -269,13 +269,16 @@ const ListProductsByBrand = () => {
                         return (
                           <div
                             key={size.id}
-                            className={`flex items-center justify-center rounded py-1 w-full hover:bg-[#ffba00] ${
-                              isSelected ? "bg-[#ffba00]" : "bg-[#EDEDED] "
+                            className={` cursor-pointer flex items-center justify-center rounded py-1 w-full hover:bg-gray-500 ${
+                              isSelected
+                                ? "bg-gray-500 text-white"
+                                : "bg-[#EDEDED] "
                             }   `}
                             onClick={() => handleSizeSelect(Number(size.name))}
                           >
                             <span
-                              className={` text-sm font-medium text-gray-900 `}
+                              className={` text-sm font-medium 
+                   ${isSelected ? " text-white" : " text-gray-900"}    `}
                             >
                               {size.name}
                             </span>
@@ -325,6 +328,7 @@ const ListProductsByBrand = () => {
                         const isSelected = selectedBrands.some(
                           (s) => s.brand === brand.name && s.selected
                         );
+                        console.log("isSelected ", isSelected);
                         return (
                           <li
                             key={brand.id}
@@ -336,14 +340,14 @@ const ListProductsByBrand = () => {
                               id={`brand-${brand.id}`}
                               type="checkbox"
                               checked={isSelected}
-                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-[#FFBA00]  focus:ring-0 "
+                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-500  focus:ring-0 "
                             />
-                            <span
+                            <label
                               // htmlFor={`brand-${brand.id}`}
                               className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
                             >
                               {brand.name}
-                            </span>
+                            </label>
                           </li>
                         );
                       })}
@@ -535,7 +539,7 @@ const ListProductsByBrand = () => {
             <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer font-medium text-sm hover:text-[#FFBA00]"
+                  className="cursor-pointer font-medium text-sm text-[#909097] "
                   onClick={() => {
                     navigate(path.home);
                   }}
@@ -544,14 +548,12 @@ const ListProductsByBrand = () => {
                 </span>
                 /
                 {!!param.status ? (
-                  <span className="text-[#FFBA00] text-sm font-medium ">
+                  <span className=" text-sm font-medium ">
                     {" "}
                     {param?.item?.name}
                   </span>
                 ) : (
-                  <span className="text-[#FFBA00] text-sm font-medium ">
-                    {param?.name}
-                  </span>
+                  <span className=" text-sm font-medium ">{param?.name}</span>
                 )}
               </div>
               {/* Lọc sản phẩm */}
@@ -597,14 +599,7 @@ const ListProductsByBrand = () => {
                       .fill({})
                       .map((item, index) => {
                         return (
-                          <div
-                            key={index}
-                            // onClick={() => {
-                            //   navigate(`/product/${item.id}}`, {
-                            //     state: item.id,
-                            //   });
-                            // }}
-                          >
+                          <div key={index}>
                             <SekeletonItemShoe />
                           </div>
                         );

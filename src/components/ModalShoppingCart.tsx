@@ -30,7 +30,6 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
       setInfoShoe(res?.data);
     }
   };
-  console.log("infoShoe", showToast);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
@@ -61,7 +60,6 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
               className="border-[1px] border-gray-300 w-6 flex items-center justify-center"
               onClick={() => {
                 if (quantity >= infoShoe.quantity) {
-                  console.log("ahihi");
                   setShowToast(true);
                   return;
                 } else {
@@ -148,7 +146,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
             </div>
             <div className=" flex justify-around items-center my-5 ">
               <button
-                className="border-[#ffba00] border-[1px] px-3 py-2 rounded font-medium w-[45%]"
+                className="border-gray-300 border-[1px] px-3 py-2 rounded font-medium w-[45%] hover:border-gray-500"
                 onClick={() => [closeCart(), navigate(path.cart)]}
               >
                 Xem giỏ hàng

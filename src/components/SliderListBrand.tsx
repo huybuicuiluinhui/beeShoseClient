@@ -5,6 +5,10 @@ import slugify from "slugify";
 import axios from "axios";
 import API from "../api";
 import { Product } from "../types/product.type";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 import Images from "../static";
 const SliderListBrand = () => {
   const navigate = useNavigate();
@@ -52,7 +56,7 @@ const SliderListBrand = () => {
                 key={index}
               >
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 ">
-                  <img
+                  <LazyLoadImage
                     src={Images.iconAdidas}
                     className="w-[100px] h-[60px] object-contain mx-auto"
                   />

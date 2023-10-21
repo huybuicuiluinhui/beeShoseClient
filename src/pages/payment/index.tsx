@@ -16,6 +16,10 @@ import { convertToCurrencyString, toSlug } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
 import API from "../../api";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
 interface Province {
   ProvinceID: number;
   ProvinceName: string;
@@ -158,7 +162,7 @@ const PaymentPage = () => {
                   >
                     {/* product */}
                     {
-                      <img
+                      <LazyLoadImage
                         className="h-auto w-[20%] object-cpnatin"
                         src={item?.infoShoe?.images[0]?.name}
                       />
@@ -220,7 +224,7 @@ const PaymentPage = () => {
                 className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
                 htmlFor="radio_1"
               >
-                <img
+                <LazyLoadImage
                   className="w-14 object-contain"
                   src={Images.iconDeliveryFash}
                 />
@@ -245,7 +249,10 @@ const PaymentPage = () => {
                 className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
                 htmlFor="radio_2"
               >
-                <img className="w-14 object-contain" src={Images.iconDivery} />
+                <LazyLoadImage
+                  className="w-14 object-contain"
+                  src={Images.iconDivery}
+                />
                 <div className="ml-5">
                   <span className="mt-2 font-semibold">Giao hàng nhanh</span>
                   <p className="text-slate-500 text-sm leading-6">
@@ -577,7 +584,9 @@ const PaymentPage = () => {
               {!!listDetailShoe && !!location?.state?.totalPercent ? (
                 <p className="text-2xl font-semibold text-red-500">
                   {formatCurrency(
-                    location?.state?.total - location?.state?.totalPercent
+                    location?.state?.total -
+                      location?.state?.totalPercent +
+                      8000
                   )}
                 </p>
               ) : (
