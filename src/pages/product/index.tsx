@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ProductItem from "../../components/ProductItem";
 import Rate from "../../components/Rate";
 import SliderListProduct from "../../components/SliderListProduct";
@@ -10,6 +10,9 @@ import path from "../../constants/path";
 import { toSlug } from "../../utils/format";
 const ProductPage = () => {
   const location = useLocation();
+  const params = useParams();
+  const id = params?.id;
+  console.log("location ", params?.id);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
   const [inforShoe, setInforShoe] = useState<IInforShoe>();
@@ -22,15 +25,24 @@ const ProductPage = () => {
   const [rating, setRating] = useState(0);
   const [rating2, setRating2] = useState(0);
   const getInfoDetailProduct = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getShoeDetail(location.state),
-    });
-    if (res.status) {
-      setDataDetailProduct(res?.data?.data);
+    if (!!location && !id) {
+      const res = await axios({
+        method: "get",
+        url: API.getShoeDetail(location.state),
+      });
+      if (res.status) {
+        setDataDetailProduct(res?.data?.data);
+      }
+    } else if (!!id) {
+      const res = await axios({
+        method: "get",
+        url: API.getShoeDetail(Number(id)),
+      });
+      if (res.status) {
+        setDataDetailProduct(res?.data?.data);
+      }
     }
   };
-
   const getShoeSole = async () => {
     const res = await axios({
       method: "get",
@@ -41,19 +53,30 @@ const ProductPage = () => {
     }
   };
   const getProductWithId = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getShoeWithId(location.state),
-    });
-    if (res.status) {
-      setInforShoe(res.data);
+    if (!!location && !id) {
+      const res = await axios({
+        method: "get",
+        url: API.getShoeWithId(location.state),
+      });
+      if (res.status) {
+        setInforShoe(res.data);
+      }
+    } else if (!!id) {
+      console.log("ahihihi");
+      const res = await axios({
+        method: "get",
+        url: API.getShoeWithId(Number(id)),
+      });
+      if (res.status) {
+        setInforShoe(res.data);
+      }
     }
   };
   useEffect(() => {
     getProductWithId();
     getInfoDetailProduct();
     getShoeSole();
-  }, [location.state]);
+  }, [location.state || id]);
   const Tab01 = () => {
     return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">
@@ -116,35 +139,6 @@ const ProductPage = () => {
             tại CHÍNH SÁCH HOÀN TRẢ SẢN PHẨM
           </span>
         </p>
-        {/* <div className="grid grid-cols-3  ">
-          <div className="border p-4">
-            <p className="text-xl font-normal text-center">
-              Đánh giá trung bình
-            </p>
-            <p className="text-[#FFBA00] font-bold text-4xl text-center my-3">
-              0/5
-            </p>
-            <Rate rating={rating} onRating={(rate: any) => setRating(rate)} />
-          </div>
-          <div className="border p-4 h-full flex flex-col justify-around">
-            <p className="text-sm  text-center text-[#FE5335]">
-              Đánh giá sản phẩm
-            </p>
-            <div className="my-3">
-              <Rate
-                rating={rating2}
-                onRating={(rate: any) => setRating(rate)}
-              />
-            </div>
-            <p className="text-sm  text-center text-[#FE5335]">
-              Nội dung đánh giá
-            </p>
-            <textarea />
-          </div>
-          <div className="border p-4 ">
-            <span>Đăng nhập để đánh giá</span>
-          </div>
-        </div> */}
       </div>
     );
   };
@@ -199,8 +193,8 @@ const ProductPage = () => {
         </div>
         <p className="text-base font-medium  uppercase my-5 text-[#000] flex">
           Các sản phẩm tương tự
-          <div className="w-10 h-[1px] bg-[#000] self-end ml-2" />
         </p>
+        <div className="w-10 h-[1px] bg-[#000] self-end ml-2" />
         {!!dataProductSole && !!dataProductSole.length && (
           <SliderListProduct products={dataProductSole} />
         )}

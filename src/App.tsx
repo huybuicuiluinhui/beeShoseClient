@@ -18,6 +18,7 @@ import ReturnProduct from "./pages/information/returnProduct";
 import DetailReturn from "./pages/information/returnProduct/detailReturn";
 import { ShoppingCartProvider } from "./context/shoppingCart.context";
 import "react-toastify/dist/ReactToastify.css";
+import ListProductsByBrandWithSearch from "./pages/listProductsByBrandWithSearch";
 
 function App() {
   let routes: RouteObject[] = [
@@ -29,6 +30,12 @@ function App() {
           element: <ListProductsByBrand />,
           children: [{ index: true, element: <ProductPage /> }],
         },
+        {
+          path: path.listProductsByBrandWithSearch,
+          element: <ListProductsByBrandWithSearch />,
+          children: [{ index: true, element: <ProductPage /> }],
+        },
+
         { path: path.product, element: <ProductPage /> },
         { path: path.cart, element: <CartPage /> },
         { path: path.payment, element: <PaymentPage /> },

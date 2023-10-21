@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { IProduct } from "../types/product.type";
 import { convertToCurrencyString, renderColor } from "../utils/format";
 import Slider from "react-slick";
+import {
+  LazyLoadImage,
+  trackWindowScroll,
+} from "react-lazy-load-image-component";
+
 const ProductStanding = ({ product }: { product: IProduct }) => {
+  console.log("product", product);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const imageArray = product.images ? product.images.split(",") : [];
   const firstImageUrl = imageArray[0];
@@ -19,12 +25,12 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
   return (
     <div
       className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden"
-      onMouseEnter={() => {
-        setIsHovered(true);
-      }}
-      onMouseLeave={() => {
-        setIsHovered(false);
-      }}
+      // onMouseEnter={() => {
+      //   setIsHovered(true);
+      // }}
+      // onMouseLeave={() => {
+      //   setIsHovered(false);
+      // }}
     >
       <p className=" text-xs bg-red-500 rounded-md font-medium  absolute top-[2%] left-[2%] z-[8] text-white px-2 py-1">
         Trả góp 0%
@@ -36,21 +42,22 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
         `}
         >
           {isHovered === true ? (
-            <Slider {...settings}>
-              {imageArray.map((item, index) => {
-                return (
-                  <div
-                    className="flex flex-col w-full items-center justify-center "
-                    key={index}
-                  >
-                    <img
-                      src={item}
-                      className="max-h-[170px] w-full  object-contain mx-auto"
-                    />
-                  </div>
-                );
-              })}
-            </Slider>
+            // <Slider {...settings}>
+            //   {imageArray.map((item, index) => {
+            //     return (
+            //       <div
+            //         className="flex flex-col w-full items-center justify-center "
+            //         key={index}
+            //       >
+            //         <img
+            //           src={item}
+            //           className="max-h-[170px] w-full  object-contain mx-auto"
+            //         />
+            //       </div>
+            //     );
+            //   })}
+            // </Slider>
+            <></>
           ) : (
             <img
               src={firstImageUrl}

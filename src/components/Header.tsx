@@ -4,7 +4,6 @@ import Images from "../static";
 import path from "../constants/path";
 import axios from "axios";
 import { IProduct, Product } from "../types/product.type";
-import slugify from "slugify";
 import FormLogin from "../pages/loginAndRegister";
 import { toSlug } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
@@ -25,6 +24,20 @@ const Header = () => {
   const [searchValue, setSearchValue] = useState<string>();
   const onShowDropdown = (isShowDropDown: boolean) => {
     setIsShowDropdown(isShowDropDown);
+  };
+
+  const handleKeyPress = (event: any) => {
+    console.log(event.key);
+    if (event.key === "Enter") {
+      const key = event.target.value;
+      navigate(`/search/${toSlug(event.target.value)}`, {
+        state: {
+          key,
+          value: results,
+          status: false,
+        },
+      });
+    }
   };
   const handleHover = (isHovering: boolean) => {
     if (!showModal) {
@@ -115,6 +128,7 @@ const Header = () => {
                     "text-gray-900"
                   }`}
                   onClick={() => {
+                    console.log(item);
                     navigate(`${toSlug(item.name)}`, {
                       state: item,
                     });
@@ -178,12 +192,13 @@ const Header = () => {
                       className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
                       placeholder="Tìm kiếm sản phẩm tại đây....."
                       required
+                      // onChange={(e) => handleChange(e.target.value)}
+                      onKeyDown={(e) => handleKeyPress(e)}
                     />
                     <div className="w-full absolute bg-white z-[1000] mt-1 rounded px-3 max-h-[200px] overflow-y-scroll ">
                       {!!results &&
                         !!results.length &&
                         results.map((result, index) => {
-                          console.log("result.images[0]", result);
                           return (
                             <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
                               <img
@@ -197,7 +212,7 @@ const Header = () => {
                                 onClick={() => {
                                   setSearchValue(result.name);
                                   setResults([]);
-                                  navigate(`/product/${toSlug(result.name)}`, {
+                                  navigate(`/product/${result.id}`, {
                                     state: result.id,
                                   });
                                 }}

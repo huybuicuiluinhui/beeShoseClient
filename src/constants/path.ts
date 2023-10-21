@@ -8,6 +8,7 @@ const path = {
   cart: "/cart",
   product: "/product/:id",
   listProductsByBrand: "/:category",
+  listProductsByBrandWithSearch: "/search/:category",
   payment: "/payment",
   invoice: "/invoice",
   information: "/information",
