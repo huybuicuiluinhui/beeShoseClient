@@ -102,7 +102,7 @@ const Header = () => {
   }, []);
   const CategoryTable = () => {
     return (
-      <div className="w-full bg-[#ececec] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+      <div className="w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         <ul
           className="max-w-screen-xl px-4  mx-auto   flex flex-col   py-2 "
           onMouseEnter={() => {

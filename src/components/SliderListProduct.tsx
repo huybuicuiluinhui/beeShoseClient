@@ -38,6 +38,10 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
       sliderRef.current.slickPrev();
     }
   };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [products]);
+
   return (
     <div className="w-full flex px-4 my-2 mb-5 ">
       <button onClick={() => prev()}>

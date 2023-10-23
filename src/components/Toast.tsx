@@ -10,7 +10,6 @@ interface ToastType {
 const SimpleToast = ({ typeToast, message }: ToastType) => {
   const prevTypeToast = useRef<string | undefined>(typeToast);
   const prevMessage = useRef<string | undefined>(message);
-
   useEffect(() => {
     // Kiểm tra xem props có thay đổi so với lần trước hay không
     if (
@@ -36,7 +35,7 @@ const SimpleToast = ({ typeToast, message }: ToastType) => {
   }, [typeToast, message]);
 
   return (
-    <>
+    <div className="z-[1000]">
       <ToastContainer
         position="top-right"
         closeOnClick={true}
@@ -46,7 +45,7 @@ const SimpleToast = ({ typeToast, message }: ToastType) => {
         closeButton={<p>Đóng</p>}
         icon={"❤"}
       />
-    </>
+    </div>
   );
 };
 

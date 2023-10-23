@@ -15,6 +15,8 @@ import { useShoppingCart } from "../context/shoppingCart.context";
 import ModalComponent from "./Modal";
 import Images from "../static";
 import MyReactImageMagnify from "./ReactImageMagnify";
+import { toast } from "react-toastify";
+
 const ProductItem = ({
   product,
   shoeId,
@@ -36,7 +38,6 @@ const ProductItem = ({
   const [allColorData, setAllColorData] = useState<Product[]>([]);
   const [price, setPrice] = useState<number | undefined>(0);
   const [amountShoe, setAmountShoe] = useState<number>(0);
-  const [showToast, setShowToast] = React.useState<boolean>(false);
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
@@ -180,10 +181,7 @@ const ProductItem = ({
               Trang chủ
             </span>{" "}
             /
-            <span
-              className="text-xs  text-[#909097]"
-              onClick={() => navigate(path.listProductsByBrand)}
-            >
+            <span className="text-xs  text-[#909097]">
               {inforShoe?.brand.name}
             </span>
             / <span className="text-[#000] text-xs ">{inforShoe?.name}</span>
@@ -269,10 +267,10 @@ const ProductItem = ({
                           amount <= 10) ||
                         amount > 10
                       ) {
-                        alert("Số lượng sản phẩm đã đạt tối đa");
+                        toast("Số lượng sản phẩm đã đạt tối đa");
                         return;
                       } else if (!price) {
-                        alert(
+                        toast(
                           "Sản phẩm hiện hết hàng, vui lòng bạn chọn sản phẩm khác"
                         );
                         return;
@@ -316,17 +314,17 @@ const ProductItem = ({
                       amountItemInCart <= 10
                     ) {
                       addMultipleToCart(idAddToCart, amount);
-                      // setShowToast(true);
                       openCart();
                       setAmount(1);
+                      toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
                     } else if (
                       (!!price && amount < amountShoe - amountItemInCart) ||
                       amount >= 10
                     ) {
-                      alert("Sản phẩm đã tối đa trong giỏ hàng");
+                      toast("Sản phẩm đã tối đa trong giỏ hàng");
                       return;
                     } else {
-                      alert("Bạn cần chọn sản phẩm khác");
+                      toast("Bạn cần chọn sản phẩm khác");
                     }
                   }
                 }
@@ -341,12 +339,11 @@ const ProductItem = ({
                 onClick={() => {
                   if (!!idAddToCart && !!price) {
                     addMultipleToCart(idAddToCart, amount);
-                    setShowToast(true);
                     navigate(path.payment, {
                       // state: { cartItems, total, totalPercent },
                     });
                   } else {
-                    alert("Bạn cần chọn sản phẩm khác");
+                    toast("Bạn cần chọn sản phẩm khác");
                   }
                 }}
               >
@@ -386,12 +383,6 @@ const ProductItem = ({
           </div>
         </div>
       </div>
-      {showToast && (
-        <SimpleToast
-          typeToast="success"
-          message="Thêm vào giỏ hàng thành công"
-        />
-      )}
       {showModal && (
         <ModalComponent
           isVisible={showModal}

@@ -4,16 +4,16 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { DataProvider } from "./context/app.context";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* <DataProvider> */}
       <App />
-      {/* </DataProvider> */}
+      <ToastContainer autoClose={5000} />
     </BrowserRouter>
   </React.StrictMode>
 );

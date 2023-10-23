@@ -616,7 +616,7 @@ const ListProductsByBrandWithSearch = () => {
                 /
                 {param?.key ? (
                   <span className=" text-sm font-medium">
-                    y Kết quả tìm kiếm cho “{param?.key}”
+                    Kết quả tìm kiếm cho “{param?.key}”
                   </span>
                 ) : (
                   <span className="text-sm font-medium "> Tất cả sản phẩm</span>

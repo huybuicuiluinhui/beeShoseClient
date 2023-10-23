@@ -35,7 +35,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
   }, [id]);
 
   return infoShoe ? (
-    <div className="flex justify-between items-center p-3 border-b-[2px] border-dotted w-full border-[#ffba00]  ">
+    <div className="flex justify-between items-center p-3 border-b-[2px] border-dotted w-full border-gray-400  ">
       <img
         src={infoShoe?.images[0]?.name}
         className="w-[90px] h-[90px] object-contain"
@@ -110,18 +110,18 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
   return (
     <div>
       {isOpen ? (
-        <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10 overflow-y-auto  ">
+        <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    ">
           <div className="w-full h-full" onClick={() => closeCart()}></div>
-          <div className="bg-white  shadow-lg h-full w-[30%] overflow-y-auto transform   transition-transform ease-in-out ">
-            <div className="flex justify-between items-center px-4 pt-4 mb-2  ">
+          <div className="bg-white  shadow-lg h-screen w-[30%]  transform   transition-transform ease-in-out   ">
+            <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
               <h2 className="text-lg font-semibold  uppercase   ">Giỏ hàng</h2>
               <div onClick={() => closeCart()} className="cursor-pointer">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVklEQVR4nGNgoBAwMjAw8BGhjg+qFkVgCQMDgygeTaJQNXzYJFYyMDBI4NC0EoccTgWihDRhUyhKrCZ0/ywh4G/qaBQlx6mi5ASOKDnRQXYCIDvJkQwARZsQRRiqQN4AAAAASUVORK5CYII=" />{" "}
               </div>
             </div>
-            <div className="w-full bg-[#ffba00] h-[1.5px]  " />
+            <div className="w-full bg-gray-500 h-[1.5px]  " />
 
-            <div className="w-full  ">
+            <div className="w-full overflow-y-auto max-h-[550px]  ">
               {cartItems.map((item) => {
                 return <ItemInCart key={item.id} {...item} />;
               })}
