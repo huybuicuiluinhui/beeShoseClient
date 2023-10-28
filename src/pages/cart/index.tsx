@@ -27,10 +27,8 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
     try {
       const res = await axios.get(API.getShoeDetailWithId(id));
       if (res.status === 200) {
-        // Lấy thông tin từ API
         const newInfoShoe = res.data;
 
-        // Cập nhật mảng infoShoeList
         setInfoShoeList((prevInfoShoeList: any) => {
           const updatedInfoShoeList = [...prevInfoShoeList];
           const existingInfoShoe = updatedInfoShoeList.find(
@@ -38,17 +36,13 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
           );
 
           if (existingInfoShoe) {
-            // Nếu sản phẩm đã tồn tại trong mảng, cập nhật thông tin
             existingInfoShoe.infoShoe = newInfoShoe;
           } else {
-            // Nếu sản phẩm chưa tồn tại trong mảng, thêm mới
             updatedInfoShoeList.push({ id, infoShoe: newInfoShoe, quantity });
           }
 
           return updatedInfoShoeList;
         });
-
-        // Cập nhật thông tin sản phẩm
         setInfoShoe(newInfoShoe);
       }
     } catch (error) {
@@ -61,7 +55,7 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
   }, [id]);
 
   return infoShoe ? (
-    <div className="flex items-center hover:bg-gray-100  py-5 border-b-[1px] border-dashed w-full border-[#ffba00]">
+    <div className="flex items-center hover:bg-gray-100  py-5 border-b-[1px] border-dashed w-full border-gray-500">
       <div
         className="flex w-[5%] items-center justify-center cursor-pointer"
         onClick={() => {
@@ -145,6 +139,53 @@ const CartPage = () => {
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
   const [totalPercent, setTotalPercent] = useState<number>();
+  function generateRandomName() {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let randomName = "";
+    for (let i = 0; i < 50; i++) {
+      randomName += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return randomName;
+  }
+  function setUserNameCookie() {
+    let userName = getCookie("user_token");
+    if (!userName) {
+      userName = generateRandomName();
+      setCookie("user_token", userName, 365);
+    }
+    localStorage.setItem("user_token", userName);
+  }
+
+  function getCookie(cookieName: string) {
+    const name = cookieName + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(";");
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return "";
+  }
+
+  function setCookie(
+    cookieName: string,
+    cookieValue: string,
+    expirationDays: number
+  ) {
+    const d = new Date();
+    d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + d.toUTCString();
+    document.cookie =
+      cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+  }
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -165,6 +206,7 @@ const CartPage = () => {
   };
 
   useEffect(() => {
+    setUserNameCookie();
     getVoucher();
     getDetailShoe();
   }, []);
@@ -202,11 +244,11 @@ const CartPage = () => {
       <div className="flex shadow-md my-5">
         <div className="w-3/4 bg-white px-10 py-10">
           {/* <div className="flex justify-between border-b pb-8"> */}
-          <h1 className="font-semibold text-2xl uppercase text-[#FFBA00]">
+          <h1 className="font-semibold text-2xl uppercase text-gray-500">
             Giỏ hàng của bạn
           </h1>
           {/* </div> */}
-          <span className="font-medium text-sm  text-[#FFBA00]">
+          <span className="font-medium text-sm  text-gray-500">
             ({cartItems.length} sản phẩm)
           </span>
           <div className="flex mt-10 mb-5">
@@ -249,89 +291,12 @@ const CartPage = () => {
           </a>
         </div>
         <div id="summary" className="w-1/4 px-8 py-10">
-          <h1 className="font-normal text-2xl border-b pb-4 uppercase  ">
-            Thêm voucher
-          </h1>
+          <img
+            src={Images.bannerCart}
+            alt=""
+            className="w-full h-auto object-contain"
+          />
 
-          <div className=" w-full font-medium ">
-            <div
-              className={`bg-white w-full  flex items-center justify-between rounded `}
-            >
-              Dùng mã voucher ngay
-            </div>
-            <div
-              className={`w-full  mt-2 overflow-y-auto ${
-                open ? "max-h-60" : "max-h-0"
-              } `}
-            >
-              <div className="w-full bg-white">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value.toLowerCase())}
-                  onClick={() => setOpenList(true)}
-                  placeholder=""
-                  className="placeholder:text-gray-700 p-2 w-full "
-                />
-              </div>
-
-              {!!openList &&
-                voucher?.map((voucher, index) => (
-                  <div
-                    key={index}
-                    className={`w-full flex justify-between  hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2  ${
-                      voucher?.name?.toLowerCase() ===
-                        selected?.toLowerCase() && "bg-[#f5f5f5] text-black"
-                    }
-        ${
-          voucher?.name?.toLowerCase().startsWith(inputValue)
-            ? "block"
-            : "hidden"
-        }`}
-                    onClick={() => {
-                      if (
-                        voucher?.name?.toLowerCase() !== selected.toLowerCase()
-                      ) {
-                        setSelected(voucher?.name);
-                        setPrecent(voucher?.percentReduce);
-                        setInputValue(voucher?.name);
-                      }
-                    }}
-                  >
-                    <div className={`w-[50%] `}>
-                      <div
-                        key={voucher?.name}
-                        className={`w-full  text-xs  text-[#BFAEE3] `}
-                      >
-                        {voucher?.name}
-                      </div>
-
-                      <p className="text-[10px] mt-2">
-                        Phần trăm giảm: {voucher.percentReduce}%
-                      </p>
-                      <p className="text-[10px] mt-2">
-                        Số lượng còn: {voucher.quantity}
-                      </p>
-                    </div>
-                    <div className={`w-[50%] flex flex-col justify-between `}>
-                      <div
-                        key={voucher?.name}
-                        className={`w-full  text-[8px]   `}
-                      >
-                        Mã voucher: {voucher?.code}
-                      </div>
-
-                      <p className="text-[10px]">
-                        Đơn tối thiểu:{" "}
-                        <span className="text-red-400">
-                          {convertToCurrencyString(voucher.minBillValue)}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
           <div className="flex justify-between mt-10 mb-5">
             <span className="font-semibold text-sm uppercase">Tạm tính</span>
             {!!listDetailShoe && (

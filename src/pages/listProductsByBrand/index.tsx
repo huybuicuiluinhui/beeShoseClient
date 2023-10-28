@@ -229,7 +229,7 @@ const ListProductsByBrand = () => {
           aria-label="Sidebar"
         >
           <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
-          <div className=" mx-2 my-5 h-fit border-[1px] border-solid border-[#EDEDED]  ">
+          <div className=" mx-2 my-5 h-fit border-[1px] border-solid border-[#EDEDED]">
             <div className="flex flex-col items-center justify-center  w-full ">
               <button
                 onClick={handleDropdownToggle}

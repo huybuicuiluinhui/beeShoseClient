@@ -39,6 +39,11 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { cartItems } = useShoppingCart();
+  const [selected, setSelected] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [open, setOpen] = useState<boolean>(true);
+  const [openList, setOpenList] = useState<boolean>(false);
+  const [percent, setPrecent] = useState<number>();
   const [radioChoose, setRadioChoose] = React.useState<string>("option1");
   const [voucher, setVoucher] = useState<IVoucher[]>();
   const [showToast, setShowToast] = React.useState<boolean>(false);
@@ -152,13 +157,13 @@ const PaymentPage = () => {
             phù hợp.
           </p>
           {!!arrShoes && !!arrShoes.length ? (
-            <div className="mt-8 space-y-3 rounded-lg border bg-white  border-[#ffba00]">
+            <div className="mt-8 space-y-3 rounded-lg border bg-white  ">
               {arrShoes.map((item, index) => {
                 return (
                   <div
                     className={`flex px-6 py-2 w-full  ${
                       index === arrShoes.length
-                    } ? "": "border-b-[2px] border-dotted  border-[#ffba00]`}
+                    } ? "": "border-b-[2px] border-dotted  border-gray-500`}
                   >
                     {/* product */}
                     {
@@ -207,61 +212,85 @@ const PaymentPage = () => {
               </div>
             </div>
           )}
-          <p className="mt-8 text-lg font-medium text-[#FFBA00]">
-            Phương thức giao hàng
-          </p>
-          <form className="mt-5 grid gap-6 mb-10">
-            <div className="relative">
-              <input
-                className="peer hidden"
-                id="radio_1"
-                type="radio"
-                name="radio"
-                defaultChecked
-              />
-              <span className="peer-checked:border-[#FFBA00] absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
-              <label
-                className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                htmlFor="radio_1"
-              >
-                <LazyLoadImage
-                  className="w-14 object-contain"
-                  src={Images.iconDeliveryFash}
-                />
-                <div className="ml-5">
-                  <span className="mt-2 font-semibold">Giao trong ngày</span>
-                  <p className="text-slate-500 text-sm leading-6">
-                    Vận chuyển: 1h- 1 ngày
-                  </p>
-                </div>
-              </label>
+
+          <div className=" w-full font-medium ">
+            <div
+              className={`bg-white w-full  flex items-center justify-between rounded my-3`}
+            >
+              Dùng mã voucher ngay
             </div>
-            <div className="relative">
+            <div className="w-full bg-white ">
               <input
-                className="peer hidden"
-                id="radio_2"
-                type="radio"
-                name="radio"
-                defaultChecked
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+                onClick={() => setOpenList(true)}
+                placeholder=""
+                className="placeholder:text-gray-700 p-2 w-full "
               />
-              <span className="peer-checked:border-[#FFBA00] absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white" />
-              <label
-                className="peer-checked:border-2 peer-checked:border-[#FFBA00] peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
-                htmlFor="radio_2"
-              >
-                <LazyLoadImage
-                  className="w-14 object-contain"
-                  src={Images.iconDivery}
-                />
-                <div className="ml-5">
-                  <span className="mt-2 font-semibold">Giao hàng nhanh</span>
-                  <p className="text-slate-500 text-sm leading-6">
-                    Vận chuyển: 2-4 ngày
-                  </p>
-                </div>
-              </label>
             </div>
-          </form>
+            <div
+              className={`w-full  mt-2  ${
+                open ? "max-h-60" : "max-h-0"
+              } overflow-y-auto`}
+            >
+              {!!openList &&
+                voucher?.map((voucher, index) => (
+                  <div
+                    key={index}
+                    className={`w-full flex justify-betwee   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2  ${
+                      voucher?.name?.toLowerCase() ===
+                        selected?.toLowerCase() && "bg-[#f5f5f5] text-black"
+                    }
+        ${
+          voucher?.name?.toLowerCase().startsWith(inputValue)
+            ? "block"
+            : "hidden"
+        }`}
+                    onClick={() => {
+                      if (
+                        voucher?.name?.toLowerCase() !== selected.toLowerCase()
+                      ) {
+                        setSelected(voucher?.name);
+                        setPrecent(voucher?.percentReduce);
+                        setInputValue(voucher?.name);
+                      }
+                    }}
+                  >
+                    <div className={`w-[50%] `}>
+                      <div
+                        key={voucher?.name}
+                        className={`w-full  text-xs  text-[#BFAEE3] `}
+                      >
+                        {voucher?.name}
+                      </div>
+
+                      <p className="text-[10px] mt-2">
+                        Phần trăm giảm: {voucher.percentReduce}%
+                      </p>
+                      <p className="text-[10px] mt-2">
+                        Số lượng còn: {voucher.quantity}
+                      </p>
+                    </div>
+                    <div className={`w-[50%] flex flex-col justify-between `}>
+                      <div
+                        key={voucher?.name}
+                        className={`w-full  text-[8px]   `}
+                      >
+                        Mã voucher: {voucher?.code}
+                      </div>
+
+                      <p className="text-[10px]">
+                        Đơn tối thiểu:{" "}
+                        <span className="text-red-400">
+                          {convertToCurrencyString(voucher.minBillValue)}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
         </div>
         {/* Thanh toán */}
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
@@ -401,7 +430,7 @@ const PaymentPage = () => {
             </div>
             <label
               htmlFor="card-holder"
-              className="mt-4 mb-2 block text-sm font-medium text-[#FFBA00]"
+              className="mt-4 mb-2 block text-sm font-medium text-gray-500"
             >
               Chọn phương thức thanh toán
             </label>
@@ -415,13 +444,13 @@ const PaymentPage = () => {
                   id="option1"
                   aria-describedby="helper-radio-text"
                   type="radio"
-                  className=" peer-checked:border-[#FFBA00]   peer-checked:ring-[#FFBA00] w-4 h-4 text-[#FFBA00] bg-gray-100 border-gray-300 focus:ring-[#FFBA00]  "
+                  className=" peer-checked:border-gray-500   peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
                 />
               </div>
               <div className="ml-2 text-sm">
                 <label
                   htmlFor="option1"
-                  className="font-medium text-gray-900  peer-checked:text-[#FFBA00] "
+                  className="font-medium text-gray-900  peer-checked:text-gray-500 "
                 >
                   Thanh toán ngay
                 </label>
@@ -443,7 +472,7 @@ const PaymentPage = () => {
                   id="option2"
                   aria-describedby="helper-radio-text"
                   type="radio"
-                  className=" peer-checked:border-[#FFBA00]  peer-checked: peer-checked:ring-[#FFBA00] w-4 h-4 text-[#FFBA00] bg-gray-100 border-gray-300 focus:ring-[#FFBA00]  "
+                  className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
                 />
               </div>
               <div className="ml-2 text-sm">
@@ -597,7 +626,7 @@ const PaymentPage = () => {
             </div>
           </div>
           <button
-            className="mt-4 mb-8 w-full rounded-md bg-[#FFBA00] px-6 py-3 font-medium text-white"
+            className="mt-4 mb-8 w-full rounded-md bg-gray-500 px-6 py-3 font-medium text-white"
             onClick={() => {
               setShowToast(true);
               navigate(path.home);
