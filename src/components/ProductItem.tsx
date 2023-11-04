@@ -2,15 +2,9 @@ import React, { useEffect, useState, useMemo } from "react";
 import { IDetailProduct, IInforShoe, Product } from "../types/product.type";
 import { useNavigate } from "react-router-dom";
 import path from "../constants/path";
-import ReactImageMagnify from "react-image-magnify";
 import axios from "axios";
 import API from "../api";
-import {
-  convertToCurrencyString,
-  findProductIdByName,
-  renderColor,
-} from "../utils/format";
-import SimpleToast from "./Toast";
+import { convertToCurrencyString, findProductIdByName } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
 import ModalComponent from "./Modal";
 import Images from "../static";

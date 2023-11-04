@@ -1,25 +1,15 @@
 import React, { useState, useEffect } from "react";
-import Images from "../../static";
-import { Toast } from "flowbite-react";
-import SimpleToast from "../../components/Toast";
 import ShippingProcess from "../../components/shippingProcess";
-import path from "../../constants/path";
 import { useNavigate, useLocation } from "react-router-dom";
-import * as request from "../../utils/http";
 import axios from "axios";
-import {
-  IIForDetailShoe,
-  IListDeatilShoe,
-  IVoucher,
-} from "../../types/product.type";
+import { IListDeatilShoe, IVoucher } from "../../types/product.type";
 import { convertToCurrencyString, toSlug } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
-import API from "../../api";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+import API, { baseUrl } from "../../api";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { toast } from "react-toastify";
+import path from "../../constants/path";
 interface Province {
   ProvinceID: number;
   ProvinceName: string;
@@ -38,25 +28,32 @@ interface Ward {
 const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartItems } = useShoppingCart();
+  const { cartItems, clearCart } = useShoppingCart();
   const [selected, setSelected] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState<boolean>(true);
   const [openList, setOpenList] = useState<boolean>(false);
-  const [percent, setPrecent] = useState<number>();
+  const [percent, setPrecent] = useState<number>(0);
+  const [minPrice, setMinPrice] = useState<number>(0);
   const [radioChoose, setRadioChoose] = React.useState<string>("option1");
   const [voucher, setVoucher] = useState<IVoucher[]>();
-  const [showToast, setShowToast] = React.useState<boolean>(false);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<number>();
+  const [quantity, setQuantity] = useState<number>();
+  const [code, setCode] = useState<string>();
   const [arrShoes, setArrShoes] = useState<any[]>(
     location?.state?.infoShoeList
   );
+  const [feeShip, setFeeShip] = useState();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
+  const [textHVT, setTextHVT] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [note, setNote] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<number>(1);
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -72,16 +69,95 @@ const PaymentPage = () => {
       url: API.getVoucher(),
     });
     if (res.status) {
-      setVoucher(res?.data.data);
+      setVoucher(res?.data?.data);
     }
   };
-
+  const postBill = async () => {
+    if (textHVT === "" || textHVT === null || textHVT === undefined) {
+      toast.warning("Không được để trống họ và tên");
+    } else if (email === "" || email === null || email === undefined) {
+      toast.warning("Không được để trống họ và tên");
+    } else if (
+      selectedDistrict === null ||
+      selectedDistrict === undefined ||
+      selectedProvince === null ||
+      selectedProvince === undefined ||
+      selectedWard === null ||
+      selectedWard === undefined
+    ) {
+      toast.warning("Không được để trống địa chỉ");
+    } else if (feeShip === "" || feeShip === null || feeShip === undefined) {
+      toast.warning("Không được để trống họ và tên");
+    } else if (paymentMethod === null || paymentMethod === undefined) {
+      toast.warning("Hãy chọn phương thức thanh to");
+    } else {
+      try {
+        const response = await axios.post(
+          baseUrl + "api/bill/create-bill-client",
+          {
+            customerName: textHVT,
+            email: email,
+            district: selectedDistrict,
+            province: selectedProvince,
+            ward: selectedWard,
+            specificAddress: email,
+            moneyShip: feeShip,
+            moneyReduce: (percent / 100) * location?.state?.total,
+            totalMoney:
+              Number(location?.state?.total) +
+              Number(feeShip ? feeShip : 0) -
+              (percent / 100) * location?.state?.total,
+            note: note,
+            paymentMethod: paymentMethod,
+            carts: cartItems,
+          }
+        );
+        if (response.status) {
+          toast.success("Đặt hàng thành công");
+          navigate(path.home);
+          clearCart();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   const configApi = {
     headers: {
       Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
       "Content-Type": "application/json",
       ShopId: 124173,
     },
+  };
+  const caculateFee = async () => {
+    try {
+      const response = await axios.post(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
+        {
+          service_id: 53320,
+          service_type_id: null,
+          to_district_id: Number(selectedDistrict),
+          to_ward_code: selectedWard,
+          height: 50,
+          length: 20,
+          weight: 200,
+          width: 20,
+          cod_failed_amount: 2000,
+          insurance_value: 10000,
+          coupon: null,
+        },
+        {
+          headers: {
+            Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
+            "Content-Type": "application/json",
+            ShopId: 124173,
+          },
+        }
+      );
+      setFeeShip(response?.data?.data?.total);
+    } catch (error) {
+      console.log("Error:", error);
+    }
   };
   const fetchProvinces = async () => {
     try {
@@ -108,7 +184,6 @@ const PaymentPage = () => {
     }
   };
 
-  // Hàm lấy danh sách các phường xã theo quận huyện
   const fetchWardsByDistrict = async (districtId: number) => {
     try {
       const response = await axios.get(
@@ -120,27 +195,30 @@ const PaymentPage = () => {
       console.error("Error fetching wards:", error);
     }
   };
-
-  // Sử dụng useEffect để gọi hàm lấy danh sách tỉnh khi component được mount
   useEffect(() => {
     getDetailShoe();
     fetchProvinces();
     getVoucher();
   }, []);
-
-  // Sử dụng useEffect để gọi hàm lấy danh sách quận huyện khi selectedProvince thay đổi
   useEffect(() => {
     if (selectedProvince) {
       fetchDistrictsByProvince(selectedProvince);
     }
   }, [selectedProvince]);
 
-  // Sử dụng useEffect để gọi hàm lấy danh sách phường xã khi selectedDistrict thay đổi
   useEffect(() => {
     if (selectedDistrict) {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
+
+  useEffect(() => {
+    if (selectedWard !== undefined) {
+      caculateFee();
+    } else {
+      return;
+    }
+  }, [selectedWard]);
 
   const handleChange = (event: any) => {
     setRadioChoose(event.target.value);
@@ -156,16 +234,17 @@ const PaymentPage = () => {
             Kiểm tra các mặt hàng của bạn. Và chọn một phương thức vận chuyển
             phù hợp.
           </p>
+
           {!!arrShoes && !!arrShoes.length ? (
             <div className="mt-8 space-y-3 rounded-lg border bg-white  ">
               {arrShoes.map((item, index) => {
                 return (
                   <div
+                    key={index}
                     className={`flex px-6 py-2 w-full  ${
-                      index === arrShoes.length
-                    } ? "": "border-b-[2px] border-dotted  border-gray-500`}
+                      index === arrShoes.length - 1
+                    } ? "": " border-b-[1px] border-dotted  border-gray-200`}
                   >
-                    {/* product */}
                     {
                       <LazyLoadImage
                         className="h-auto w-[20%] object-cpnatin"
@@ -173,27 +252,25 @@ const PaymentPage = () => {
                       />
                     }
                     <div className="w-full">
-                      <div
-                        className="flex flex-col justify-between ml-4 flex-grow w-full h-full cursor-pointer"
-                        onClick={() => {
-                          navigate(`product/${toSlug(item?.infoShoe?.name)}`, {
-                            state: item?.infoShoe?.id,
-                          });
-                        }}
-                      >
-                        <span className="font-bold text-sm underline ">
+                      <div className="flex flex-col justify-between ml-4 flex-grow w-full h-full cursor-pointer">
+                        <span className="font-bold text-sm  ">
                           {item?.infoShoe?.shoe?.name}-
                           {item?.infoShoe?.color?.name}-
                           {item?.infoShoe?.size?.name}
                         </span>
-                        <span className="text-red-500 text-xs">
-                          {item?.infoShoe?.shoe?.brand?.name}
+                        <span className="text-red-500 text-xs font-medium">
+                          Thương hiệu: {item?.infoShoe?.shoe?.brand?.name}
                         </span>
                         <div className="w-full flex">
-                          <span className=" w-[50%]  text-xs font-semibold ">
-                            x{item?.quantity}
+                          <span className=" w-[50%] text-xs font-medium  text-[#333333]  ">
+                            <span className="text-[#666666] text-xs font-medium">
+                              {" "}
+                              Số lượng:
+                            </span>{" "}
+                            {item?.quantity}
                           </span>
-                          <span className="text-center  font-semibold text-sm w-[50%]">
+                          <span className="text-center  font-medium text-xs w-[50%] text-[#333333]">
+                            <span className="text-[#666666]">Thành tiền: </span>
                             {convertToCurrencyString(
                               item?.infoShoe?.price * item?.quantity
                             )}
@@ -207,7 +284,7 @@ const PaymentPage = () => {
             </div>
           ) : (
             <div className="flex items-center justify-center w-56 h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-              <div className="px-3 py-1 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+              <div className="px-3 py-1 text-xs font-medium leading-none text-center text-gray-800 bg-gray-200 rounded-full animate-pulse dark:bg-gray-900 dark:text-gray-200">
                 loading...
               </div>
             </div>
@@ -215,18 +292,20 @@ const PaymentPage = () => {
 
           <div className=" w-full font-medium ">
             <div
-              className={`bg-white w-full  flex items-center justify-between rounded my-3`}
+              className={`bg-white w-full  flex items-center justify-between rounded my-3 `}
             >
-              Dùng mã voucher ngay
+              MÃ GIẢM GIÁ
             </div>
             <div className="w-full bg-white ">
               <input
                 type="text"
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value.toLowerCase())}
+                onChange={(e) => {
+                  setInputValue(e.target.value.toLowerCase());
+                }}
                 onClick={() => setOpenList(true)}
-                placeholder=""
-                className="placeholder:text-gray-700 p-2 w-full "
+                placeholder="Hãy nhập mã voucher của bạn vào đây..."
+                className="placeholder:text-gray-700 p-2 w-full rounded-t-[4px] border-gray-200 "
               />
             </div>
             <div
@@ -238,7 +317,7 @@ const PaymentPage = () => {
                 voucher?.map((voucher, index) => (
                   <div
                     key={index}
-                    className={`w-full flex justify-betwee   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2  ${
+                    className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2  ${
                       voucher?.name?.toLowerCase() ===
                         selected?.toLowerCase() && "bg-[#f5f5f5] text-black"
                     }
@@ -249,11 +328,19 @@ const PaymentPage = () => {
         }`}
                     onClick={() => {
                       if (
-                        voucher?.name?.toLowerCase() !== selected.toLowerCase()
+                        voucher?.name?.toLowerCase() !==
+                          selected.toLowerCase() &&
+                        voucher?.minBillValue < location?.state?.total
                       ) {
                         setSelected(voucher?.name);
                         setPrecent(voucher?.percentReduce);
                         setInputValue(voucher?.name);
+                        setMinPrice(voucher?.minBillValue);
+                        setQuantity(voucher?.quantity);
+                        setCode(voucher?.code);
+                        toast.success("Áp dụng voucher thành công");
+                      } else {
+                        toast.warning("Bạn cần chọn voucher khác");
                       }
                     }}
                   >
@@ -289,6 +376,34 @@ const PaymentPage = () => {
                     </div>
                   </div>
                 ))}
+              {selected && percent && minPrice && quantity && (
+                <div
+                  className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}
+                >
+                  <div className={`w-[50%] `}>
+                    <div className={`w-full  text-xs  text-[#BFAEE3] `}>
+                      {inputValue}
+                    </div>
+
+                    <p className="text-[10px] mt-2">
+                      Phần trăm giảm: {percent}%
+                    </p>
+                    <p className="text-[10px] mt-2">Số lượng còn: {quantity}</p>
+                  </div>
+                  <div className={`w-[50%] flex flex-col justify-between `}>
+                    <div className={`w-full  text-[8px]   `}>
+                      Mã voucher: {code}
+                    </div>
+
+                    <p className="text-[10px]">
+                      Đơn tối thiểu:{" "}
+                      <span className="text-red-400">
+                        {convertToCurrencyString(minPrice)}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -303,30 +418,38 @@ const PaymentPage = () => {
             <div className="flex justify-between w-full px-4 my-5">
               <div className="relative z-0  w-[45%]">
                 <input
+                  value={textHVT}
+                  onChange={(e) => {
+                    setTextHVT(e.target.value);
+                  }}
                   type="text"
                   id="floating_standard"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập họ và tên
                 </label>
               </div>
               <div className="relative z-0 w-[45%] ">
                 <input
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                   type="text"
                   id="floating_standard"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Nhập số điện thoại
+                  Nhập emmai
                 </label>
               </div>
             </div>
@@ -352,7 +475,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Tỉnh/Thành Phố
                 </label>
@@ -378,7 +501,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Quận/Huyện
                 </label>
@@ -408,7 +531,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Phường/Xã
                 </label>
@@ -417,12 +540,12 @@ const PaymentPage = () => {
                 <input
                   type="text"
                   id="floating_standard"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập địa chỉ cụ thể
                 </label>
@@ -454,12 +577,6 @@ const PaymentPage = () => {
                 >
                   Thanh toán ngay
                 </label>
-                <p
-                  id="helper-radio-text"
-                  className="text-xs font-normal text-gray-500 dark:text-gray-300"
-                >
-                  Miễn phí cho đơn hàng trên 1tr đồng
-                </p>
               </div>
             </div>
             <div className="flex">
@@ -497,7 +614,7 @@ const PaymentPage = () => {
                     type="text"
                     id="card-holder"
                     name="card-holder"
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
                     placeholder="Hãy nhập tên tài khoản của bạn"
                   />
                   <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
@@ -529,7 +646,7 @@ const PaymentPage = () => {
                       type="text"
                       id="card-no"
                       name="card-no"
-                      className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                      className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
                       placeholder="xxxx-xxxx-xxxx-xxxx"
                     />
                     <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
@@ -549,13 +666,13 @@ const PaymentPage = () => {
                   <input
                     type="text"
                     name="credit-expiry"
-                    className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
                     placeholder="MM/YY"
                   />
                   <input
                     type="text"
                     name="credit-cvc"
-                    className="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                    className="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
                     placeholder="CVC"
                   />
                 </div>
@@ -584,15 +701,17 @@ const PaymentPage = () => {
                 <p className="text-sm font-medium text-gray-900">
                   Tổng phí vận chuyển
                 </p>
-                <p className="font-normal text-gray-900">8.000đ</p>
+                <p className="font-normal text-gray-900">
+                  {formatCurrency(feeShip ? feeShip : 0)}
+                </p>
               </div>
-              {!!listDetailShoe && !!location?.state?.totalPercent ? (
+              {!!listDetailShoe && !!percent ? (
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-gray-900">
                     Giảm giá voucher
                   </p>
                   <p className="font-normal text-gray-900">
-                    - {formatCurrency(location?.state?.totalPercent)}
+                    - {formatCurrency((percent / 100) * location?.state?.total)}
                   </p>
                 </div>
               ) : (
@@ -610,12 +729,12 @@ const PaymentPage = () => {
               <p className="text-sm font-medium text-gray-900">
                 Tổng thanh toán
               </p>
-              {!!listDetailShoe && !!location?.state?.totalPercent ? (
+              {!!location?.state?.total || !!feeShip || !!percent ? (
                 <p className="text-2xl font-semibold text-red-500">
                   {formatCurrency(
-                    location?.state?.total -
-                      location?.state?.totalPercent +
-                      8000
+                    Number(location?.state?.total) +
+                      Number(feeShip ? feeShip : 0) -
+                      (percent / 100) * location?.state?.total
                   )}
                 </p>
               ) : (
@@ -628,17 +747,13 @@ const PaymentPage = () => {
           <button
             className="mt-4 mb-8 w-full rounded-md bg-gray-500 px-6 py-3 font-medium text-white"
             onClick={() => {
-              setShowToast(true);
-              navigate(path.home);
+              postBill();
             }}
           >
             Đặt hàng
           </button>
         </div>
       </div>
-      {showToast && (
-        <SimpleToast typeToast="success" message="Đặt hàng thành công" />
-      )}
     </div>
   );
 };

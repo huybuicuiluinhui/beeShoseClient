@@ -193,7 +193,6 @@ const Header = () => {
                       className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
                       placeholder="Tìm kiếm sản phẩm tại đây....."
                       required
-                      // onChange={(e) => handleChange(e.target.value)}
                       onKeyDown={(e) => handleKeyPress(e)}
                     />
                     <div className="w-full absolute bg-white z-[1000] mt-1 rounded px-3 max-h-[200px] overflow-y-scroll ">

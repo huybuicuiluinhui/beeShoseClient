@@ -130,62 +130,57 @@ const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems } = useShoppingCart();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
-  const [voucher, setVoucher] = useState<IVoucher[]>();
-  const [selected, setSelected] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [open, setOpen] = useState<boolean>(true);
-  const [openList, setOpenList] = useState<boolean>(false);
-  const [percent, setPrecent] = useState<number>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
-  const [totalPercent, setTotalPercent] = useState<number>();
-  function generateRandomName() {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let randomName = "";
-    for (let i = 0; i < 50; i++) {
-      randomName += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-    }
-    return randomName;
-  }
-  function setUserNameCookie() {
-    let userName = getCookie("user_token");
-    if (!userName) {
-      userName = generateRandomName();
-      setCookie("user_token", userName, 365);
-    }
-    localStorage.setItem("user_token", userName);
-  }
+  // const [totalPercent, setTotalPercent] = useState<number>();
+  // function generateRandomName() {
+  //   const characters =
+  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  //   let randomName = "";
+  //   for (let i = 0; i < 50; i++) {
+  //     randomName += characters.charAt(
+  //       Math.floor(Math.random() * characters.length)
+  //     );
+  //   }
+  //   return randomName;
+  // }
+  // function setUserNameCookie() {
+  //   let userName = getCookie("user_token");
+  //   if (!userName) {
+  //     userName = generateRandomName();
+  //     setCookie("user_token", userName, 365);
+  //   }
+  //   localStorage.setItem("user_token", userName);
+  // }
 
-  function getCookie(cookieName: string) {
-    const name = cookieName + "=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const cookieArray = decodedCookie.split(";");
-    for (let i = 0; i < cookieArray.length; i++) {
-      let cookie = cookieArray[i];
-      while (cookie.charAt(0) === " ") {
-        cookie = cookie.substring(1);
-      }
-      if (cookie.indexOf(name) === 0) {
-        return cookie.substring(name.length, cookie.length);
-      }
-    }
-    return "";
-  }
+  // function getCookie(cookieName: string) {
+  //   const name = cookieName + "=";
+  //   const decodedCookie = decodeURIComponent(document.cookie);
+  //   const cookieArray = decodedCookie.split(";");
+  //   for (let i = 0; i < cookieArray.length; i++) {
+  //     let cookie = cookieArray[i];
+  //     while (cookie.charAt(0) === " ") {
+  //       cookie = cookie.substring(1);
+  //     }
+  //     if (cookie.indexOf(name) === 0) {
+  //       return cookie.substring(name.length, cookie.length);
+  //     }
+  //   }
+  //   return "";
+  // }
 
-  function setCookie(
-    cookieName: string,
-    cookieValue: string,
-    expirationDays: number
-  ) {
-    const d = new Date();
-    d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
-    const expires = "expires=" + d.toUTCString();
-    document.cookie =
-      cookieName + "=" + cookieValue + ";" + expires + ";path=/";
-  }
+  // function setCookie(
+  //   cookieName: string,
+  //   cookieValue: string,
+  //   expirationDays: number
+  // ) {
+  //   const d = new Date();
+  //   d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
+  //   const expires = "expires=" + d.toUTCString();
+  //   document.cookie =
+  //     cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+  // }
+
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -195,22 +190,11 @@ const CartPage = () => {
       setListDetailShoe(res?.data?.data);
     }
   };
-  const getVoucher = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getVoucher(),
-    });
-    if (res.status) {
-      setVoucher(res?.data.data);
-    }
-  };
 
   useEffect(() => {
-    setUserNameCookie();
-    getVoucher();
+    // setUserNameCookie();
     getDetailShoe();
   }, []);
-  console.log("ldsfd", cartItems);
   useEffect(() => {
     if (!!listDetailShoe) {
       cartItems.reduce((total, cartItem) => {
@@ -220,30 +204,12 @@ const CartPage = () => {
       }, 0);
     }
   }, [listDetailShoe]);
-  useEffect(() => {
-    if (!!listDetailShoe) {
-      cartItems.reduce((total, cartItem) => {
-        const item = listDetailShoe.find((i) => i.id === cartItem.id);
-        if (percent) {
-          setTotalPercent(
-            total + (item?.price || 0) * cartItem.quantity * (percent / 100)
-          );
-          return (
-            total + (item?.price || 0) * cartItem.quantity * (percent / 100)
-          );
-        } else {
-          return 0;
-        }
-      }, 0);
-    }
-  }, [inputValue]);
 
   return (
     <div className="container mx-auto ">
       <ShippingProcess type={1} />
       <div className="flex shadow-md my-5">
         <div className="w-3/4 bg-white px-10 py-10">
-          {/* <div className="flex justify-between border-b pb-8"> */}
           <h1 className="font-semibold text-2xl uppercase text-gray-500">
             Giỏ hàng của bạn
           </h1>
@@ -268,12 +234,7 @@ const CartPage = () => {
           </div>
           {cartItems.map((item) => {
             return (
-              <Item
-                key={item.id}
-                {...item}
-                // infoShoeList={infoShoeList}
-                setInfoShoeList={setInfoShoeList}
-              />
+              <Item key={item.id} {...item} setInfoShoeList={setInfoShoeList} />
             );
           })}
 
@@ -290,7 +251,7 @@ const CartPage = () => {
             Tiếp tục mua sắm
           </a>
         </div>
-        <div id="summary" className="w-1/4 px-8 py-10">
+        <div id="summary" className="w-1/4 px-4 py-10">
           <img
             src={Images.bannerCart}
             alt=""
@@ -313,44 +274,10 @@ const CartPage = () => {
               </span>
             )}
           </div>
-          <div className="flex justify-between mt-10 mb-5">
-            <span className="font-semibold text-sm uppercase">Giảm giá</span>
-            {!!listDetailShoe && (
-              <span className="font-semibold text-sm uppercase text-red-600">
-                {" "}
-                {formatCurrency(
-                  cartItems.reduce((total, cartItem) => {
-                    const item = listDetailShoe.find(
-                      (i) => i.id === cartItem.id
-                    );
-                    if (percent) {
-                      return (
-                        total +
-                        (item?.price || 0) * cartItem.quantity * (percent / 100)
-                      );
-                    } else {
-                      return 0;
-                    }
-                  }, 0)
-                )}
-              </span>
-            )}
-          </div>
           <div className="border-t ">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Tổng tiền</span>
-              {!!listDetailShoe && !!total && !!totalPercent ? (
-                <span className="text-red-800">
-                  {formatCurrency(
-                    cartItems.reduce((total, cartItem) => {
-                      const item = listDetailShoe.find(
-                        (i) => i.id === cartItem.id
-                      );
-                      return total + (item?.price || 0) * cartItem.quantity;
-                    }, 0) - totalPercent
-                  )}
-                </span>
-              ) : !!listDetailShoe && !!total ? (
+              {!!listDetailShoe && !!total ? (
                 <span className="text-red-800">
                   {formatCurrency(
                     cartItems.reduce((total, cartItem) => {
@@ -382,7 +309,6 @@ const CartPage = () => {
                     state: {
                       infoShoeList,
                       total,
-                      totalPercent,
                     },
                   })
                 }

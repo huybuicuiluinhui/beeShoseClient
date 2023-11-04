@@ -13,6 +13,7 @@ type CartItem = {
 };
 
 type ShoppingCartContext = {
+  clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
   getItemQuantity: (id: number) => number;
@@ -80,6 +81,10 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       }
     });
   }
+
+  function clearCart() {
+    setCartItems([]);
+  }
   function removeFromCart(id: number) {
     setCartItems((currItems) => {
       return currItems.filter((item) => item.id !== id);
@@ -118,6 +123,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         closeCart,
         cartItems,
         cartQuantity,
+        clearCart,
       }}
     >
       {children}

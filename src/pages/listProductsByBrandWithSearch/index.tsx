@@ -624,14 +624,11 @@ const ListProductsByBrandWithSearch = () => {
               </div>
               {/* Lọc sản phẩm */}
               <div>
-                <label htmlFor="underline_select" className="sr-only">
-                  Underline select
-                </label>
                 <select
                   value={selectedOption}
                   onChange={handleChangeSelect}
                   id="underline_select"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none  focus:outline-none focus:ring-0 focus:border-gray-200 "
+                  className="block py-1 px-2 w-full text-sm text-gray-500 bg-transparent border-solid border-1 border-gray-200  "
                 >
                   <option value="US">Sản phẩm mới</option>
                   <option value="CA">Giá tăng dần</option>
