@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { RouteObject, useRoutes } from "react-router-dom";
+import { RouteObject, useRoutes, Link } from "react-router-dom";
 import HomePage from "./pages/home/index";
 import ProductPage from "./pages/product/index";
 import path from "./constants/path";
@@ -19,6 +19,7 @@ import DetailReturn from "./pages/information/returnProduct/detailReturn";
 import { ShoppingCartProvider } from "./context/shoppingCart.context";
 import "react-toastify/dist/ReactToastify.css";
 import ListProductsByBrandWithSearch from "./pages/listProductsByBrandWithSearch";
+import PageNotFound from "./pages/pageNotFound404";
 
 function App() {
   let routes: RouteObject[] = [
@@ -45,6 +46,7 @@ function App() {
         { path: path.addAddress, element: <AddAddress /> },
         { path: path.addAddress, element: <ReturnProduct /> },
         { path: path.detailReturn, element: <DetailReturn /> },
+        { path: "*", element: <PageNotFound /> },
       ],
     },
   ];

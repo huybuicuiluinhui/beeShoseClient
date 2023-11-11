@@ -23,12 +23,6 @@ const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<number>(1);
   const [searchValue, setSearchValue] = useState<string>();
-  // const [showDropdown, setIsShowDropdown] = useState<boolean>(false);
-  // const [selectedCategory, setSelectedCategory] = useState("");
-  // const onShowDropdown = (isShowDropDown: boolean) => {
-  //   setIsShowDropdown(isShowDropDown);
-  // };
-
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
       const key = event.target.value;
@@ -102,44 +96,84 @@ const Header = () => {
   }, []);
   const CategoryTable = () => {
     return (
-      <div className="w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-        <ul
-          className="max-w-screen-xl px-4  mx-auto   flex flex-col   py-2 "
-          onMouseEnter={() => {
-            handleHover(true);
-          }}
-          onMouseLeave={() => {
-            handleHover(false);
-          }}
-        >
-          {!!listBrandHeader &&
-            !!listBrandHeader.length &&
-            listBrandHeader.map((item, index) => (
-              <li
-                key={index}
-                className="relative tracking-wider btn4 leading-none overflow-hidden py-3  w-fit "
-              >
-                <span
-                  className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
-                />
-                <span
-                  className={`cursor-pointer  hover:text-[#6756ca] ${
-                    // selectedCategory === item.name
-                    //   ? "text-[#FFBA00] : "
-                    "text-gray-900"
-                  }`}
-                  onClick={() => {
-                    console.log(item);
-                    navigate(`${toSlug(item.name)}`, {
-                      state: item,
-                    });
-                  }}
-                >
-                  {item.name}
-                </span>
-              </li>
-            ))}
-        </ul>
+      <div
+        className="w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-h-64"
+        onMouseEnter={() => {
+          handleHover(true);
+        }}
+        onMouseLeave={() => {
+          handleHover(false);
+        }}
+      >
+        <div className="w-full flex  mx-10">
+          <div className="w-[20%]">
+            <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+              Thương hiệu
+            </span>
+            <ul className="   mx-auto   flex flex-col   py-2 ">
+              {!!listBrandHeader &&
+                !!listBrandHeader.length &&
+                listBrandHeader.map((item, index) => (
+                  <li
+                    key={index}
+                    className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
+                  >
+                    <span
+                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                    />
+                    <span
+                      className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
+                      onClick={() => {
+                        navigate(`/category/${toSlug(item.name)}`, {
+                          state: item,
+                        });
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          <ul
+            className=" w-full "
+            onMouseEnter={() => {
+              handleHover(true);
+            }}
+            onMouseLeave={() => {
+              handleHover(false);
+            }}
+          >
+            <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+              Danh mục
+            </span>
+            <div className="grid grid-rows-4 grid-flow-col ">
+              {!!listCategory &&
+                !!listCategory.length &&
+                listCategory.map((item, index) => (
+                  <li
+                    key={index}
+                    className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
+                  >
+                    <span
+                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                    />
+                    <span
+                      className={`cursor-pointer text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
+                      onClick={() => {
+                        navigate(`/category/${toSlug(item.name)}`, {
+                          state: item,
+                        });
+                      }}
+                    >
+                      {item.name}
+                    </span>
+                  </li>
+                ))}
+            </div>
+          </ul>
+        </div>
       </div>
     );
   };
@@ -172,7 +206,6 @@ const Header = () => {
                       <svg
                         className="w-4 h-4 text-gray-500 "
                         aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 20 20"
                       >
@@ -189,7 +222,7 @@ const Header = () => {
                       type="search"
                       id="default-search"
                       value={searchValue}
-                      onChange={(e) => handleChange(e.target.value)}
+                      onChange={(e) => handleChange(e?.target?.value)}
                       className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
                       placeholder="Tìm kiếm sản phẩm tại đây....."
                       required
@@ -282,7 +315,6 @@ const Header = () => {
                         </p>
                       </div>
                       <svg
-                        xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
                         strokeWidth="1.5"
@@ -330,28 +362,23 @@ const Header = () => {
         {!!listCategory && !!listCategory.length && (
           <nav className="  bg-[#f5f5f5]">
             <div className="max-w-screen-xl px-4  mx-auto">
-              <div className="flex items-center ">
+              <div className="flex items-center overflow-x-auto no-scrollbar">
                 <ul className="flex flex-row font-medium  mr-6 space-x-8 text-sm ">
-                  <li
-                    onClick={() => {
-                      // handleCategoryClick("all");
-                    }}
-                    className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
-                  >
+                  <li className="relative tracking-wider btn4 leading-none overflow-hidden py-3    ">
                     <span
                       className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
                     />
 
                     <a
                       onClick={() => {
-                        navigate(`${toSlug("Tất cả sản phẩm")}`, {
+                        navigate(`/category/${toSlug("Tất cả sản phẩm")}`, {
                           state: {
                             name: "Tất cả sản phẩm",
                             id: 0,
                           },
                         });
                       }}
-                      className={`cursor-pointer  hover:text-[#6756ca] }`}
+                      className={`cursor-pointer whitespace-nowrap hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Tất cả sản phẩm
@@ -364,7 +391,7 @@ const Header = () => {
                     onMouseLeave={() => {
                       handleHover(false);
                     }}
-                    className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
+                    className="relative tracking-wider btn4 whitespace-nowrap leading-none overflow-hidden py-3   "
                   >
                     <span
                       className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
@@ -372,18 +399,41 @@ const Header = () => {
 
                     <a
                       // href="/"
-                      className={`cursor-pointer  hover:text-[#6756ca] }`}
+                      className={`cursor-pointer  whitespace-nowrap hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Thương hiệu
                     </a>
                   </li>
+                  <li
+                    onMouseEnter={() => {
+                      handleHover(true);
+                    }}
+                    onMouseLeave={() => {
+                      handleHover(false);
+                    }}
+                    className="relative tracking-wider btn4 whitespace-nowrap leading-none overflow-hidden py-3   "
+                  >
+                    <span
+                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
+                    />
+
+                    <a
+                      // href="/"
+                      className={`cursor-pointer  whitespace-nowrap hover:text-[#6756ca] }`}
+                      aria-current="page"
+                    >
+                      Danh mục
+                    </a>
+                  </li>
                   {listCategory.map((item, index) => {
+                    if (index >= 12) {
+                      return;
+                    }
                     return (
                       <li
                         onClick={() => {
-                          // handleCategoryClick(item.name);
-                          navigate(`${toSlug(item.name)}`, {
+                          navigate(`/category/${toSlug(item.name)}`, {
                             state: {
                               item,
                               status: true,
@@ -391,17 +441,13 @@ const Header = () => {
                           });
                         }}
                         key={index}
-                        className="relative tracking-wider btn4 leading-none overflow-hidden py-3   "
+                        className="relative tracking-wider whitespace-nowrap btn4 leading-none overflow-hidden py-3   "
                       >
                         <span
                           className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]  `}
                         />
                         <span
-                          className={`cursor-pointer  hover:text-[#6756ca] ${
-                            // selectedCategory === item.name
-                            //   ? "text-[#FFBA00] :  "
-                            "text-gray-900"
-                          }`}
+                          className={`cursor-pointer whitespace-nowrap hover:text-[#6756ca] ${"text-gray-900"}`}
                         >
                           {item.name}
                         </span>

@@ -7,7 +7,7 @@ const path = {
   community: "/community",
   cart: "/cart",
   product: "/product/:id",
-  listProductsByBrand: "/:category",
+  listProductsByBrand: "/category/:category",
   listProductsByBrandWithSearch: "/search/:category",
   payment: "/payment",
   invoice: "/invoice",

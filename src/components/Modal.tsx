@@ -3,11 +3,13 @@ interface ModalComponentType {
   isVisible: boolean;
   onClose: () => void;
   children: any;
+  check: boolean;
 }
 const ModalComponent = ({
   isVisible,
   onClose,
   children,
+  check,
 }: ModalComponentType) => {
   if (!isVisible) return null;
   const handleClose = (e: any) => {
@@ -19,7 +21,7 @@ const ModalComponent = ({
       id="wrapper"
       onClick={handleClose}
     >
-      <div className="w-[600px] flex flex-col">
+      <div className={`${check ? "w-[25%]" : "w-[600px]"} flex flex-col`}>
         <button
           className="text-white text-xl place-self-end"
           onClick={() => onClose()}

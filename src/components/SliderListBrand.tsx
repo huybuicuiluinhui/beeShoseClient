@@ -48,7 +48,7 @@ const SliderListBrand = () => {
             return (
               <div
                 onClick={() => {
-                  navigate(`${toSlug(item.name)}`, {
+                  navigate(`/category/${toSlug(item.name)}`, {
                     state: item,
                   });
                 }}

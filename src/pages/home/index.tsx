@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import BannerShow from "../../components/BannerShow";
 import SliderHome from "../../components/sliderHome/SliderHome";
 import Images from "../../static";
 import "./styles.css";
 import TitleBrand from "../../components/TitleBrand";
 import { useNavigate } from "react-router-dom";
-import path from "../../constants/path";
 import SliderListBrand from "../../components/SliderListBrand";
 import axios from "axios";
 import API from "../../api";
@@ -15,10 +13,7 @@ import { toSlug } from "../../utils/format";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
 import Fade from "react-reveal/Fade";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const Line = () => {
   return (
     <span className="border-b-2 border-[#f1f1f1] border-solid w-full h-[1px] my-3 " />
@@ -105,7 +100,7 @@ const HomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  console.log("products", products);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       {showModal && <ShowModalHome />}
@@ -179,7 +174,6 @@ const HomePage = () => {
 
       <div className="w-full p-4 ">
         <div className="grid grid-cols-5 gap-0 ">
-          {" "}
           <Fade top distance="10%" duration={1500}>
             {!!products && !!products.length && sekeletonItemShoe === false
               ? products.map((item, index) => {
@@ -243,7 +237,7 @@ const HomePage = () => {
           <button
             className="  border-[1px] border-dashed px-4 py-1 rounded-md border-green-950"
             onClick={() => {
-              navigate(`${toSlug("Adidas")}`, {
+              navigate(`/category/${toSlug("Adidas")}`, {
                 state: {
                   id: 1,
                   name: "Adidas",
@@ -299,7 +293,6 @@ const HomePage = () => {
                             height={16}
                             viewBox="0 0 16 16"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M5.75 12.5L10.25 8L5.75 3.5"
@@ -344,7 +337,6 @@ const HomePage = () => {
                             height={16}
                             viewBox="0 0 16 16"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M5.75 12.5L10.25 8L5.75 3.5"
@@ -389,7 +381,6 @@ const HomePage = () => {
                           height={16}
                           viewBox="0 0 16 16"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
                             d="M5.75 12.5L10.25 8L5.75 3.5"
@@ -435,7 +426,6 @@ const HomePage = () => {
                           height={16}
                           viewBox="0 0 16 16"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
                             d="M5.75 12.5L10.25 8L5.75 3.5"
@@ -480,7 +470,6 @@ const HomePage = () => {
                             height={16}
                             viewBox="0 0 16 16"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M5.75 12.5L10.25 8L5.75 3.5"
@@ -524,7 +513,6 @@ const HomePage = () => {
                             height={16}
                             viewBox="0 0 16 16"
                             fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
                               d="M5.75 12.5L10.25 8L5.75 3.5"

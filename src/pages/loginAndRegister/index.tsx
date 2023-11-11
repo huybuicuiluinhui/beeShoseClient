@@ -20,6 +20,7 @@ const FormLogin = ({
   return (
     <div>
       <ModalComponent
+        check={false}
         isVisible={showModal}
         onClose={() => {
           setShowModal(false);

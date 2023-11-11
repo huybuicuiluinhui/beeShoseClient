@@ -28,7 +28,7 @@ const API = {
   getAllShoeDetail: () => baseUrl + `api/shoe-detail?sizePage=100000`,
   getShoeWithId: (shoe: number) => baseUrl + `api/shoe/${shoe}`,
   getShoeDetailWithId: (id: number) => baseUrl + `api/shoe-detail/${id}`,
-  getCategory: () => baseUrl + "api/category?sizePage=5",
+  getCategory: () => baseUrl + "api/category?sizePage=100",
   getAllShoe: (page: number, sizePage: number) =>
     baseUrl + `api/shoe?page=${page}&sizePage=${sizePage}`,
   getShoeWithCategory: (id: number, page: number, sizePage: number) =>

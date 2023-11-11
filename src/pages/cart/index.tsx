@@ -203,7 +203,7 @@ const CartPage = () => {
         return total + (item?.price || 0) * cartItem.quantity;
       }, 0);
     }
-  }, [listDetailShoe]);
+  }, [listDetailShoe, cartItems]);
 
   return (
     <div className="container mx-auto ">

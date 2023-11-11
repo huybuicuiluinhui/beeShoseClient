@@ -8,7 +8,6 @@ import {
 } from "react-lazy-load-image-component";
 
 const ProductStanding = ({ product }: { product: IProduct }) => {
-  console.log("product", product);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const imageArray = product.images ? product.images.split(",") : [];
   const firstImageUrl = imageArray[0];
@@ -65,7 +64,6 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
             {convertToCurrencyString(product.minPrice)}-{" "}
             {convertToCurrencyString(product.maxPrice)}
           </p>
-          {/* <p className="line-through text-gray-400 font-semibold text-sm "></p> */}
         </div>
         <p className=" text-gray-400 font-thin text-sm  line-clamp-1">
           <span className="text-slate-800 font-bold">Màu sắc</span>:{" "}

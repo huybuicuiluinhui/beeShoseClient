@@ -21,7 +21,7 @@ const ProductItem = ({
   shoeId: number;
 }) => {
   const navigate = useNavigate();
-
+  console.log("product", product);
   const { getItemQuantity, cartItems } = useShoppingCart();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
@@ -331,11 +331,21 @@ const ProductItem = ({
                 ${!!price ? "bg-[#fe662b]" : "bg-[#fe672b58]"}
               `}
                 onClick={() => {
-                  if (!!idAddToCart && !!price) {
+                  if (
+                    !!idAddToCart &&
+                    !!price &&
+                    amountShoe >= amountItemInCart + amount &&
+                    amountItemInCart <= 10
+                  ) {
                     addMultipleToCart(idAddToCart, amount);
-                    navigate(path.payment, {
-                      // state: { cartItems, total, totalPercent },
-                    });
+                    setAmount(1);
+                    navigate(path.cart);
+                  } else if (
+                    (!!price && amount < amountShoe - amountItemInCart) ||
+                    amount >= 10
+                  ) {
+                    toast("Sản phẩm đã tối đa trong giỏ hàng");
+                    return;
                   } else {
                     toast("Bạn cần chọn sản phẩm khác");
                   }
@@ -379,6 +389,7 @@ const ProductItem = ({
       </div>
       {showModal && (
         <ModalComponent
+          check={false}
           isVisible={showModal}
           onClose={() => {
             setShowModal(false);

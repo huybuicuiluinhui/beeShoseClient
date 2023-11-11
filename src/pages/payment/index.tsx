@@ -10,6 +10,7 @@ import API, { baseUrl } from "../../api";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { toast } from "react-toastify";
 import path from "../../constants/path";
+import ModalComponent from "../../components/Modal";
 interface Province {
   ProvinceID: number;
   ProvinceName: string;
@@ -30,6 +31,7 @@ const PaymentPage = () => {
   const location = useLocation();
   const { cartItems, clearCart } = useShoppingCart();
   const [selected, setSelected] = useState("");
+  const [showModal, setShowMoal] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
   const [open, setOpen] = useState<boolean>(true);
   const [openList, setOpenList] = useState<boolean>(false);
@@ -43,6 +45,7 @@ const PaymentPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<number>();
+  const [specificAddress, setSpecificAddress] = useState<string>(" ");
   const [quantity, setQuantity] = useState<number>();
   const [code, setCode] = useState<string>();
   const [arrShoes, setArrShoes] = useState<any[]>(
@@ -54,6 +57,7 @@ const PaymentPage = () => {
   const [email, setEmail] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<number>(1);
+  console.log(location);
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -72,24 +76,31 @@ const PaymentPage = () => {
       setVoucher(res?.data?.data);
     }
   };
+  function isValidEmail(email: string) {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return emailRegex.test(email);
+  }
   const postBill = async () => {
     if (textHVT === "" || textHVT === null || textHVT === undefined) {
       toast.warning("Không được để trống họ và tên");
     } else if (email === "" || email === null || email === undefined) {
-      toast.warning("Không được để trống họ và tên");
+      toast.warning("Không được để email");
+    } else if (!isValidEmail(email)) {
+      toast.warning("Email không hợp lệ");
     } else if (
       selectedDistrict === null ||
       selectedDistrict === undefined ||
       selectedProvince === null ||
       selectedProvince === undefined ||
       selectedWard === null ||
-      selectedWard === undefined
+      selectedWard === undefined ||
+      specificAddress === null ||
+      specificAddress === undefined ||
+      specificAddress === " "
     ) {
       toast.warning("Không được để trống địa chỉ");
-    } else if (feeShip === "" || feeShip === null || feeShip === undefined) {
-      toast.warning("Không được để trống họ và tên");
     } else if (paymentMethod === null || paymentMethod === undefined) {
-      toast.warning("Hãy chọn phương thức thanh to");
+      toast.warning("Hãy chọn phương thức thanh toán");
     } else {
       try {
         const response = await axios.post(
@@ -100,7 +111,7 @@ const PaymentPage = () => {
             district: selectedDistrict,
             province: selectedProvince,
             ward: selectedWard,
-            specificAddress: email,
+            specificAddress: specificAddress,
             moneyShip: feeShip,
             moneyReduce: (percent / 100) * location?.state?.total,
             totalMoney:
@@ -165,7 +176,8 @@ const PaymentPage = () => {
         "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
         configApi
       );
-      setProvinces(response.data.data);
+      setProvinces(response?.data?.data);
+      setSelectedProvince(response?.data?.data[0]?.ProvinceID);
     } catch (error) {
       console.error("Error fetching provinces:", error);
     }
@@ -178,7 +190,8 @@ const PaymentPage = () => {
         `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
         configApi
       );
-      setDistricts(response.data.data);
+      setDistricts(response?.data?.data);
+      setSelectedDistrict(response?.data?.data[0]?.DistrictID);
     } catch (error) {
       console.error("Error fetching districts:", error);
     }
@@ -191,6 +204,7 @@ const PaymentPage = () => {
         configApi
       );
       setWards(response.data.data);
+      setSelectedWard(response?.data?.data[0]?.WardCode);
     } catch (error) {
       console.error("Error fetching wards:", error);
     }
@@ -221,7 +235,7 @@ const PaymentPage = () => {
   }, [selectedWard]);
 
   const handleChange = (event: any) => {
-    setRadioChoose(event.target.value);
+    setRadioChoose(event?.target?.value);
   };
 
   return (
@@ -301,7 +315,7 @@ const PaymentPage = () => {
                 type="text"
                 value={inputValue}
                 onChange={(e) => {
-                  setInputValue(e.target.value.toLowerCase());
+                  setInputValue(e?.target?.value.toLowerCase());
                 }}
                 onClick={() => setOpenList(true)}
                 placeholder="Hãy nhập mã voucher của bạn vào đây..."
@@ -420,8 +434,9 @@ const PaymentPage = () => {
                 <input
                   value={textHVT}
                   onChange={(e) => {
-                    setTextHVT(e.target.value);
+                    setTextHVT(e?.target?.value);
                   }}
+                  autoComplete="off"
                   type="text"
                   id="floating_standard"
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
@@ -436,9 +451,10 @@ const PaymentPage = () => {
               </div>
               <div className="relative z-0 w-[45%] ">
                 <input
+                  autoComplete="off"
                   value={email}
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setEmail(e?.target?.value);
                   }}
                   type="text"
                   id="floating_standard"
@@ -458,7 +474,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     value={selectedProvince}
-                    onChange={(e: any) => setSelectedProvince(e.target.value)}
+                    onChange={(e: any) => setSelectedProvince(e?.target?.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
@@ -484,7 +500,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     value={selectedDistrict}
-                    onChange={(e: any) => setSelectedDistrict(e.target.value)}
+                    onChange={(e: any) => setSelectedDistrict(e?.target?.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
@@ -513,8 +529,7 @@ const PaymentPage = () => {
                 <div>
                   <select
                     value={selectedWard}
-                    //  value={selectedDistrict}
-                    onChange={(e: any) => setSelectedWard(e.target.value)}
+                    onChange={(e: any) => setSelectedWard(e?.target?.value)}
                     id="underline_select"
                     className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
@@ -538,6 +553,8 @@ const PaymentPage = () => {
               </div>
               <div className="relative z-0  w-[45%]">
                 <input
+                  value={specificAddress}
+                  onChange={(e: any) => setSpecificAddress(e?.target?.value)}
                   type="text"
                   id="floating_standard"
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
@@ -619,7 +636,6 @@ const PaymentPage = () => {
                   />
                   <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                     <svg
-                      xmlns="http://www.w3.org/2000/svg"
                       className="h-4 w-4 text-gray-400"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -652,7 +668,6 @@ const PaymentPage = () => {
                     <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
                       <svg
                         className="h-4 w-4 text-gray-400"
-                        xmlns="http://www.w3.org/2000/svg"
                         width={16}
                         height={16}
                         fill="currentColor"
@@ -747,13 +762,69 @@ const PaymentPage = () => {
           <button
             className="mt-4 mb-8 w-full rounded-md bg-gray-500 px-6 py-3 font-medium text-white"
             onClick={() => {
-              postBill();
+              setShowMoal(true);
             }}
           >
             Đặt hàng
           </button>
         </div>
       </div>
+      {showModal && (
+        <ModalComponent
+          check={true}
+          isVisible={showModal}
+          onClose={() => {
+            setShowMoal(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Bạn có chắc muốn mua hàng không ?
+            </h3>
+
+            <div>
+              <div className="w-full flex justify-around items-center">
+                <button
+                  onClick={() => {
+                    setShowMoal(false);
+                  }}
+                  data-modal-hide="popup-modal"
+                  type="button"
+                  className="text-white bg-red-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={() => {
+                    postBill();
+                    setShowMoal(false);
+                  }}
+                  data-modal-hide="popup-modal"
+                  type="button"
+                  className="text-white bg-green-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                >
+                  Đặt hàng
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };
