@@ -179,7 +179,7 @@ const PaymentPage = () => {
       setProvinces(response?.data?.data);
       setSelectedProvince(response?.data?.data[0]?.ProvinceID);
     } catch (error) {
-      console.error("Error fetching provinces:", error);
+      console.error("Lỗi:", error);
     }
   };
 

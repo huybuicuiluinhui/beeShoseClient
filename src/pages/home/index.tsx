@@ -49,7 +49,7 @@ const HomePage = () => {
   const [totalPagesAdidas, setTotalPagesAdidas] = useState<number>(1);
   const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
   const today = new Date();
-  const dayIndex = today.getDay(); // Lấy chỉ số ngày trong tuần (0 - Chủ Nhật, 1 - Thứ Hai, ...)
+  const dayIndex = today.getDay();
   let promotionType = "";
   if (dayIndex === 1 || dayIndex === 2) {
     promotionType = "Khuyến mãi đầu tuần";
@@ -90,7 +90,6 @@ const HomePage = () => {
   }, []);
 
   useEffect(() => {
-    // Tắt modal sau khi đóng
     if (showModal) {
       setTimeout(() => {
         setShowModal(false);
@@ -100,7 +99,6 @@ const HomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  console.log("products", products);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       {showModal && <ShowModalHome />}

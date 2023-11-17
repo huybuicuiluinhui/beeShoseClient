@@ -9,7 +9,6 @@ import ProductStanding from "../../components/ProductStanding";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
 import Fade from "react-reveal/Fade";
-import { toSlug } from "../../utils/format";
 interface ShoeSize {
   size: number;
   selected: boolean;
@@ -25,7 +24,6 @@ interface ShoseBrand {
 const ListProductsByBrand = () => {
   const location = useLocation();
   const param = location.state;
-  console.log("res", param);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
@@ -76,7 +74,6 @@ const ListProductsByBrand = () => {
   const [isCheckedSole, setIsCheckedSole] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
 
-  // ----------------------------------------------------------------
 
   const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
@@ -340,10 +337,7 @@ const ListProductsByBrand = () => {
                               checked={isSelected}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-500  focus:ring-0 "
                             />
-                            <label
-                              // htmlFor={`brand-${brand.id}`}
-                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                            >
+                            <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                               {brand.name}
                             </label>
                           </li>
@@ -571,35 +565,37 @@ const ListProductsByBrand = () => {
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
               <Fade top distance="10%" duration={1500}>
-                {!!listShoes && !!listShoes.length
-                  ? listShoes.map((item, index) => {
+                {!!listShoes && !!listShoes.length ? (
+                  listShoes.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          navigate(`/product/${item.id}`, {
+                            state: item.id,
+                          });
+                        }}
+                      >
+                        <ProductStanding product={item} />
+                      </div>
+                    );
+                  })
+                ) : !!listShoes && listShoes.length === 0 ? (
+                  <div className="text-sm font-semibold">Không có sản phẩm</div>
+                ) : (
+                  Array(10)
+                    .fill({})
+                    .map((item, index) => {
                       return (
-                        <div
-                          key={index}
-                          onClick={() => {
-                            navigate(`/product/${item.id}`, {
-                              state: item.id,
-                            });
-                          }}
-                        >
-                          <ProductStanding product={item} />
+                        <div key={index}>
+                          <SekeletonItemShoe />
                         </div>
                       );
                     })
-                  : !!sekeletonItemShoe &&
-                    sekeletonItemShoe === true &&
-                    Array(10)
-                      .fill({})
-                      .map((item, index) => {
-                        return (
-                          <div key={index}>
-                            <SekeletonItemShoe />
-                          </div>
-                        );
-                      })}
+                )}
               </Fade>
             </div>
-            {!!listShoes && !!listShoes.length && totalPage === 1 ? (
+            {totalPage <= 1 ? (
               ""
             ) : (
               <div className="my-10">
