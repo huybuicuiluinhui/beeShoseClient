@@ -65,9 +65,6 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
                 >
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
                     <div className="relative h-full w-full">
-                      <span className="text-black text-sm bg-[#fbda00] rounded-md  absolute top-[2%] left-[2%] font-medium px-1">
-                        {/* Trả góp 0% */}
-                      </span>
                       <LazyLoadImage
                         src={item.images.split(",")[0]}
                         className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
@@ -80,7 +77,8 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
                       {item.name}
                     </h3>
                     <span className=" text-sm text-gray-500">
-                      {renderColor(item)}
+                      {/* {renderColor(item)} */}
+                      {item.color}
                     </span>
                     <div className="">
                       <p className="text-sm font-medium text-red-500  ">

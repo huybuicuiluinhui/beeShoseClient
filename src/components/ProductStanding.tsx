@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { IProduct } from "../types/product.type";
 import { convertToCurrencyString, renderColor } from "../utils/format";
 import Slider from "react-slick";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ProductStanding = ({ product }: { product: IProduct }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -22,7 +19,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
     autoplaySpeed: 1000,
   };
   return (
-    <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
+    <div className="border- [1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
       <p className=" text-xs bg-red-500 rounded-md font-medium  absolute top-[2%] left-[2%] z-[8] text-white px-2 py-1">
         Trả góp 0%
       </p>
@@ -67,7 +64,8 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
         </div>
         <p className=" text-gray-400 font-thin text-sm  line-clamp-1">
           <span className="text-slate-800 font-bold">Màu sắc</span>:{" "}
-          {renderColor(product)}
+          {/* {renderColor(product)} */}
+          {product.color}
         </p>
         <p className=" text-gray-400 font-thin text-sm  line-clamp-1 ">
           <span className="text-slate-800 font-bold">Danh mục:</span>

@@ -74,7 +74,6 @@ const ListProductsByBrand = () => {
   const [isCheckedSole, setIsCheckedSole] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
 
-
   const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
   };
@@ -564,36 +563,36 @@ const ListProductsByBrand = () => {
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
-              <Fade top distance="10%" duration={1500}>
-                {!!listShoes && !!listShoes.length ? (
-                  listShoes.map((item, index) => {
+              {/* <Fade top distance="10%" duration={1500}> */}
+              {!!listShoes && !!listShoes.length ? (
+                listShoes.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        navigate(`/product/${item.id}`, {
+                          state: item.id,
+                        });
+                      }}
+                    >
+                      <ProductStanding product={item} />
+                    </div>
+                  );
+                })
+              ) : !!listShoes && listShoes.length === 0 ? (
+                <div className="text-sm font-semibold">Không có sản phẩm</div>
+              ) : (
+                Array(10)
+                  .fill({})
+                  .map((item, index) => {
                     return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          navigate(`/product/${item.id}`, {
-                            state: item.id,
-                          });
-                        }}
-                      >
-                        <ProductStanding product={item} />
+                      <div key={index}>
+                        <SekeletonItemShoe />
                       </div>
                     );
                   })
-                ) : !!listShoes && listShoes.length === 0 ? (
-                  <div className="text-sm font-semibold">Không có sản phẩm</div>
-                ) : (
-                  Array(10)
-                    .fill({})
-                    .map((item, index) => {
-                      return (
-                        <div key={index}>
-                          <SekeletonItemShoe />
-                        </div>
-                      );
-                    })
-                )}
-              </Fade>
+              )}
+              {/* </Fade> */}
             </div>
             {totalPage <= 1 ? (
               ""

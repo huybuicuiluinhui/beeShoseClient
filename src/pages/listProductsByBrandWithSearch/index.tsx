@@ -633,49 +633,49 @@ const ListProductsByBrandWithSearch = () => {
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
-              <Fade top distance="10%" duration={1500}>
-                {!!listShoes && listShoes.length > 0 ? (
-                  listShoes.map((e: any, i: number) => {
+              {/* <Fade top distance="10%" duration={1500}> */}
+              {!!listShoes && listShoes.length > 0 ? (
+                listShoes.map((e: any, i: number) => {
+                  return (
+                    <div
+                      key={i}
+                      onClick={() => {
+                        navigate(`/product/${e.id}`, {
+                          state: e.id,
+                        });
+                      }}
+                    >
+                      <ProductStanding product={e} />
+                    </div>
+                  );
+                })
+              ) : listShoes?.length === 0 ? (
+                <span className="text-center font-medium text-base text-ted">
+                  Không tìm thấy sản phẩm
+                </span>
+              ) : (
+                !!sekeletonItemShoe &&
+                sekeletonItemShoe === true &&
+                Array(10)
+                  .fill({})
+                  .map((item, index) => {
                     return (
-                      <div
-                        key={i}
-                        onClick={() => {
-                          navigate(`/product/${e.id}`, {
-                            state: e.id,
-                          });
-                        }}
-                      >
-                        <ProductStanding product={e} />
-                      </div>
+                      <Fragment>
+                        <div
+                          key={index}
+                          // onClick={() => {
+                          //   navigate(`/product/${item.id}}`, {
+                          //     state: item.id,
+                          //   });
+                          // }}
+                        >
+                          <SekeletonItemShoe />
+                        </div>
+                      </Fragment>
                     );
                   })
-                ) : listShoes?.length === 0 ? (
-                  <span className="text-center font-medium text-base text-ted">
-                    Không tìm thấy sản phẩm
-                  </span>
-                ) : (
-                  !!sekeletonItemShoe &&
-                  sekeletonItemShoe === true &&
-                  Array(10)
-                    .fill({})
-                    .map((item, index) => {
-                      return (
-                        <Fragment>
-                          <div
-                            key={index}
-                            // onClick={() => {
-                            //   navigate(`/product/${item.id}}`, {
-                            //     state: item.id,
-                            //   });
-                            // }}
-                          >
-                            <SekeletonItemShoe />
-                          </div>
-                        </Fragment>
-                      );
-                    })
-                )}
-              </Fade>
+              )}
+              {/* </Fade> */}
             </div>
             {listShoes?.length === 0 ? (
               ""

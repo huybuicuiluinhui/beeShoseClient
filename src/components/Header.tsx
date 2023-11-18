@@ -96,83 +96,85 @@ const Header = () => {
   }, []);
   const CategoryTable = () => {
     return (
-      <div
-        className="w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-h-64"
-        onMouseEnter={() => {
-          handleHover(true);
-        }}
-        onMouseLeave={() => {
-          handleHover(false);
-        }}
-      >
-        <div className="w-full flex  mx-10">
-          <div className="w-[20%]">
-            <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
-              Thương hiệu
-            </span>
-            <ul className="   mx-auto   flex flex-col   py-2 ">
-              {!!listBrandHeader &&
-                !!listBrandHeader.length &&
-                listBrandHeader.map((item, index) => (
-                  <li
-                    key={index}
-                    className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
-                  >
-                    <span
-                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
-                    />
-                    <span
-                      className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
-                      onClick={() => {
-                        navigate(`/category/${toSlug(item.name)}`, {
-                          state: item,
-                        });
-                      }}
+      <div className="w-screen flex justify-center">
+        <div
+          className=" max-w-screen-xl mx-auto w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-h-64"
+          onMouseEnter={() => {
+            handleHover(true);
+          }}
+          onMouseLeave={() => {
+            handleHover(false);
+          }}
+        >
+          <div className="w-full flex  mx-10">
+            <div className="w-[20%]">
+              <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+                Thương hiệu
+              </span>
+              <ul className="   mx-auto   flex flex-col   py-2 ">
+                {!!listBrandHeader &&
+                  !!listBrandHeader.length &&
+                  listBrandHeader.map((item, index) => (
+                    <li
+                      key={index}
+                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
                     >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
+                      <span
+                        className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                      />
+                      <span
+                        className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
+                        onClick={() => {
+                          navigate(`/category/${toSlug(item.name)}`, {
+                            state: item,
+                          });
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+
+            <ul
+              className=" w-full "
+              onMouseEnter={() => {
+                handleHover(true);
+              }}
+              onMouseLeave={() => {
+                handleHover(false);
+              }}
+            >
+              <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+                Danh mục
+              </span>
+              <div className="grid grid-rows-4 grid-flow-col ">
+                {!!listCategory &&
+                  !!listCategory.length &&
+                  listCategory.map((item, index) => (
+                    <li
+                      key={index}
+                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
+                    >
+                      <span
+                        className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                      />
+                      <span
+                        className={`cursor-pointer text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
+                        onClick={() => {
+                          navigate(`/category/${toSlug(item.name)}`, {
+                            state: item,
+                          });
+                        }}
+                      >
+                        {item.name}
+                      </span>
+                    </li>
+                  ))}
+              </div>
             </ul>
           </div>
-
-          <ul
-            className=" w-full "
-            onMouseEnter={() => {
-              handleHover(true);
-            }}
-            onMouseLeave={() => {
-              handleHover(false);
-            }}
-          >
-            <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
-              Danh mục
-            </span>
-            <div className="grid grid-rows-4 grid-flow-col ">
-              {!!listCategory &&
-                !!listCategory.length &&
-                listCategory.map((item, index) => (
-                  <li
-                    key={index}
-                    className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
-                  >
-                    <span
-                      className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
-                    />
-                    <span
-                      className={`cursor-pointer text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
-                      onClick={() => {
-                        navigate(`/category/${toSlug(item.name)}`, {
-                          state: item,
-                        });
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-            </div>
-          </ul>
         </div>
       </div>
     );

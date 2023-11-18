@@ -99,6 +99,7 @@ const HomePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  console.log(products);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       {showModal && <ShowModalHome />}
@@ -172,50 +173,9 @@ const HomePage = () => {
 
       <div className="w-full p-4 ">
         <div className="grid grid-cols-5 gap-0 ">
-          <Fade top distance="10%" duration={1500}>
-            {!!products && !!products.length && sekeletonItemShoe === false
-              ? products.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        navigate(`/product/${item.id}`, {
-                          state: item.id,
-                        });
-                      }}
-                    >
-                      <ProductStanding product={item} key={index} />
-                    </div>
-                  );
-                })
-              : !!sekeletonItemShoe &&
-                sekeletonItemShoe === true &&
-                Array(10)
-                  .fill({})
-                  .map((item, index) => {
-                    return (
-                      <div key={index}>
-                        <SekeletonItemShoe />
-                      </div>
-                    );
-                  })}
-          </Fade>
-        </div>
-        {totalPages === 1 ? (
-          ""
-        ) : (
-          <NavPage page={page} totalPages={totalPages} setPage={setPage} />
-        )}
-      </div>
-      {/* Danh mục sản phẩm giày adidas */}
-
-      <div className="w-full p-4">
-        <TitleBrand title="Giày Adidas" subtitle="giày thương hiệu nổi bật" />
-        <div className="grid grid-cols-5 gap-0">
-          <Fade top distance="10%" duration={1500}>
-            {!!productsAdidas &&
-              !!productsAdidas.length &&
-              productsAdidas.map((item, index) => {
+          {/* <Fade top distance="10%" duration={1500}> */}
+          {!!products && !!products.length && sekeletonItemShoe === false
+            ? products.map((item, index) => {
                 return (
                   <div
                     key={index}
@@ -228,8 +188,48 @@ const HomePage = () => {
                     <ProductStanding product={item} key={index} />
                   </div>
                 );
-              })}
-          </Fade>
+              })
+            : !!sekeletonItemShoe &&
+              sekeletonItemShoe === true &&
+              Array(10)
+                .fill({})
+                .map((item, index) => {
+                  return (
+                    <div key={index}>
+                      <SekeletonItemShoe />
+                    </div>
+                  );
+                })}
+          {/* </Fade> */}
+        </div>
+        {totalPages === 1 ? (
+          ""
+        ) : (
+          <NavPage page={page} totalPages={totalPages} setPage={setPage} />
+        )}
+      </div>
+
+      <div className="w-full p-4">
+        <TitleBrand title="Giày Adidas" subtitle="giày thương hiệu nổi bật" />
+        <div className="grid grid-cols-5 gap-0">
+          {/* <Fade top distance="10%" duration={1500}> */}
+          {!!productsAdidas &&
+            !!productsAdidas.length &&
+            productsAdidas.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    navigate(`/product/${item.id}`, {
+                      state: item.id,
+                    });
+                  }}
+                >
+                  <ProductStanding product={item} key={index} />
+                </div>
+              );
+            })}
+          {/* </Fade> */}
         </div>
         <div className="flex justify-center mt-4">
           <button
