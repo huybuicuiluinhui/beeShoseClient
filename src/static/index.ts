@@ -45,6 +45,7 @@ import bannerHotDeal from "./bannerHotDeal.jpg";
 import BeeShoes from "./icons/BeeShoes.png";
 import tableSize from "./tableSize.png";
 import bannerCart from "./bannerCart.png";
+import imgNotFound from "./imgNotFound.png";
 import iconBox from "./icons/iconBox.gif";
 const Images = {
   banner01,
@@ -95,5 +96,6 @@ const Images = {
   iconBox,
   tableSize,
   bannerCart,
+  imgNotFound,
 };
 export default Images;

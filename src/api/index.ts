@@ -41,5 +41,16 @@ const API = {
   getVoucher: () => baseUrl + `api/voucher?sizePage=100000`,
   getShoeSearch: (name: string, page: number) =>
     baseUrl + `api/shoe?name=${name}&page=${page}&sizePage=20`,
+  // lọc sản phẩm
+  getFilter: (
+    colorID: string,
+    sizeID: string,
+    sole: string,
+    brand: string,
+    category: string,
+    page: number
+  ) =>
+    baseUrl +
+    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${16}`,
 };
 export default API;

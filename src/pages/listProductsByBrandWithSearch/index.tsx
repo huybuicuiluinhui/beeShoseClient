@@ -614,7 +614,10 @@ const ListProductsByBrandWithSearch = () => {
                     Kết quả tìm kiếm cho “{param?.key}”
                   </span>
                 ) : (
-                  <span className="text-sm font-medium "> Tất cả sản phẩm</span>
+                  <span className="text-sm font-medium uppercase ">
+                    {" "}
+                    Tất cả sản phẩm
+                  </span>
                 )}
               </div>
               {/* Lọc sản phẩm */}
@@ -640,9 +643,19 @@ const ListProductsByBrandWithSearch = () => {
                     <div
                       key={i}
                       onClick={() => {
-                        navigate(`/product/${e.id}`, {
-                          state: e.id,
-                        });
+                        if (
+                          !!e.minPrice &&
+                          !!e.maxPrice &&
+                          e.images &&
+                          !!e.quantity &&
+                          e.images.length > 0
+                        ) {
+                          navigate(`/product/${e.id}`, {
+                            state: e.id,
+                          });
+                        } else {
+                          return;
+                        }
                       }}
                     >
                       <ProductStanding product={e} />

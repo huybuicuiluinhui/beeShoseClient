@@ -111,7 +111,7 @@ const Header = () => {
               <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
                 Thương hiệu
               </span>
-              <ul className="   mx-auto   flex flex-col   py-2 ">
+              <ul className="mx-auto   flex flex-col   py-2 ">
                 {!!listBrandHeader &&
                   !!listBrandHeader.length &&
                   listBrandHeader.map((item, index) => (
@@ -125,7 +125,7 @@ const Header = () => {
                       <span
                         className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
                         onClick={() => {
-                          navigate(`/category/${toSlug(item.name)}`, {
+                          navigate(`/brand=${item.id}/${toSlug(item.name)}`, {
                             state: item,
                           });
                         }}
@@ -163,9 +163,12 @@ const Header = () => {
                       <span
                         className={`cursor-pointer text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
                         onClick={() => {
-                          navigate(`/category/${toSlug(item.name)}`, {
-                            state: item,
-                          });
+                          navigate(
+                            `/category=${item.id}/${toSlug(item.name)}`,
+                            {
+                              state: item,
+                            }
+                          );
                         }}
                       >
                         {item.name}
@@ -373,7 +376,7 @@ const Header = () => {
 
                     <a
                       onClick={() => {
-                        navigate(`/category/${toSlug("Tất cả sản phẩm")}`, {
+                        navigate(`/${toSlug("Tất cả sản phẩm")}/id=${0}`, {
                           state: {
                             name: "Tất cả sản phẩm",
                             id: 0,
@@ -401,7 +404,7 @@ const Header = () => {
 
                     <a
                       // href="/"
-                      className={`cursor-pointer  whitespace-nowrap hover:text-[#6756ca] }`}
+                      className={`cursor-default   whitespace-nowrap hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Thương hiệu
@@ -422,7 +425,7 @@ const Header = () => {
 
                     <a
                       // href="/"
-                      className={`cursor-pointer  whitespace-nowrap hover:text-[#6756ca] }`}
+                      className={`cursor-default  whitespace-nowrap hover:text-[#6756ca] }`}
                       aria-current="page"
                     >
                       Danh mục
@@ -435,12 +438,15 @@ const Header = () => {
                     return (
                       <li
                         onClick={() => {
-                          navigate(`/category/${toSlug(item.name)}`, {
-                            state: {
-                              item,
-                              status: true,
-                            },
-                          });
+                          navigate(
+                            `/category=${item.id}/${toSlug(item.name)}`,
+                            {
+                              state: {
+                                item,
+                                status: true,
+                              },
+                            }
+                          );
                         }}
                         key={index}
                         className="relative tracking-wider whitespace-nowrap btn4 leading-none overflow-hidden py-3   "

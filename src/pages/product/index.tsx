@@ -12,7 +12,6 @@ const ProductPage = () => {
   const location = useLocation();
   const params = useParams();
   const id = params?.id;
-  console.log("location ", params?.id);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = React.useState(0);
   const [inforShoe, setInforShoe] = useState<IInforShoe>();
@@ -73,7 +72,7 @@ const ProductPage = () => {
     getProductWithId();
     getInfoDetailProduct();
     getShoeSole();
-  }, [location.state || id]);
+  }, [location.state, id]);
   const Tab01 = () => {
     return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">

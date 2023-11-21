@@ -180,9 +180,20 @@ const HomePage = () => {
                   <div
                     key={index}
                     onClick={() => {
-                      navigate(`/product/${item.id}`, {
-                        state: item.id,
-                      });
+                      if (
+                        !!item.minPrice &&
+                        !!item.maxPrice &&
+                        item.images &&
+                        !!item.quantity &&
+                        item.images.length > 0
+                      ) {
+                        navigate(`/product/${item.id}`, {
+                          state: item.id,
+                        });
+                      } else {
+                        console.log("hhdifhsidf");
+                        return;
+                      }
                     }}
                   >
                     <ProductStanding product={item} key={index} />
