@@ -60,9 +60,7 @@ const SliderListBrand = () => {
                     src={Images.iconAdidas}
                     className="w-[100px] h-[60px] object-contain mx-auto"
                   />
-                  <p className="text-center font-semibold group-hover:text-hover ">
-                    {item.name}
-                  </p>
+                  <p className="text-center font-semibold  ">{item.name}</p>
                 </div>
               </div>
             );

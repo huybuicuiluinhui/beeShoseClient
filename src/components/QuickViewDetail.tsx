@@ -1,0 +1,416 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { IDetailProduct, IProduct, Product } from "../types/product.type";
+import Slider from "react-slick";
+import { convertToCurrencyString, findProductIdByName } from "../utils/format";
+import { useNavigate } from "react-router-dom";
+import API from "../api";
+import axios from "axios";
+import { useShoppingCart } from "../context/shoppingCart.context";
+import { toast } from "react-toastify";
+import Images from "../static";
+
+const QuickViewDetail = ({
+  product,
+  setShowQuickView,
+}: {
+  product: IProduct;
+  setShowQuickView: any;
+}) => {
+  const navigate = useNavigate();
+  const { getItemQuantity, openCart, addMultipleToCart, closeCart } =
+    useShoppingCart();
+  const [chooseSize, setChooseSize] = useState<any>();
+  const [chooseColor, setChooseColor] = useState<any>();
+  const [dataDetailProduct, setDataDetailProduct] =
+    useState<IDetailProduct[]>();
+  const [price, setPrice] = useState<number | undefined>(0);
+  const [amountShoe, setAmountShoe] = useState<number>(0);
+  const [idAddToCart, setIdAddToCart] = useState<number>(0);
+  const [code, setCode] = useState<string>();
+  const [amount, setAmount] = useState(1);
+  const [chooseSizeName, setChooseSizeName] = useState<string | number>();
+  const [chooseColorName, setChooseColorName] = useState<string>();
+  const [allSizeData, setAllSizeData] = useState<Product[]>([]);
+  const [allColorData, setAllColorData] = useState<Product[]>([]);
+  const imageArray = product.images ? product.images.split(",") : [];
+
+  const settings = {
+    arrows: false,
+    dots: false,
+    infinite: true,
+    speed: 2500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  };
+  const handleCloseClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Ngăn chặn sự kiện lan truyền
+    setShowQuickView(false);
+  };
+  const getInfoDetailProduct = async () => {
+    try {
+      if (!!product?.id) {
+        const res = await axios({
+          method: "get",
+          url: API.getShoeDetail(Number(product.id)),
+        });
+        if (res.status) {
+          setDataDetailProduct(res?.data?.data);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getDataSize = async () => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      let combinedData: Product[] = [];
+      let currentPage = 1;
+      while (true) {
+        try {
+          const response = await axios.get(API.getSizePage(currentPage));
+          const data = response.data.data;
+
+          if (data.length === 0) {
+            break;
+          }
+
+          combinedData = [...combinedData, ...data];
+          currentPage++;
+
+          if (currentPage >= response.data.totalPages) {
+            break;
+          }
+        } catch (error) {
+          console.error(error);
+          break;
+        }
+      }
+
+      setAllSizeData(combinedData);
+      setChooseSize(
+        findProductIdByName(dataDetailProduct[0]?.size, allSizeData)
+      );
+    }
+  };
+  const getPriceDetailShoe = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getPriceDetailShoe(product.name, chooseSize, chooseColor),
+    });
+    if (res.status) {
+      if (res?.data?.totalPages === 0) {
+        setPrice(0);
+      }
+      if (res?.data?.data[0]?.price) {
+        setPrice(res?.data?.data[0].price);
+        setAmountShoe(res?.data?.data[0].quantity);
+        setIdAddToCart(res?.data?.data[0].id);
+        setCode(res?.data.data[0].code);
+      }
+    }
+  };
+  const getDataColor = async () => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      let combinedData: Product[] = [];
+      let currentPage = 1;
+
+      while (true) {
+        try {
+          const response = await axios.get(API.getColorPage(currentPage));
+          const data = response.data.data;
+
+          if (data.length === 0) {
+            break;
+          }
+
+          combinedData = [...combinedData, ...data];
+          currentPage++;
+
+          if (currentPage >= response.data.totalPages) {
+            break;
+          }
+        } catch (error) {
+          console.error(error);
+          break;
+        }
+      }
+
+      setAllColorData(combinedData);
+      setChooseColor(
+        findProductIdByName(dataDetailProduct[0]?.color, allColorData)
+      );
+    }
+  };
+  useEffect(() => {
+    getDataSize();
+    getDataColor();
+  }, [dataDetailProduct]);
+  useEffect(() => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      setChooseSize(
+        findProductIdByName(dataDetailProduct[0]?.size, allSizeData)
+      );
+      setChooseSizeName(dataDetailProduct[0]?.size);
+      setChooseColor(
+        findProductIdByName(dataDetailProduct[0]?.color, allColorData)
+      );
+      setChooseColorName(dataDetailProduct[0]?.color);
+    }
+  }, [product, allSizeData, allColorData]);
+  useEffect(() => {
+    setAmountShoe(0);
+    if (chooseColor && chooseSize) {
+      getPriceDetailShoe();
+    }
+  }, [product.name, chooseSize, chooseColor]);
+  const amountItemInCart = getItemQuantity(idAddToCart);
+  const uniqueSizes = useMemo(() => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      const sizes: any[] = [];
+      for (let i = 0; i < dataDetailProduct.length; i++) {
+        const size = dataDetailProduct[i].size;
+        if (!sizes.includes(size)) {
+          sizes.push(size);
+        }
+      }
+      return sizes;
+    }
+  }, [dataDetailProduct]);
+  const uniqueColors = useMemo(() => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      const colors: any[] = [];
+      for (let i = 0; i < dataDetailProduct.length; i++) {
+        const color = dataDetailProduct[i].color;
+        if (!colors.includes(color)) {
+          colors.push(color);
+        }
+      }
+      return colors;
+    }
+  }, [dataDetailProduct]);
+  const imgArr = useMemo(() => {
+    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
+      const arr = [];
+      for (let i = 0; i < dataDetailProduct.length; i++) {
+        arr.push(
+          dataDetailProduct[i].images
+            ? dataDetailProduct[i].images.split(",")
+            : []
+        );
+      }
+
+      return arr.flat(); // hoặc arr.flatMap(e => e);
+    }
+    return [];
+  }, [dataDetailProduct]);
+  console.log("imgArr", imgArr);
+  useEffect(() => {
+    getInfoDetailProduct();
+  }, [product.id]);
+  return (
+    <div>
+      <div
+        className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    "
+        // onClick={handleCloseClick as any}
+      >
+        <div className="bg-white  shadow-lg h-screen w-[30%]  transform  transition-transform ease-in-out   ">
+          <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
+            <h2 className="text-lg font-semibold  uppercase   ">XEM NHANH</h2>
+            <div onClick={handleCloseClick as any} className="cursor-pointer">
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVklEQVR4nGNgoBAwMjAw8BGhjg+qFkVgCQMDgygeTaJQNXzYJFYyMDBI4NC0EoccTgWihDRhUyhKrCZ0/ywh4G/qaBQlx6mi5ASOKDnRQXYCIDvJkQwARZsQRRiqQN4AAAAASUVORK5CYII=" />{" "}
+            </div>
+          </div>
+          <div className="w-full bg-gray-500 h-[1px]  " />
+
+          <div className="w-full overflow-y-auto max-h-[550px] ">
+            <div className="flex ">
+              <div className="w-[30%]">
+                <Slider {...settings}>
+                  {imgArr?.map((item, index) => {
+                    return (
+                      <img
+                        src={!!item ? item : Images.imgNotFound}
+                        className="max-h-[170px] w-[220px]"
+                        key={index}
+                      />
+                    );
+                  })}
+                </Slider>
+              </div>
+
+              <div className="ml-[10%] w-full flex flex-col justify-center">
+                <p className="text-base font-medium line-clamp-2">
+                  {product.name}
+                </p>
+                <p className="text-sm font-normal line-clamp-2">
+                  {product.brand}
+                </p>
+                <span className="font-normal text-[11px]">
+                  Số lượng còn: {amountShoe}
+                </span>{" "}
+                <p className="text-red-500 font-semibold text-sm   ">
+                  {!!price
+                    ? `${convertToCurrencyString(price)}`
+                    : "Sản phẩm hiện hết hàng"}
+                </p>
+              </div>
+            </div>
+            <div className="w-full  px-5">
+              <span className="text-sm font-semibold ">Chọn kích thước</span>
+              <div className="flex items-center w-full flex-wrap mt-2">
+                {!!uniqueSizes &&
+                  uniqueSizes.map((e, i) => {
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => {
+                          setAmount(1);
+                          setChooseSize(findProductIdByName(e, allSizeData));
+                          setChooseSizeName(e);
+                        }}
+                        className={`min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400 rounded mb-1 ${
+                          chooseSizeName === e ? "bg-gray-600  text-[#fff]" : ""
+                        }`}
+                      >
+                        {e}
+                      </div>
+                    );
+                  })}
+              </div>
+              <span className="text-sm font-semibold ">Chọn màu sắc :</span>
+              <div className="flex w-full items-center">
+                <div className="flex items-center  flex-wrap">
+                  {!!uniqueColors &&
+                    uniqueColors.map((e, i) => {
+                      return (
+                        <div
+                          key={i}
+                          onClick={() => {
+                            setAmount(1);
+                            setChooseColor(
+                              findProductIdByName(e, allColorData)
+                            );
+                            setChooseColorName(e);
+                          }}
+                          className={` min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400  mb-1 rounded
+            
+            ${chooseColorName === e ? "bg-gray-600  text-[#fff]" : ""}`}
+                        >
+                          {e}
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+              <span className="text-sm font-semibold ">Chọn số lượng :</span>
+
+              <div className="flex flex-row  w-full ">
+                <div className="w-[15%] border-l-[1px] border-t-[1px] border-b-[1px] border-[#e9e9e9]  flex items-center justify-center">
+                  <span className=" px-3 rounded-lg w-8">{amount}</span>
+                </div>
+                <div className="flex flex-col">
+                  <button
+                    className="w-8  h-[50%]  border-[1px] border-[#e9e9e9] "
+                    onClick={() => {
+                      if (
+                        (amountShoe <= amountItemInCart + amount &&
+                          !!price &&
+                          amount <= 10) ||
+                        amount > 10
+                      ) {
+                        toast("Số lượng sản phẩm đã đạt tối đa");
+                        return;
+                      } else if (!price) {
+                        toast(
+                          "Sản phẩm hiện hết hàng, vui lòng bạn chọn sản phẩm khác"
+                        );
+                        return;
+                      } else {
+                        setAmount((prev) => prev + 1);
+                      }
+                    }}
+                  >
+                    <span className="leading-[5px]">+</span>
+                  </button>
+                  <button
+                    className="w-8 h-[50%] border-[1px] border-[#e9e9e9] "
+                    onClick={() => {
+                      setAmount((prev) => {
+                        if (prev > 1) {
+                          return prev - 1;
+                        } else {
+                          return 1;
+                        }
+                      });
+                    }}
+                  >
+                    <span>-</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className=" flex justify-around items-center my-5 ">
+            <button
+              className="border-gray-300 border-[1px] px-3 py-2 rounded font-medium w-[45%] hover:border-gray-500"
+              onClick={() => {
+                if (
+                  !!product.minPrice &&
+                  !!product.maxPrice &&
+                  product.images &&
+                  !!product.quantity &&
+                  product.images.length > 0
+                ) {
+                  navigate(`/product/${product.id}`);
+                } else {
+                  return;
+                }
+              }}
+            >
+              Xem chi tiết
+            </button>
+            <button
+              // className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
+              // onClick={handleCloseClick as any}
+              className={`cursor-pointer  text-white   flex  items-center justify-center  rounded font-medium  px-3 py-2 w-[45%]
+                ${!!price ? "bg-[#0161e7]" : "bg-[#5ae0d7]"}
+                `}
+              onClick={
+                // () =>
+
+                () => {
+                  setShowQuickView(false);
+                  if (
+                    !!idAddToCart &&
+                    !!price &&
+                    amountShoe >= amountItemInCart + amount &&
+                    amountItemInCart <= 10
+                  ) {
+                    addMultipleToCart(idAddToCart, amount);
+                    openCart();
+                    setAmount(1);
+                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                  } else if (
+                    (!!price && amount < amountShoe - amountItemInCart) ||
+                    amount >= 10
+                  ) {
+                    toast("Sản phẩm đã tối đa trong giỏ hàng");
+                    return;
+                  } else {
+                    toast("Bạn cần chọn sản phẩm khác");
+                  }
+                }
+              }
+            >
+              Thêm vào giỏ hàng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default QuickViewDetail;

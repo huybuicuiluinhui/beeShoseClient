@@ -33,17 +33,19 @@ interface ShoseColor {
 const ListProductsByBrand = () => {
   const location = useLocation();
   const params = useParams();
-  const param = location.state;
-  console.log("id", params);
+  console.log("params", params);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
+  const [pageColor, setPageColor] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
+  const [totalPageSize, setTotalPageSize] = useState<number>(1);
+  const [totalPageColor, setTotalPageColor] = useState<number>(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
   const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
   const [isDropdownOpen5, setIsDropdownOpen5] = useState<boolean>(true);
-  const [isCheckAll, setIsCheckAll] = useState<boolean>(false);
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [priceRange2, setPriceRange2] = useState([
     {
@@ -83,7 +85,8 @@ const ListProductsByBrand = () => {
   const [brands, setBrands] = useState<Product[]>();
   const [listShoes, setListShoes] = useState<IProduct[]>();
   const [idCategories, setIDCategories] = useState<any>("");
-  const [idBrands, setIdBrands] = useState<any>("");
+  const [idBrands, setIdBrands] = useState<any>();
+  const [name, setName] = useState<String>("Tất cả sản phẩm");
   const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
   const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
@@ -144,8 +147,6 @@ const ListProductsByBrand = () => {
   const handlePriceChange = (value: any) => {
     setPriceRange(value);
   };
-  // ----------------------------------------------------------------
-
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -161,15 +162,41 @@ const ListProductsByBrand = () => {
   const handleDropdownToggleColor = () => {
     setIsDropdownOpen5(!isDropdownOpen5);
   };
-  // ----------------------------------------------------------------
+  // -----------------------------------------------------------------------
+  const getNameParam = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getBrandWithId(idBrands),
+    });
+    if (res) {
+      setName(res?.data.name);
+    }
+  };
+  const getNameParamCate = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getCategoryWithId(idCategories),
+    });
+    if (res) {
+      setName(res?.data.name);
+    }
+  };
+
   const getDataSize = async () => {
     const res = await axios({
       method: "get",
-      url: API.getSizeAll(),
+      url: API.getSize(pageSize),
     });
     if (res.status) {
+      setTotalPageSize(res.data.totalPage);
       setShoesSize(res?.data?.data);
     }
+  };
+  const getDataSizePage = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getSize(pageSize),
+    });
   };
   const getDataColor = async () => {
     const res = await axios({
@@ -180,9 +207,6 @@ const ListProductsByBrand = () => {
       setColors(res?.data?.data);
     }
   };
-
-  // call dữ liệu
-  //  theo chất liệu
   const getDataSole = async () => {
     const res = await axios({
       method: "get",
@@ -192,7 +216,6 @@ const ListProductsByBrand = () => {
       setMaterials(res.data?.data);
     }
   };
-  //  theo thương hiệu
   const getBrand = async () => {
     const res = await axios({
       method: "get",
@@ -202,7 +225,6 @@ const ListProductsByBrand = () => {
       setBrands(res?.data?.data);
     }
   };
-
   const getFilter = async () => {
     const myColor = selectedColors.map((i) => i.id);
     const idColors = myColor.join(",");
@@ -211,47 +233,33 @@ const ListProductsByBrand = () => {
     const myBrand = selectedBrands.map((i) => i.id);
     const myMaterials = selectedMaterials.map((i) => i.id);
     const idMaterials = myMaterials.join(",");
-    if (location.pathname.includes("/brand=") && params.check) {
-      const match = params.check.match(/brand=(\d+)/);
-      if (match && match[1]) {
-        const categoryId = match[1];
-        console.log("Category ID:", categoryId);
-        setIdBrands(categoryId);
-      }
-    } else if (location.pathname.includes("/category=") && params.check) {
-      const match = params.check.match(/category=(\d+)/);
-      if (match && match[1]) {
-        const categoryId = match[1];
-        console.log("Category ID:", categoryId);
-        console.log("cate", categoryId);
-        setIDCategories(categoryId);
-      }
-    } else {
+    if (!!params.idBrand) {
+      setIdBrands(params?.idBrand);
+    } else if (!!params.idCategory) {
+      setIDCategories(params?.idCategory);
+    } else if (!!selectedBrands && selectedBrands.length > 0) {
       setIdBrands(myBrand.join(","));
     }
-    if (!!idBrands || !!idCategories) {
-      try {
-        const res = await axios({
-          method: "get",
-          url: API.getFilter(
-            idColors,
-            idSizes,
-            idMaterials,
-            idBrands,
-            idCategories,
-            page
-          ),
-        });
-        if (res.status) {
-          setTotalPage(res.data.totalPages);
-          setListShoes(res.data.data);
-        }
-      } catch (error) {
-        console.error("Lỗi: ", error);
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getFilter(
+          idColors,
+          idSizes,
+          idMaterials,
+          !!idBrands ? idBrands : "",
+          idCategories,
+          page
+        ),
+      });
+      if (res.status) {
+        setTotalPage(res?.data?.totalPages);
+        setListShoes(res?.data?.data);
       }
+    } catch (error) {
+      console.error("Lỗi: ", error);
     }
   };
-
   useEffect(() => {
     window.scrollTo(0, 0);
     getDataSize();
@@ -260,17 +268,24 @@ const ListProductsByBrand = () => {
     getDataColor();
   }, []);
   useEffect(() => {
-    console.log("kookookkok");
+    if (!!idBrands && idBrands !== "") {
+      getNameParam();
+    } else if (!!idCategories && idCategories !== "") {
+      getNameParamCate();
+    }
+  }, [idBrands, idCategories]);
+
+  useEffect(() => {
     getFilter();
   }, [
     selectedColors,
     selectedSizes,
     selectedMaterials,
-    param,
     page,
     idBrands,
     idCategories,
-    location.pathname,
+    location,
+    params,
   ]);
   return (
     <div className="w-full h-full ">
@@ -507,6 +522,9 @@ const ListProductsByBrand = () => {
                               id={`material-${material.id}`}
                               type="checkbox"
                               checked={isSelected}
+                              onChange={() => {
+                                return;
+                              }}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-600  focus:ring-0"
                             />
                             <span
@@ -575,7 +593,7 @@ const ListProductsByBrand = () => {
                       })}
                     </div>
 
-                    <div className="mt-2 p-2">
+                    {/* <div className="mt-2 p-2">
                       <div className="relative z-0  ">
                         <input
                           value={priceRange[0]}
@@ -611,7 +629,7 @@ const ListProductsByBrand = () => {
                           Giá cao nhất
                         </label>
                       </div>
-                    </div>
+                    </div> */}
                   </Fragment>
                 )}
               </div>
@@ -622,15 +640,7 @@ const ListProductsByBrand = () => {
         {/* danh sách sản phẩm */}
         <div className="w-full mb-10">
           <div className="mx-auto  flex flex-col  my-4 items-center ">
-            {!!param.status ? (
-              <span className=" text-3xl font-medium uppercase">
-                {param?.item?.name}
-              </span>
-            ) : (
-              <span className=" text-3xl font-medium uppercase">
-                {param?.name}
-              </span>
-            )}
+            <span className=" text-3xl font-medium uppercase">{name}</span>
           </div>
           <div className="w-full  mx-auto ">
             <div className="w-full flex justify-between items-center ">
@@ -643,15 +653,7 @@ const ListProductsByBrand = () => {
                 >
                   Trang chủ
                 </span>
-                /
-                {!!param.status ? (
-                  <span className=" text-sm font-medium ">
-                    {" "}
-                    {param?.item?.name}
-                  </span>
-                ) : (
-                  <span className=" text-sm font-medium ">{param?.name}</span>
-                )}
+                /<span className=" text-sm font-medium ">{name}</span>
               </div>
               {/* Lọc sản phẩm */}
               <div>
@@ -670,7 +672,7 @@ const ListProductsByBrand = () => {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
+            <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {/* <Fade top distance="10%" duration={1500}> */}
               {!!listShoes && !!listShoes.length ? (
                 listShoes.map((item, index) => {

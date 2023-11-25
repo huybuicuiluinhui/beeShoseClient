@@ -38,6 +38,8 @@ export interface IProduct {
   name: string;
   quantity: number;
   size: any;
+  discountValue: null | number;
+  quantitySold: null | number;
   status: boolean;
 }
 export interface IDetailProduct {

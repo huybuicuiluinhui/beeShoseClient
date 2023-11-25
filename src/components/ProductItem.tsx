@@ -21,8 +21,7 @@ const ProductItem = ({
   shoeId: number;
 }) => {
   const navigate = useNavigate();
-  console.log("product", product);
-  const { getItemQuantity, cartItems } = useShoppingCart();
+  const { getItemQuantity, openCart, addMultipleToCart } = useShoppingCart();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
@@ -35,7 +34,6 @@ const ProductItem = ({
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
-  const { openCart, addMultipleToCart } = useShoppingCart();
   const getDataSize = async () => {
     let combinedData: Product[] = [];
     let currentPage = 1;
@@ -127,7 +125,7 @@ const ProductItem = ({
     }
     return colors;
   }, [product]);
-
+  console.log("product", product);
   const uniqueSizes = useMemo(() => {
     const sizes: any[] = [];
     for (let i = 0; i < product.length; i++) {
@@ -138,7 +136,6 @@ const ProductItem = ({
     }
     return sizes;
   }, [product]);
-  console.log(cartItems);
   useEffect(() => {
     getDataSize();
     getDataColor();
@@ -214,7 +211,7 @@ const ProductItem = ({
                       setChooseSizeName(e);
                     }}
                     className={`min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400 rounded mb-1 ${
-                      chooseSizeName === e ? "bg-[#111111]  text-[#fff]" : ""
+                      chooseSizeName === e ? "bg-gray-600  text-[#fff]" : ""
                     }`}
                   >
                     {e}
@@ -237,7 +234,7 @@ const ProductItem = ({
                       }}
                       className={` min-w-[50px] text-center cursor-pointer px-1 py-[4px] mx-2 border-solid border-[1px] border-gray-400  mb-1 rounded
             
-            ${chooseColorName === e ? "bg-[#111111]  text-[#fff]" : ""}`}
+            ${chooseColorName === e ? "bg-gray-600  text-[#fff]" : ""}`}
                     >
                       {e}
                     </div>

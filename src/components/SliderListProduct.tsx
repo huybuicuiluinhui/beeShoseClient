@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Slider, { Settings } from "react-slick";
 import { useNavigate } from "react-router-dom";
-import path from "../constants/path";
 import { convertToCurrencyString, renderColor, toSlug } from "../utils/format";
-import axios from "axios";
-import API from "../api";
 import { IProduct } from "../types/product.type";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import Images from "../static";
 const SliderListProduct = ({ products }: { products: IProduct[] }) => {
   const navigate = useNavigate();
   const settings: Settings = {
@@ -21,7 +16,6 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
     slidesToShow: 5,
     swipeToSlide: true,
   };
-  console.log(products);
   const sliderRef = React.useRef<Slider>(null);
 
   const next = () => {
@@ -29,10 +23,10 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
       sliderRef.current.slickNext();
     }
   };
-  const imgArr = [];
-  for (let i = 0; i < products.length; i++) {
-    imgArr.push(products[i].images ? products[i].images.split(",") : []);
-  }
+  // const imgArr = [];
+  // for (let i = 0; i < products.length; i++) {
+  //   imgArr.push(products[i].images ? products[i].images.split(",") : []);
+  // }
   const prev = () => {
     if (sliderRef.current) {
       sliderRef.current.slickPrev();
@@ -66,7 +60,8 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
                     <div className="relative h-full w-full">
                       <LazyLoadImage
-                        src={item.images.split(",")[0]}
+                        // src={Images.testAvatar}
+                        src={item.images}
                         className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
                       />
                     </div>

@@ -1,65 +1,112 @@
-import React, { useState } from "react";
 import { IProduct } from "../types/product.type";
 import { convertToCurrencyString, renderColor } from "../utils/format";
-import Slider from "react-slick";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Images from "../static";
+import Fade from "react-reveal/Fade";
+import QuickViewDetail from "./QuickViewDetail";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductStanding = ({ product }: { product: IProduct }) => {
-  const imageArray = product.images ? product.images.split(",") : [];
-  const firstImageUrl = imageArray[0];
-  return product.minPrice && product.maxPrice && product.quantity ? (
-    <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
-      <p className=" text-xs bg-red-500 rounded-md font-medium  absolute top-[2%] left-[2%] z-[8] text-white px-2 py-1">
-        Trả góp 0%
-      </p>
-      <div className="hover-translate-up">
+  const navigate = useNavigate();
+  const [showQuickView, setShowQuickView] = useState<boolean>(false);
+  return product.minPrice && product.maxPrice ? (
+    <div>
+      <Fade top distance="10%" duration={2000}>
         <div
-          className={`min-h-[110px] max-h-[170px] flex flex-col gap-2
-          
-        `}
+          className="border-[0.2px] py-4  relative h-[300px] group btn4 leading-none overflow-hidden  border-gray-100"
+          onClick={() => {
+            if (!!product.minPrice && !!product.maxPrice && product.images) {
+              navigate(`/product/${product.id}`, {
+                state: product.id,
+              });
+            } else {
+              return;
+            }
+          }}
         >
-          <LazyLoadImage
-            src={firstImageUrl ? firstImageUrl : Images.imgNotFound}
-            className="max-h-[170px] w-full  object-contain mx-auto"
+          {!!product.discountValue && (
+            <p className=" text-xs bg-red-500  font-medium  absolute top-[1%] left-[1%] z-[8] text-white px-3 py-[1px] rounded-r-[15px]">
+              Sale
+            </p>
+          )}
+
+          <button
+            className="opacity-0 group-hover:opacity-100 absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-sm font-bold py-2 transition-opacity duration-300 ease-in-out cursor-pointer"
+            type="button"
+            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+              event.stopPropagation();
+              setShowQuickView(true);
+            }}
+          >
+            Xem nhanh
+          </button>
+          <div className="hover-translate-up">
+            <div className={`min-h-[110px] max-h-[170px] flex flex-col gap-2`}>
+              <img
+                src={product?.images ? product?.images : Images.imgNotFound}
+                className="max-h-[170px] w-full  object-contain mx-auto"
+              />
+            </div>
+            <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-1">
+              {product.name}
+            </p>
+            <div className="px-2">
+              {product.discountValue !== null ? (
+                <div className="flex items-end ">
+                  <p className="text-red-500 font-semibold text-base mr-2">
+                    {convertToCurrencyString(product.discountValue)}
+                  </p>
+                  <p className="text-gray-500 font-semibold text-sm  line-through">
+                    {convertToCurrencyString(product.minPrice)}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-red-500 font-semibold text-base  ">
+                  {convertToCurrencyString(product.minPrice)}
+                </p>
+              )}
+              <p className=" text-gray-400 font-normal text-sm  line-clamp-1">
+                <span className="text-slate-800 ">Màu sắc</span>:{" "}
+                {product.color}
+              </p>
+              <p className=" text-gray-400 font-normal text-sm  line-clamp-1 ">
+                <span className="text-slate-800 ">Danh mục:</span>{" "}
+                {product?.category}
+              </p>
+            </div>
+          </div>
+          <span
+            className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#000]  `}
           />
         </div>
-        <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-1">
-          {product.name}
-        </p>
-        <div className="flex items-center justify-between ">
-          <p className="text-red-500 font-semibold text-base   ">
-            {convertToCurrencyString(product.minPrice)}-{" "}
-            {convertToCurrencyString(product.maxPrice)}
-          </p>
-        </div>
-        <p className=" text-gray-400 font-thin text-sm  line-clamp-1">
-          <span className="text-slate-800 font-bold">Màu sắc</span>:{" "}
-          {product.color}
-        </p>
-        <p className=" text-gray-400 font-thin text-sm  line-clamp-1 ">
-          <span className="text-slate-800 font-bold">Danh mục:</span>
-          {product?.category}
-        </p>
-      </div>
-      <span className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#000]  `} />
+      </Fade>
+
+      {showQuickView && (
+        <QuickViewDetail
+          product={product}
+          setShowQuickView={setShowQuickView}
+        />
+      )}
     </div>
   ) : (
-    <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
-      <div className="hover-translate-up">
-        <div
-          className={`min-h-[110px] max-h-[170px] flex flex-col gap-2
+    <Fade top distance="10%" duration={2000}>
+      <div className="border-[1px] py-4 px-4 relative h-[300px] group btn4 leading-none overflow-hidden">
+        <div className="hover-translate-up">
+          <div
+            className={`min-h-[110px] max-h-[170px] flex flex-col gap-2
         
       `}
-        >
-          <LazyLoadImage
-            src={Images.imgNotFound}
-            className="max-h-[170px] w-full  object-contain mx-auto"
-          />
+          >
+            <LazyLoadImage
+              src={Images.imgNotFound}
+              className="max-h-[170px] w-full  object-contain mx-auto"
+            />
+          </div>
         </div>
+        <span className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#000]  `} />
       </div>
-      <span className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#000]  `} />
-    </div>
+    </Fade>
   );
 };
 export default ProductStanding;

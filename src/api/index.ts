@@ -6,9 +6,9 @@ const API = {
     baseUrl + `api/shoe?brand=${id}&page=${page}&sizePage=${sizePage}`,
   getBrandAllPage: (page: number, sizePage: number) =>
     baseUrl + `api/brand?page=${page}&sizePage=${sizePage}`,
-
+  getBrandWithId: (id: number) => baseUrl + `api/brand/${id}`,
   // size
-  getSize: () => baseUrl + `api/size`,
+  getSize: (page: number) => baseUrl + `api/size?page=${page}&sizePage=${10}`,
   getSizeAll: () => baseUrl + `api/size?page=1&sizePage=1000000`,
   getSizePage: (page: number) => baseUrl + `api/size?page=${page}`,
   //
@@ -18,17 +18,21 @@ const API = {
 
   // Danh mục
   getSole: () => baseUrl + "api/sole",
-  getSoleChoose: (sole: number, page: number, sizePage: number) =>
-    baseUrl + `api/shoe?sole=${sole}&page=${page}&sizePage=${sizePage}`,
+  getProuductSame: (sole: number | string, brand: number | string) =>
+    baseUrl +
+    `api/shoe?brand=${brand}&category=${sole}&page=${1}&sizePage=${20}`,
   // sản phẩm
   getShoe: (page: number, sizePage: number) =>
     baseUrl + `api/shoe?page=${page}&sizePage=${sizePage}`,
+  getIDWithName: (name: string) => baseUrl + `api/brand?name=${name}`,
+  getTopSale: (top: number) => baseUrl + `api/shoe/top-sell?top=${top}`,
   getShoesImg: () => baseUrl + "api/images",
   getShoeDetail: (shoe: number) => baseUrl + `api/shoe-detail?shoe=${shoe}`,
   getAllShoeDetail: () => baseUrl + `api/shoe-detail?sizePage=100000`,
   getShoeWithId: (shoe: number) => baseUrl + `api/shoe/${shoe}`,
   getShoeDetailWithId: (id: number) => baseUrl + `api/shoe-detail/${id}`,
   getCategory: () => baseUrl + "api/category?sizePage=100",
+  getCategoryWithId: (id: number) => baseUrl + `api/category/${id}`,
   getAllShoe: (page: number, sizePage: number) =>
     baseUrl + `api/shoe?page=${page}&sizePage=${sizePage}`,
   getShoeWithCategory: (id: number, page: number, sizePage: number) =>
@@ -51,6 +55,6 @@ const API = {
     page: number
   ) =>
     baseUrl +
-    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${16}`,
+    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${20}`,
 };
 export default API;

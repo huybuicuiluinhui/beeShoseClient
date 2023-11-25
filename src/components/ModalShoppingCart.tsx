@@ -132,15 +132,18 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
               </p>
               {!!listDetailShoe && !!listDetailShoe.length && (
                 <p className="text-sm font-medium">
-                  Tổng giá:
-                  {formatCurrency(
-                    cartItems.reduce((total, cartItem) => {
-                      const item = listDetailShoe.find(
-                        (i) => i.id === cartItem.id
-                      );
-                      return total + (item?.price || 0) * cartItem.quantity;
-                    }, 0)
-                  )}
+                  Tổng giá:{" "}
+                  <span className="text-red-500">
+                    {" "}
+                    {formatCurrency(
+                      cartItems.reduce((total, cartItem) => {
+                        const item = listDetailShoe.find(
+                          (i) => i.id === cartItem.id
+                        );
+                        return total + (item?.price || 0) * cartItem.quantity;
+                      }, 0)
+                    )}
+                  </span>
                 </p>
               )}
             </div>
@@ -152,7 +155,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                 Xem giỏ hàng
               </button>
               <button
-                className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] animate-pulse"
+                className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
                 onClick={() => [navigate(path.cart), closeCart()]}
               >
                 Thanh toán

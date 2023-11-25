@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { RouteObject, useRoutes, Link } from "react-router-dom";
+import { RouteObject, useRoutes, useLocation } from "react-router-dom";
 import HomePage from "./pages/home/index";
 import ProductPage from "./pages/product/index";
 import path from "./constants/path";
@@ -22,13 +22,24 @@ import ListProductsByBrandWithSearch from "./pages/listProductsByBrandWithSearch
 import PageNotFound from "./pages/pageNotFound404";
 
 function App() {
+  const location = useLocation();
   let routes: RouteObject[] = [
     {
       children: [
         { path: "/", element: <HomePage /> },
         {
+          path: "/tat-ca-san-pham",
+          element: <ListProductsByBrand key={location.key} />,
+          children: [{ index: true, element: <ProductPage /> }],
+        },
+        {
+          path: path.listProductsByCategory,
+          element: <ListProductsByBrand key={location.key} />,
+          children: [{ index: true, element: <ProductPage /> }],
+        },
+        {
           path: path.listProductsByBrand,
-          element: <ListProductsByBrand />,
+          element: <ListProductsByBrand key={location.key} />,
           children: [{ index: true, element: <ProductPage /> }],
         },
         {

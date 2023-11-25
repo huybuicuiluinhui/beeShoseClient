@@ -8,10 +8,7 @@ import FormLogin from "../pages/loginAndRegister";
 import { toSlug } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
 import API from "../api";
-import {
-  LazyLoadImage,
-  trackWindowScroll,
-} from "react-lazy-load-image-component";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const Header = () => {
   const navigate = useNavigate();
   const { cartQuantity, openCart } = useShoppingCart();
@@ -115,8 +112,12 @@ const Header = () => {
                 {!!listBrandHeader &&
                   !!listBrandHeader.length &&
                   listBrandHeader.map((item, index) => (
-                    <li
+                    <Link
+                      to={`/brand/${item.id}/${toSlug(item.name)}`}
                       key={index}
+                      onClick={() => {
+                        handleHover(false);
+                      }}
                       className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
                     >
                       <span
@@ -124,15 +125,10 @@ const Header = () => {
                       />
                       <span
                         className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
-                        onClick={() => {
-                          navigate(`/brand=${item.id}/${toSlug(item.name)}`, {
-                            state: item,
-                          });
-                        }}
                       >
                         {item.name}
                       </span>
-                    </li>
+                    </Link>
                   ))}
               </ul>
             </div>
@@ -153,27 +149,23 @@ const Header = () => {
                 {!!listCategory &&
                   !!listCategory.length &&
                   listCategory.map((item, index) => (
-                    <li
+                    <Link
+                      onClick={() => {
+                        handleHover(false);
+                      }}
+                      to={`/category/${item.id}/${toSlug(item.name)}`}
                       key={index}
-                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
+                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit group "
                     >
                       <span
                         className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
                       />
                       <span
-                        className={`cursor-pointer text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
-                        onClick={() => {
-                          navigate(
-                            `/category=${item.id}/${toSlug(item.name)}`,
-                            {
-                              state: item,
-                            }
-                          );
-                        }}
+                        className={`cursor-pointer text-[12px] group-hover:text-[#6756ca] ${"text-gray-900"}`}
                       >
                         {item.name}
                       </span>
-                    </li>
+                    </Link>
                   ))}
               </div>
             </ul>
@@ -264,10 +256,7 @@ const Header = () => {
                   </div>
                 </li>
                 <li className="flex-1 cursor-pointer">
-                  <div
-                    className=" flex justify-center items-center my-auto "
-                    onClick={() => {}}
-                  >
+                  <div className=" flex justify-center items-center my-auto ">
                     <div className="">
                       <LazyLoadImage
                         width="20"
@@ -289,10 +278,7 @@ const Header = () => {
                     navigate(path.invoice);
                   }}
                 >
-                  <div
-                    className=" flex justify-center items-center my-auto "
-                    onClick={() => {}}
-                  >
+                  <div className=" flex justify-center items-center my-auto ">
                     <LazyLoadImage
                       src={Images.iconBox}
                       alt=""
@@ -309,16 +295,17 @@ const Header = () => {
                   className="flex-1 px-0 cursor-pointer"
                   onClick={() => {
                     openCart();
-                    // navigate(path.cart);
                   }}
                 >
                   <div className=" flex justify-center items-center my-auto ">
                     <div className=" relative">
-                      <div className=" absolute left-3 -top-[30%]">
-                        <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                          {cartQuantity}
-                        </p>
-                      </div>
+                      {!!cartQuantity && cartQuantity > 0 && (
+                        <div className=" absolute left-3 -top-[30%]">
+                          <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
+                            {cartQuantity}
+                          </p>
+                        </div>
+                      )}
                       <svg
                         fill="none"
                         viewBox="0 0 24 24"
@@ -369,25 +356,16 @@ const Header = () => {
             <div className="max-w-screen-xl px-4  mx-auto">
               <div className="flex items-center overflow-x-auto no-scrollbar">
                 <ul className="flex flex-row font-medium  mr-6 space-x-8 text-sm ">
-                  <li className="relative tracking-wider btn4 leading-none overflow-hidden py-3    ">
+                  <li className="relative tracking-wider btn4 leading-none overflow-hidden py-3 group  ">
                     <span
                       className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
                     />
-
-                    <a
-                      onClick={() => {
-                        navigate(`/${toSlug("Tất cả sản phẩm")}/id=${0}`, {
-                          state: {
-                            name: "Tất cả sản phẩm",
-                            id: 0,
-                          },
-                        });
-                      }}
-                      className={`cursor-pointer whitespace-nowrap hover:text-[#6756ca] }`}
-                      aria-current="page"
+                    <Link
+                      to={`/${toSlug("Tất cả sản phẩm")}`}
+                      className={`cursor-pointer whitespace-nowrap group-hover:text-[#6756ca] font-sans }`}
                     >
                       Tất cả sản phẩm
-                    </a>
+                    </Link>
                   </li>
                   <li
                     onMouseEnter={() => {
@@ -403,8 +381,7 @@ const Header = () => {
                     />
 
                     <a
-                      // href="/"
-                      className={`cursor-default   whitespace-nowrap hover:text-[#6756ca] }`}
+                      className={`cursor-default   whitespace-nowrap hover:text-[#6756ca] font-sans}`}
                       aria-current="page"
                     >
                       Thương hiệu
@@ -417,15 +394,14 @@ const Header = () => {
                     onMouseLeave={() => {
                       handleHover(false);
                     }}
-                    className="relative tracking-wider btn4 whitespace-nowrap leading-none overflow-hidden py-3   "
+                    className="relative tracking-wider btn4 whitespace-nowrap leading-none overflow-hidden py-3 group  "
                   >
                     <span
                       className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]   `}
                     />
 
                     <a
-                      // href="/"
-                      className={`cursor-default  whitespace-nowrap hover:text-[#6756ca] }`}
+                      className={`cursor-default  whitespace-nowrap group-hover:text-[#6756ca] font-sans }`}
                       aria-current="page"
                     >
                       Danh mục
@@ -436,30 +412,20 @@ const Header = () => {
                       return;
                     }
                     return (
-                      <li
-                        onClick={() => {
-                          navigate(
-                            `/category=${item.id}/${toSlug(item.name)}`,
-                            {
-                              state: {
-                                item,
-                                status: true,
-                              },
-                            }
-                          );
-                        }}
+                      <Link
+                        to={`/category/${item.id}/${toSlug(item.name)}`}
                         key={index}
-                        className="relative tracking-wider whitespace-nowrap btn4 leading-none overflow-hidden py-3   "
+                        className="relative tracking-wider whitespace-nowrap btn4 leading-none overflow-hidden py-3  group "
                       >
                         <span
                           className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca]  `}
                         />
                         <span
-                          className={`cursor-pointer whitespace-nowrap hover:text-[#6756ca] ${"text-gray-900"}`}
+                          className={`cursor-pointer whitespace-nowrap group-hover:text-[#6756ca] ${"text-gray-900"} font-sans`}
                         >
                           {item.name}
                         </span>
-                      </li>
+                      </Link>
                     );
                   })}
                 </ul>

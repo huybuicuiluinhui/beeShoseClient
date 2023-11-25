@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ProductItem from "../../components/ProductItem";
-import Rate from "../../components/Rate";
 import SliderListProduct from "../../components/SliderListProduct";
 import axios from "axios";
 import API from "../../api";
 import { IDetailProduct, IInforShoe, IProduct } from "../../types/product.type";
-import path from "../../constants/path";
 import { toSlug } from "../../utils/format";
 const ProductPage = () => {
-  const location = useLocation();
   const params = useParams();
   const id = params?.id;
   const navigate = useNavigate();
@@ -22,15 +19,7 @@ const ProductPage = () => {
     setActiveTab(index);
   };
   const getInfoDetailProduct = async () => {
-    if (!!location && !id) {
-      const res = await axios({
-        method: "get",
-        url: API.getShoeDetail(location.state),
-      });
-      if (res.status) {
-        setDataDetailProduct(res?.data?.data);
-      }
-    } else if (!!id) {
+    if (!!id) {
       const res = await axios({
         method: "get",
         url: API.getShoeDetail(Number(id)),
@@ -41,24 +30,18 @@ const ProductPage = () => {
     }
   };
   const getShoeSole = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getSoleChoose(location.state, 1, 20),
-    });
-    if (res.status) {
-      setDataProductSole(res?.data?.data);
+    if (!!inforShoe) {
+      const res = await axios({
+        method: "get",
+        url: API.getProuductSame(inforShoe?.brand?.id, inforShoe.category?.id),
+      });
+      if (res.status) {
+        setDataProductSole(res?.data?.data);
+      }
     }
   };
   const getProductWithId = async () => {
-    if (!!location && !id) {
-      const res = await axios({
-        method: "get",
-        url: API.getShoeWithId(location.state),
-      });
-      if (res.status) {
-        setInforShoe(res.data);
-      }
-    } else if (!!id) {
+    if (!!id) {
       const res = await axios({
         method: "get",
         url: API.getShoeWithId(Number(id)),
@@ -71,13 +54,17 @@ const ProductPage = () => {
   useEffect(() => {
     getProductWithId();
     getInfoDetailProduct();
+    // getShoeSole();
+  }, [id]);
+  useEffect(() => {
     getShoeSole();
-  }, [location.state, id]);
+  }, [inforShoe]);
+
   const Tab01 = () => {
     return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">
         <p
-          className="font-semibold my-4 cursor-pointer"
+          className="font-semibold my-4 cursor-pointer text-xs"
           onClick={() => {
             navigate(`/product/${toSlug(inforShoe.name)}`, {
               state: inforShoe.id,
@@ -88,15 +75,39 @@ const ProductPage = () => {
           <span className="underline font-normal ">{inforShoe?.name}</span>{" "}
         </p>
         <span className="font-bold my-4">Thông tin sản phẩm: </span>
-        <span className=" my-4 font-normal">{inforShoe?.description}</span>
-        <p className="font-semibold my-4">
+        <span className=" my-4 font-normal text-xs">
+          {inforShoe?.description}
+        </span>
+        <p className="font-semibold my-4 text-xs">
           Thương hiệu:{" "}
-          <span className="font-normal ">{inforShoe?.brand.name}</span>
+          <span className="font-normal text-xs">{inforShoe?.brand.name}</span>
         </p>
-        <p className="font-medium my-4">
+        <p className="font-medium my-4 text-xs">
           Danh mục:{" "}
-          <span className="font-normal ">{inforShoe?.category.name}</span>
+          <span className="font-normal  ">{inforShoe?.category.name}</span>
         </p>
+        <p className="font-medium my-4 text-xs">
+          Size:{" "}
+          {!!dataDetailProduct &&
+            !!dataDetailProduct.length &&
+            dataDetailProduct.map((e, i) => {
+              return i + 1 === dataDetailProduct.length ? (
+                <span key={i} className="font-normal  ">
+                  {e.size}
+                </span>
+              ) : (
+                <span key={i} className="font-normal  ">
+                  {e.size},
+                </span>
+              );
+            })}
+        </p>
+        {!!inforShoe?.description && (
+          <p className="font-medium my-4 text-xs">
+            Chi tiết:{" "}
+            <span className="font-normal ">{inforShoe?.description}</span>
+          </p>
+        )}
       </div>
     ) : (
       <div> </div>
@@ -141,26 +152,26 @@ const ProductPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
+  console.log("inforShoe", inforShoe);
   return (
     <div className="w-full h-full  px-4">
       {!!inforShoe && !!dataDetailProduct && !!dataDetailProduct.length && (
         <ProductItem
           product={dataDetailProduct}
-          shoeId={location.state}
+          shoeId={Number(id)}
           inforShoe={inforShoe}
         />
       )}
       <div className="w-full h-[1px] bg-gray-400" />
       {/* Mô tả và đánh giá */}
-      <div className="w-full  mb-32 mt-2">
-        <div className="flex space-x-10 w-full justify-center mb-10">
+      <div className="w-full  mb-32 ">
+        <div className="flex space-x-10 w-full justify-around mb-10">
           {/* Tab buttons */}
           <button
             onClick={() => handleTabClick(0)}
             className={`px-4 ${
-              activeTab === 0 ? " border-gray-700 border-b-[1px]" : ""
-            } py-2 px-4 relative group btn4 leading-none overflow-hidden`}
+              activeTab === 0 ? " bg-[#f5f5f5] border-b-[1px]" : ""
+            } py-2 px-4 relative group btn4 leading-none overflow-hidden w-[50%]`}
           >
             <span className=" rounded-md font-semibold px-9 text-gray-700">
               MÔ TẢ
@@ -172,10 +183,10 @@ const ProductPage = () => {
           <button
             onClick={() => handleTabClick(1)}
             className={`px-4 ${
-              activeTab === 1 ? " border-gray-700 border-b-[1px]" : ""
-            } py-2 px-4 relative group btn4 leading-none overflow-hidden`}
+              activeTab === 1 ? " bg-[#f5f5f5] border-b-[1px]" : ""
+            } py-2 px-4 relative group btn4 leading-none overflow-hidden w-[50%]`}
           >
-            <span className="rounded-md font-semibold px-9 text-gray-700">
+            <span className="rounded-md font-semibold px-9 text-gray-700 ">
               CHÍNH SÁCH HOÀN TRẢ
             </span>
             <span
@@ -187,14 +198,17 @@ const ProductPage = () => {
           {activeTab === 0 && <Tab01 />}
           {activeTab === 1 && <Tab02 />}
         </div>
-        <div className="flex items-center   ">
-          <span className="text-base font-medium  uppercase my-5 text-[#000] ">
-            Các sản phẩm tương tự
-          </span>
-          <div className="w-10 h-[1px] bg-[#000]  ml-2" />
-        </div>
         {!!dataProductSole && !!dataProductSole.length && (
-          <SliderListProduct products={dataProductSole} />
+          <>
+            <div className="flex items-center   ">
+              <span className="text-base font-medium  uppercase my-5 text-[#000] ">
+                Các sản phẩm tương tự
+              </span>
+              <div className="w-10 h-[1px] bg-[#000]  ml-2" />
+            </div>
+
+            <SliderListProduct products={dataProductSole} />
+          </>
         )}
       </div>
       {/* các sản phẩm tương tự */}

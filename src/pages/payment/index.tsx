@@ -760,7 +760,7 @@ const PaymentPage = () => {
             </div>
           </div>
           <button
-            className="mt-4 mb-8 w-full rounded-md bg-gray-500 px-6 py-3 font-medium text-white"
+            className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white"
             onClick={() => {
               setShowMoal(true);
             }}
@@ -794,33 +794,31 @@ const PaymentPage = () => {
               />
             </svg>
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
-              Bạn có chắc muốn mua hàng không ?
+              Xác nhận đặt đơn hàng ?
             </h3>
 
-            <div>
-              <div className="w-full flex justify-around items-center">
-                <button
-                  onClick={() => {
-                    setShowMoal(false);
-                  }}
-                  data-modal-hide="popup-modal"
-                  type="button"
-                  className="text-white bg-red-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
-                >
-                  Hủy
-                </button>
-                <button
-                  onClick={() => {
-                    postBill();
-                    setShowMoal(false);
-                  }}
-                  data-modal-hide="popup-modal"
-                  type="button"
-                  className="text-white bg-green-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                >
-                  Đặt hàng
-                </button>
-              </div>
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowMoal(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  postBill();
+                  setShowMoal(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Đặt hàng
+              </button>
             </div>
           </div>
         </ModalComponent>
