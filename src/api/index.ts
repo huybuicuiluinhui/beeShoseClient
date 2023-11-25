@@ -27,7 +27,8 @@ const API = {
   getIDWithName: (name: string) => baseUrl + `api/brand?name=${name}`,
   getTopSale: (top: number) => baseUrl + `api/shoe/top-sell?top=${top}`,
   getShoesImg: () => baseUrl + "api/images",
-  getShoeDetail: (shoe: number) => baseUrl + `api/shoe-detail?shoe=${shoe}`,
+  getShoeDetail: (shoe: number) =>
+    baseUrl + `api/shoe-detail?shoe=${shoe}$sizePage=${100}`,
   getAllShoeDetail: () => baseUrl + `api/shoe-detail?sizePage=100000`,
   getShoeWithId: (shoe: number) => baseUrl + `api/shoe/${shoe}`,
   getShoeDetailWithId: (id: number) => baseUrl + `api/shoe-detail/${id}`,

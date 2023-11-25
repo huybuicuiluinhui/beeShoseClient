@@ -13,6 +13,7 @@ import {
 import { convertToCurrencyString } from "../../utils/format";
 import API from "../../api";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { toast } from "react-toastify";
 type CartItemProps = {
   id: number;
   quantity: number;
@@ -229,7 +230,7 @@ const CartPage = () => {
               Giá
             </h3>
             <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
-              Tổng tiền
+              Thành tiền
             </h3>
           </div>
           {cartItems.map((item) => {
@@ -296,7 +297,7 @@ const CartPage = () => {
               <button
                 className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"
                 onClick={() => {
-                  alert("Không có sản phẩm trong giỏ hàng ");
+                  toast("Không có sản phẩm trong giỏ hàng ");
                 }}
               >
                 Mua hàng

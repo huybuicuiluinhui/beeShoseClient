@@ -27,6 +27,7 @@ const QuickViewDetail = ({
   const [amountShoe, setAmountShoe] = useState<number>(0);
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [code, setCode] = useState<string>();
+  const [sale, setSale] = useState<boolean>();
   const [amount, setAmount] = useState(1);
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
   const [chooseColorName, setChooseColorName] = useState<string>();
@@ -108,6 +109,7 @@ const QuickViewDetail = ({
         setAmountShoe(res?.data?.data[0].quantity);
         setIdAddToCart(res?.data?.data[0].id);
         setCode(res?.data.data[0].code);
+        setSale(res?.data?.data[0].discountValue);
       }
     }
   };
@@ -205,16 +207,13 @@ const QuickViewDetail = ({
     }
     return [];
   }, [dataDetailProduct]);
-  console.log("imgArr", imgArr);
+  console.log("dataDetailProduct", dataDetailProduct);
   useEffect(() => {
     getInfoDetailProduct();
   }, [product.id]);
   return (
     <div>
-      <div
-        className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    "
-        // onClick={handleCloseClick as any}
-      >
+      <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    ">
         <div className="bg-white  shadow-lg h-screen w-[30%]  transform  transition-transform ease-in-out   ">
           <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
             <h2 className="text-lg font-semibold  uppercase   ">XEM NHANH</h2>
@@ -225,7 +224,7 @@ const QuickViewDetail = ({
           <div className="w-full bg-gray-500 h-[1px]  " />
 
           <div className="w-full overflow-y-auto max-h-[550px] ">
-            <div className="flex ">
+            <div className="flex mx-2 ">
               <div className="w-[30%]">
                 <Slider {...settings}>
                   {imgArr?.map((item, index) => {
@@ -244,17 +243,35 @@ const QuickViewDetail = ({
                 <p className="text-base font-medium line-clamp-2">
                   {product.name}
                 </p>
-                <p className="text-sm font-normal line-clamp-2">
-                  {product.brand}
-                </p>
+                <div className="flex justify-between">
+                  <p className="text-sm font-normal line-clamp-2">
+                    {product.brand}
+                  </p>
+                  {sale && (
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEN0lEQVR4nO1Z3WtcRRS/1Af1XxB9ER8EsVC75+ymrcadc93ElFYREi1CH/xABaHEFoNiSbAY0hbSpoptbRtokYr4oAgi+NCHqtiqFMVq1La+WFq1Rc3O3N179+vIzDY3d6+72buxdzdbe+DAMjM78/vN+Z2582FZ1+0aNpXGLVLAZqsbTYrkY1JgWRJWFOFGq5tMCkxLga4iZO2SsKBs6LOWguUyidukwHNK4FTWTq7hUWtZsF7aqbsV4V9z4Ocdskqk7gn3J9NwlyQYUwTfO714a+wEpA1DQWBS4AVJsE8R9GczK++UhBf/Dd6PxEXdRrfV/5ECL9TU2zAUOwFFsLsRwP/usCt2ApLwZFwEJMGJWMFzKnWzFOjFRwALeozYCOikjU8+aDx7/8rVVx049/bepDtWBEfjJqAIjuqx9JiLBuzYq25xRGKdJJxQAj+TBPn4gWM4H4p6aZUC9usPYZ4St0cmoAh/bDdg1cwFzkQmIAm2dxwwhSOCE5EJzKYTqzoNWIU8R9ATmYDeHiz0RW2/fOD38JaluYwEHFo68oGDVqvmpJPrOw1cXXG9IrZMQIrk8oadPpBiZ71oXwREcnlrs29DQuuuXmeFIweZ3TxrK536kp116Zr60renmEsldh62/TJ3cty0zz23sbavwwc4bM7QQJ0cwMuRk1jaQErAbD3wuSc3mEGKx4+xt2/K/NYg/FA/0sdcLptyd2IsMgF3cpzdV18yrgbubRAFVEokHlwYPMHj5vTUIJT5TU+bAb29u6vAdm7j/IvPzwPduY254HH5/K9c/PRYZAJOvVmvn8xFRfhEI81v0mfYBTvJ9HDpu2+YK2UThdxTG2rl8/lxLn19kgvvv8ucz/mz2YxA+dwZLv80w9703ggksKIEjCyOgPa+1ezt2cGVy5fMbOeHn62Wr+1ldl323tzF7tiIAZbfujkSgcIH73HhncPsjo4snkAkCb08bAZS/Wuqei94XPzkoyrI0SrooBU//rB9EoqSxO5rr1Rz4MAbnN+6hblYNHLRdZqIlo1JyMlxLv9ylit//2mW3DkChben/fogAe+t1+fLB+5bfBI3XUbtpImAlorR7g+n2Xl0rcmNSnaWS1+d8Nt6+/dUZTT8jE8gaLEto5E+ZJkeo/koYe/Ih0ybQ/hQuwCqJq63NVarJgmmOw1c+RGAQy2B11tXRfBbp4Gr4HZ6cPCGyASqB/glAJzmXR+yostHwI5OA1ZhGRFs7/JDPfz8/7lW6fqLrU4m92wrydqqcf8dNwZfXq66bAR6scx80PQVeHwE4AsrbtOPELFJSMBk25+YFOElSXBEr1rmiSn0bFQLEP/Qbcw1vcApSXA+JKHBtjzy6YtWvcQ6NqbCN2aKEivqnidMWWJFsC2PWst0H1eW6xndt7Vkn1nTmLG6yWQ3P3TPmSR4QbtfcN2uQfsHfcxrgxrgiEkAAAAASUVORK5CYII=" />
+                  )}
+                </div>
                 <span className="font-normal text-[11px]">
                   Số lượng còn: {amountShoe}
                 </span>{" "}
-                <p className="text-red-500 font-semibold text-sm   ">
-                  {!!price
-                    ? `${convertToCurrencyString(price)}`
-                    : "Sản phẩm hiện hết hàng"}
-                </p>
+                {!!price && !!sale ? (
+                  <>
+                    <span className="text-red-500 font-semibold text-sm   ">
+                      {convertToCurrencyString(Number(sale))}
+                    </span>
+                    <span className="text-gray-500 font-semibold text-base   ">
+                      {convertToCurrencyString(Number(price))}
+                    </span>
+                  </>
+                ) : !!price && !sale ? (
+                  `${convertToCurrencyString(Number(price))}`
+                ) : (
+                  "Sản phẩm hiện hết hàng"
+                )}
+                {/* {(!!price && sale == null) || sale == undefined
+                    ? `${convertToCurrencyString(Number(sale))}   `
+                    : "Sản phẩm hiện hết hàng"} */}
+                {/* </p> */}
               </div>
             </div>
             <div className="w-full  px-5">
