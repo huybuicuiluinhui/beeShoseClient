@@ -14,13 +14,22 @@ import { convertToCurrencyString } from "../../utils/format";
 import API from "../../api";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { toast } from "react-toastify";
+import ModalComponent from "../../components/Modal";
 type CartItemProps = {
   id: number;
   quantity: number;
   setInfoShoeList: any;
+  showModal: boolean;
+  setShowModal: any;
 };
 
-const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
+const Item = ({
+  id,
+  quantity,
+  setInfoShoeList,
+  showModal,
+  setShowModal,
+}: CartItemProps) => {
   const [infoShoe, setInfoShoe] = useState<IIForDetailShoe>();
   const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
     useShoppingCart();
@@ -60,7 +69,7 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
       <div
         className="flex w-[5%] items-center justify-center cursor-pointer"
         onClick={() => {
-          removeFromCart(infoShoe.id);
+          setShowModal(true);
         }}
       >
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVklEQVR4nGNgoBAwMjAw8BGhjg+qFkVgCQMDgygeTaJQNXzYJFYyMDBI4NC0EoccTgWihDRhUyhKrCZ0/ywh4G/qaBQlx6mi5ASOKDnRQXYCIDvJkQwARZsQRRiqQN4AAAAASUVORK5CYII=" />{" "}
@@ -82,12 +91,12 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
             {" "}
             {infoShoe?.shoe.brand.name}
           </span>
-          <a
+          {/* <a
             href="#"
             className="font-semibold hover:text-red-500 text-gray-500 text-xs"
           >
             Xóa
-          </a>
+          </a> */}
         </div>
       </div>
       <div className=" flex items-center justify-center w-1/5">
@@ -106,7 +115,7 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
           viewBox="0 0 448 512"
           onClick={() => {
             if (quantity >= infoShoe.quantity) {
-              alert("Sản phẩm đạt số lượng tối đa");
+              toast("Sản phẩm đạt số lượng tối đa");
               return;
             } else {
               increaseCartQuantity(infoShoe.id);
@@ -122,6 +131,60 @@ const Item = ({ id, quantity, setInfoShoeList }: CartItemProps) => {
       <span className="text-center w-1/5 font-semibold text-sm">
         {convertToCurrencyString(infoShoe.price * quantity)}
       </span>
+      {showModal && (
+        <ModalComponent
+          check={true}
+          isVisible={showModal}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận xóa sản phẩm khỏi giỏ hàng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  removeFromCart(infoShoe.id);
+                  setShowModal(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   ) : (
     <div></div>
@@ -133,55 +196,7 @@ const CartPage = () => {
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
-  // const [totalPercent, setTotalPercent] = useState<number>();
-  // function generateRandomName() {
-  //   const characters =
-  //     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  //   let randomName = "";
-  //   for (let i = 0; i < 50; i++) {
-  //     randomName += characters.charAt(
-  //       Math.floor(Math.random() * characters.length)
-  //     );
-  //   }
-  //   return randomName;
-  // }
-  // function setUserNameCookie() {
-  //   let userName = getCookie("user_token");
-  //   if (!userName) {
-  //     userName = generateRandomName();
-  //     setCookie("user_token", userName, 365);
-  //   }
-  //   localStorage.setItem("user_token", userName);
-  // }
-
-  // function getCookie(cookieName: string) {
-  //   const name = cookieName + "=";
-  //   const decodedCookie = decodeURIComponent(document.cookie);
-  //   const cookieArray = decodedCookie.split(";");
-  //   for (let i = 0; i < cookieArray.length; i++) {
-  //     let cookie = cookieArray[i];
-  //     while (cookie.charAt(0) === " ") {
-  //       cookie = cookie.substring(1);
-  //     }
-  //     if (cookie.indexOf(name) === 0) {
-  //       return cookie.substring(name.length, cookie.length);
-  //     }
-  //   }
-  //   return "";
-  // }
-
-  // function setCookie(
-  //   cookieName: string,
-  //   cookieValue: string,
-  //   expirationDays: number
-  // ) {
-  //   const d = new Date();
-  //   d.setTime(d.getTime() + expirationDays * 24 * 60 * 60 * 1000);
-  //   const expires = "expires=" + d.toUTCString();
-  //   document.cookie =
-  //     cookieName + "=" + cookieValue + ";" + expires + ";path=/";
-  // }
-
+  const [showModal, setShowMoal] = useState<boolean>(false);
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -235,7 +250,13 @@ const CartPage = () => {
           </div>
           {cartItems.map((item) => {
             return (
-              <Item key={item.id} {...item} setInfoShoeList={setInfoShoeList} />
+              <Item
+                key={item.id}
+                {...item}
+                setInfoShoeList={setInfoShoeList}
+                showModal={showModal}
+                setShowModal={setShowMoal}
+              />
             );
           })}
 

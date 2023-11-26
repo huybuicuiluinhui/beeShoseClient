@@ -9,9 +9,10 @@ import { toSlug } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
 import API from "../api";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { getCookie } from "../helper/CookiesRequest";
 const Header = () => {
   const navigate = useNavigate();
-  const { cartQuantity, openCart } = useShoppingCart();
+  const { cartQuantity, openCart, cartItems } = useShoppingCart();
   const [showTable, setShowTable] = useState<boolean>(false);
   const [results, setResults] = useState<IProduct[]>([]);
   const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
@@ -20,6 +21,8 @@ const Header = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<number>(1);
   const [searchValue, setSearchValue] = useState<string>();
+  const token = getCookie("customerToken");
+
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
       const key = event.target.value;
@@ -232,7 +235,7 @@ const Header = () => {
                           return (
                             <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
                               <LazyLoadImage
-                                src={result.images.split(",")[0]}
+                                src={result.images}
                                 alt=""
                                 className="w-10 h-10 object-cover rounded mr-2  "
                               />
@@ -275,7 +278,7 @@ const Header = () => {
                 <li
                   className="flex-[1.3] px-0 cursor-pointer"
                   onClick={() => {
-                    navigate(path.invoice);
+                    navigate(path.lookUpOrders);
                   }}
                 >
                   <div className=" flex justify-center items-center my-auto ">
@@ -302,7 +305,7 @@ const Header = () => {
                       {!!cartQuantity && cartQuantity > 0 && (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                            {cartQuantity}
+                            {cartItems.length}
                           </p>
                         </div>
                       )}
@@ -324,20 +327,27 @@ const Header = () => {
                     <div className="ml-3">
                       <p className="text-xs">Giỏ hàng</p>
                       <span className="text-sm font-medium">
-                        {cartQuantity} sản phẩm{" "}
+                        {cartItems.length} sản phẩm{" "}
                       </span>
                     </div>
                   </div>
                 </li>
                 <li
                   className="flex-[1.4] px-0 cursor-pointer"
-                  onClick={() => {
-                    navigate(path.information);
-                  }}
+                  // onClick={() => {
+                  //
+                  // }}
                 >
                   <div
                     className=" flex justify-center items-center my-auto "
-                    onClick={() => {}}
+                    onClick={() => {
+                      // setShowModal(true);
+                      if (token) {
+                        navigate(path.information);
+                      } else {
+                        navigate(path.loginScreen);
+                      }
+                    }}
                   >
                     <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
                     <div className="ml-3">
@@ -434,6 +444,7 @@ const Header = () => {
           </nav>
         )}
       </header>
+
       {showTable && <CategoryTable />}
       <FormLogin
         showModal={showModal}

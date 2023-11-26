@@ -3,23 +3,25 @@ import Images from "../../static";
 import InforMe from "./inforMe";
 import Invoice from "../invoice";
 import HistoryOrder from "./historyOrder";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Address from "./address";
 import ReturnProduct from "./returnProduct";
 import { IDataAside } from "../../types/product.type";
+import { deleteToken, deleteUserToken } from "../../helper/useCookie";
+import path from "../../constants/path";
 type IDataAsideOmit = Omit<IDataAside, "imgHover"> | IDataAside;
 const Information = () => {
-  const [isHovered, setIsHovered] = useState<number>(0);
+  const navigate = useNavigate();
   const [chooseTab, setChooseTab] = useState<number>(1);
   const dataAside: IDataAside[] = [
     {
       id: 1,
-      name: "Trang tài khoản",
+      name: "Tài khoản của tôi",
       img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB7klEQVR4nOXV24uNURgG8J8MjaYGhWimoSRKStQkOU0ykxzKKUU5RynmAqGUs5BjEYkc4oqc4kIyN5Qbf4UL9/4BtOpRu5m9Ne297zy1Wt/3vqv3+b738Cz+R4xAJ6bluenYhuc4i9N5XtOs4GPxFNur+E7hCRY0SvAWs2r4R2F0iKbUS9KHh4NsnViI43iHy+jBfg3gfAJvSB3OYS/mxl+CH8axRgt+Apdq+LvwDXsaIVmOH2nbahiHn1ihAfTjJtqwGx2xd+S9Lf5yrm4sw2O0JnBL7C15b41/qQZxBN01fGVGDmkCygzcq+Er9smahC24UzF0Zb+LtYPOXcHFeknKZA+kyC+yD8ReMCZp6096D6Zew8b0BH6fuZC9TPzmzNAbrMTIrNV4Hd+SfwWfivu4hldJ0aek6Ssm4WO6rB29eJTVE+0ravGhFsHOEPwt6o4QXc3wFe2agQOR/Dm4nb9oSUPMjBztq0awqYoWtVdI+vdBDdEX/ZpdYZ+XupQP2FiN5EEOlVosThp687Ulhb8qCr4uROuxtSLGLqxKBkp9hqDI+9Ea6wx+Z+9O8cfnOr6V+t3A9dgm5E4agiKG84exuiL95ea8kEusNMPE/GnprGc4WY2kHhTtepn0ls4qLb+oWcErURT5Cz4PHsQ/+nZWwSUOVrQAAAAASUVORK5CYII=",
     },
     {
       id: 2,
-      name: "Đơn hàng",
+      name: "Đơn mua",
       img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAgUlEQVR4nO2UQQqAIBBF3xXa2kbwgF4h6hS1ETqBO68XgYsorEYGWuQDEUacN/6F0KjEAyswK6w197swABYdbO73jcQDSSmuVIprJyi9JNQcToWJR03JchONmkRKaBIJLS4RP4vLAT3Q5d0JaiKJyZfNoaF5UXuURKWvPr7NtcGZDTlhQ6jNuo6FAAAAAElFTkSuQmCC",
     },
     {
@@ -39,11 +41,17 @@ const Information = () => {
       img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABQklEQVR4nOXVS0pcURDG8R/oQIlLyEQ7GwhOxAcoandEpxm4AHsk8YEgDkV0B5KZRHTiAhJnKroBcQfuwVac2HKgAk3TfW+8eiXgBzW4nLrnTz1OFR9N/fiGOjaxjCoG3uLyCo7QQLODPeAXvhQFbOARTzjDCqYxjEms4rIFtvBSwM/4+RojOb7jOEXtpREkwG98UoIqkaLrsgBJx1GDvBR10hy20SunTRtR5CLaiTSfZIFq4fSjIKQ3AJmgejjMZFw0he8ZtojbLNBWHH7tAvjc5UFmWfU9Iulpv6Aah+lll1aTftzhvCBk91+6SwzD5DhaADKPvTxA0lC8+Ju3GuPdtB7R/CkbtB+gFNFYju9EkSn8V2uRugS7iP0x27ZPrlr2SapJIQ3iMLqu2cHucRDT+9XqiyiWWnZ8+i5tHfyfegbdCmXLx2hOTwAAAABJRU5ErkJggg==",
     },
   ];
+  const handleLogout = () => {
+    deleteToken();
+    deleteUserToken();
+    sessionStorage.removeItem("idAccount");
+    navigate(path.loginScreen);
+  };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  console.log(chooseTab, isHovered);
-  const [selectedCategory, setSelectedCategory] = useState("Trang tài khoản");
+  console.log(chooseTab);
+  const [selectedCategory, setSelectedCategory] = useState("Tài khoản của tôi");
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
   };
@@ -54,45 +62,45 @@ const Information = () => {
         className="sticky   left-0  w-64 transition-transform -translate-x-full sm:translate-x-0 mt-10  "
         aria-label="Sidebar"
       >
-        <img
-          src={Images.testAvatar}
-          alt=""
-          className="rounded-[100%] w-10 h-10 mb-2"
-        />
-        <p className="text-sm font-thin ">
-          Xin chào
-          <span className="font-bold text-gray-800"> userName</span>
-        </p>
+        <div className="flex items-start">
+          <img
+            src={Images.testAvatar}
+            alt=""
+            className="rounded-[100%] w-10 h-10 mb-2"
+          />
+          <div className="ml-2">
+            <p className="text-sm font-bold text-gray-800 ">
+              userName
+              <div className="font-thin text-gray-800 flex items-end">
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAABJklEQVR4nN3TvUoDURCG4cdIKjsLg16B1jbaaimxsLRIoygISW1nSGGhuYMUQiz0Jqy1y12kESzUFPEH5cAEljVkiVqIHyyHnZ3znu/MzPJHtI7Sb8FO8YErzP4U1sYAdTzg4rtOSwFLzjoRW50WuoQ9XOMez2jhBcfTQGdwhlf00UUNlfi+k4PWw3lq1Fgd4hFbE9yPoJ2o6fmkq/ZwolitcNaelDSPd6xlYgvYRTkTq4SzdtGp25GY3dwNJwk6Ui0aVSoCplrcZN738YbLcJo9JHW/UHdo5mBpdPJT0B8T/6K56NxGBpbWvKqRt6hAm5HYGAMrx5wl90/xPxfqCMOANcJpM2o6iO734qB07UIth8NhrOm5jUZVY6Sm1goO4vqppv9Qn6xsSHwtb9O6AAAAAElFTkSuQmCC" />{" "}
+                sửa hồ sơ
+              </div>
+            </p>
+          </div>
+        </div>
         <div className="h-full py-4 ">
           <div className="flex flex-col items-start justify-center  w-full ">
             {dataAside.map((item, index) => {
               return (
                 <div
-                  className="relative tracking-wider btn4 leading-none overflow-hidden mt-2 pb-2 w-[85%] cursor-pointer mb-10 "
+                  className="relative tracking-wider  leading-none overflow-hidden mt-2 pb-2 w-[85%] cursor-pointer mb-2 "
                   onClick={() => {
                     handleCategoryClick(item.name);
                     setChooseTab(item.id);
                   }}
                   key={index}
                 >
-                  <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-[#FFBA00]  " />
-                  <div
-                    className=" block "
-                    onMouseEnter={() => setIsHovered(item.id)}
-                    onMouseLeave={() => setIsHovered(0)}
-                  >
+                  <div className=" flex items-end">
                     <img src={item.img} />{" "}
-                    {chooseTab === index + 1 || isHovered === index + 1 ? (
-                      <span
-                        className={`font-normal ml-10 my-2 ${
-                          selectedCategory === item.name
-                            ? "text-[#FFBA00]  "
-                            : "text-gray-900"
-                        }`}
-                      >
-                        {item.name}
-                      </span>
-                    ) : null}
+                    <span
+                      className={` ml-2  text-gray-900 ${
+                        selectedCategory === item.name
+                          ? "font-semibold "
+                          : "text-gray-500 font-normal"
+                      }`}
+                    >
+                      {item.name}
+                    </span>
                   </div>
                 </div>
               );
@@ -104,11 +112,13 @@ const Information = () => {
         {selectedCategory === dataAside[0].name ? (
           <InforMe />
         ) : selectedCategory === dataAside[1].name ? (
-          <HistoryOrder />
+          <Invoice />
         ) : selectedCategory === dataAside[2].name ? (
           <ReturnProduct />
-        ) : (
+        ) : selectedCategory === dataAside[3].name ? (
           <Address />
+        ) : (
+          <>{handleLogout()}</>
         )}
       </div>
     </div>

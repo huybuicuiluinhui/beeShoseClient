@@ -31,6 +31,8 @@ const ProductItem = ({
   const [allColorData, setAllColorData] = useState<Product[]>([]);
   const [price, setPrice] = useState<number | undefined>(0);
   const [amountShoe, setAmountShoe] = useState<number>(0);
+  const [priceSale, setPriceSale] = useState<boolean>();
+  const [sale, setSale] = useState<boolean>();
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
@@ -103,6 +105,8 @@ const ProductItem = ({
         setAmountShoe(res?.data?.data[0].quantity);
         setIdAddToCart(res?.data?.data[0].id);
         setCode(res?.data.data[0].code);
+        setSale(res?.data?.data[0].discountPercent);
+        setPriceSale(res?.data?.data[0].discountValue);
       }
     }
   };
@@ -147,13 +151,12 @@ const ProductItem = ({
     setChooseColorName(product[0]?.color);
   }, [product, allSizeData, allColorData]);
   useEffect(() => {
-    setAmountShoe(0);
+    // setAmountShoe(0);
     if (chooseColor && chooseSize) {
       getPriceDetailShoe();
     }
   }, [inforShoe.name, chooseSize, chooseColor]);
   const amountItemInCart = getItemQuantity(idAddToCart);
-  console.log(amountItemInCart, amountShoe, amount);
   return (
     <div className="max-w-7xl mx-auto p-8">
       <div className="flex   justify-between lg:flex-row gap-16   infoShoe">
@@ -180,11 +183,25 @@ const ProductItem = ({
           <span className="text-3xl font-medium text-black  ">
             {inforShoe?.name}
           </span>
-          <h6 className="text-2xl font-semibold text-[#942319]">
-            {!!price
-              ? `${convertToCurrencyString(price)}`
-              : "Sản phẩm hiện hết hàng"}
-          </h6>
+          <div className="flex items-end">
+            {!!price && !!priceSale && amountShoe > 0 ? (
+              <>
+                <span className="text-red-500 font-semibold text-lg  ">
+                  {convertToCurrencyString(Number(priceSale))}
+                </span>
+                <span className="text-gray-500 font-semibold text-base   line-through ml-2 ">
+                  {convertToCurrencyString(Number(price))}
+                </span>
+                <span className="bg-[#ee4d2d] text-white font-medium ml-10 px-1 rounded">
+                  Giảm {sale}%
+                </span>
+              </>
+            ) : !!price && !priceSale && amountShoe > 0 ? (
+              `${convertToCurrencyString(Number(price))}`
+            ) : (
+              <span className="font-semibold"> Sản phẩm hiện hết hàng</span>
+            )}
+          </div>
           <div className="w-full flex justify-between items-center">
             <span className="text-sm font-semibold ">Chọn kích thước</span>
             <div
@@ -255,6 +272,7 @@ const ProductItem = ({
                       if (
                         (amountShoe <= amountItemInCart + amount &&
                           !!price &&
+                          amountShoe !== 0 &&
                           amount <= 10) ||
                         amount > 10
                       ) {
@@ -294,31 +312,27 @@ const ProductItem = ({
                 className={`cursor-pointer  text-white font-semibold  flex  items-center justify-center  w-[49%] 
                 ${!!price ? "bg-[#0161e7]" : "bg-[#0161e767]"}
                 `}
-                onClick={
-                  // () =>
-
-                  () => {
-                    if (
-                      !!idAddToCart &&
-                      !!price &&
-                      amountShoe >= amountItemInCart + amount &&
-                      amountItemInCart <= 10
-                    ) {
-                      addMultipleToCart(idAddToCart, amount);
-                      openCart();
-                      setAmount(1);
-                      toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
-                    } else if (
-                      (!!price && amount < amountShoe - amountItemInCart) ||
-                      amount >= 10
-                    ) {
-                      toast("Sản phẩm đã tối đa trong giỏ hàng");
-                      return;
-                    } else {
-                      toast("Bạn cần chọn sản phẩm khác");
-                    }
+                onClick={() => {
+                  if (
+                    !!idAddToCart &&
+                    !!price &&
+                    amountShoe >= amountItemInCart + amount &&
+                    amountItemInCart <= 10
+                  ) {
+                    addMultipleToCart(idAddToCart, amount);
+                    openCart();
+                    setAmount(1);
+                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                  } else if (
+                    (!!price && amount < amountShoe - amountItemInCart) ||
+                    amount >= 10
+                  ) {
+                    toast("Sản phẩm đã tối đa trong giỏ hàng");
+                    return;
+                  } else {
+                    toast("Bạn cần chọn sản phẩm khác");
                   }
-                }
+                }}
               >
                 <span>Thêm vào giỏ hàng</span>
               </div>

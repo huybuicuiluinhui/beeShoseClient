@@ -28,13 +28,13 @@ const QuickViewDetail = ({
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [code, setCode] = useState<string>();
   const [sale, setSale] = useState<boolean>();
+  const [priceSale, setPriceSale] = useState<boolean>();
   const [amount, setAmount] = useState(1);
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
   const [chooseColorName, setChooseColorName] = useState<string>();
   const [allSizeData, setAllSizeData] = useState<Product[]>([]);
   const [allColorData, setAllColorData] = useState<Product[]>([]);
   const imageArray = product.images ? product.images.split(",") : [];
-
   const settings = {
     arrows: false,
     dots: false,
@@ -109,7 +109,8 @@ const QuickViewDetail = ({
         setAmountShoe(res?.data?.data[0].quantity);
         setIdAddToCart(res?.data?.data[0].id);
         setCode(res?.data.data[0].code);
-        setSale(res?.data?.data[0].discountValue);
+        setSale(res?.data?.data[0].discountPercent);
+        setPriceSale(res?.data?.data[0].discountValue);
       }
     }
   };
@@ -162,7 +163,7 @@ const QuickViewDetail = ({
     }
   }, [product, allSizeData, allColorData]);
   useEffect(() => {
-    setAmountShoe(0);
+    // setAmountShoe(0);
     if (chooseColor && chooseSize) {
       getPriceDetailShoe();
     }
@@ -207,7 +208,6 @@ const QuickViewDetail = ({
     }
     return [];
   }, [dataDetailProduct]);
-  console.log("dataDetailProduct", dataDetailProduct);
   useEffect(() => {
     getInfoDetailProduct();
   }, [product.id]);
@@ -239,39 +239,46 @@ const QuickViewDetail = ({
                 </Slider>
               </div>
 
-              <div className="ml-[10%] w-full flex flex-col justify-center">
-                <p className="text-base font-medium line-clamp-2">
-                  {product.name}
-                </p>
+              <div className="ml-[10%] w-full flex flex-col justify-center relative">
+                <div className="flex justify-center ">
+                  <p className="text-base font-medium line-clamp-2 w-full">
+                    {product.name}
+                  </p>
+                  {sale && dataDetailProduct && amountShoe > 0 && (
+                    <div className="bg-yellow-300 px-1  h-fit  flex relative ">
+                      <img
+                        src={Images.iconStom}
+                        alt=""
+                        className="  object-contain  absolute -left-[23%]"
+                      />
+                      <span className="text-red-400 ml-1 font-sm">
+                        -{sale}%
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="flex justify-between">
                   <p className="text-sm font-normal line-clamp-2">
                     {product.brand}
                   </p>
-                  {sale && (
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEN0lEQVR4nO1Z3WtcRRS/1Af1XxB9ER8EsVC75+ymrcadc93ElFYREi1CH/xABaHEFoNiSbAY0hbSpoptbRtokYr4oAgi+NCHqtiqFMVq1La+WFq1Rc3O3N179+vIzDY3d6+72buxdzdbe+DAMjM78/vN+Z2582FZ1+0aNpXGLVLAZqsbTYrkY1JgWRJWFOFGq5tMCkxLga4iZO2SsKBs6LOWguUyidukwHNK4FTWTq7hUWtZsF7aqbsV4V9z4Ocdskqk7gn3J9NwlyQYUwTfO714a+wEpA1DQWBS4AVJsE8R9GczK++UhBf/Dd6PxEXdRrfV/5ECL9TU2zAUOwFFsLsRwP/usCt2ApLwZFwEJMGJWMFzKnWzFOjFRwALeozYCOikjU8+aDx7/8rVVx049/bepDtWBEfjJqAIjuqx9JiLBuzYq25xRGKdJJxQAj+TBPn4gWM4H4p6aZUC9usPYZ4St0cmoAh/bDdg1cwFzkQmIAm2dxwwhSOCE5EJzKYTqzoNWIU8R9ATmYDeHiz0RW2/fOD38JaluYwEHFo68oGDVqvmpJPrOw1cXXG9IrZMQIrk8oadPpBiZ71oXwREcnlrs29DQuuuXmeFIweZ3TxrK536kp116Zr60renmEsldh62/TJ3cty0zz23sbavwwc4bM7QQJ0cwMuRk1jaQErAbD3wuSc3mEGKx4+xt2/K/NYg/FA/0sdcLptyd2IsMgF3cpzdV18yrgbubRAFVEokHlwYPMHj5vTUIJT5TU+bAb29u6vAdm7j/IvPzwPduY254HH5/K9c/PRYZAJOvVmvn8xFRfhEI81v0mfYBTvJ9HDpu2+YK2UThdxTG2rl8/lxLn19kgvvv8ucz/mz2YxA+dwZLv80w9703ggksKIEjCyOgPa+1ezt2cGVy5fMbOeHn62Wr+1ldl323tzF7tiIAZbfujkSgcIH73HhncPsjo4snkAkCb08bAZS/Wuqei94XPzkoyrI0SrooBU//rB9EoqSxO5rr1Rz4MAbnN+6hblYNHLRdZqIlo1JyMlxLv9ylit//2mW3DkChben/fogAe+t1+fLB+5bfBI3XUbtpImAlorR7g+n2Xl0rcmNSnaWS1+d8Nt6+/dUZTT8jE8gaLEto5E+ZJkeo/koYe/Ih0ybQ/hQuwCqJq63NVarJgmmOw1c+RGAQy2B11tXRfBbp4Gr4HZ6cPCGyASqB/glAJzmXR+yostHwI5OA1ZhGRFs7/JDPfz8/7lW6fqLrU4m92wrydqqcf8dNwZfXq66bAR6scx80PQVeHwE4AsrbtOPELFJSMBk25+YFOElSXBEr1rmiSn0bFQLEP/Qbcw1vcApSXA+JKHBtjzy6YtWvcQ6NqbCN2aKEivqnidMWWJFsC2PWst0H1eW6xndt7Vkn1nTmLG6yWQ3P3TPmSR4QbtfcN2uQfsHfcxrgxrgiEkAAAAASUVORK5CYII=" />
-                  )}
                 </div>
                 <span className="font-normal text-[11px]">
                   Số lượng còn: {amountShoe}
                 </span>{" "}
-                {!!price && !!sale ? (
+                {!!price && !!priceSale && amountShoe > 0 ? (
                   <>
-                    <span className="text-red-500 font-semibold text-sm   ">
-                      {convertToCurrencyString(Number(sale))}
+                    <span className="text-red-500 font-semibold text-sm  ">
+                      {convertToCurrencyString(Number(priceSale))}
                     </span>
-                    <span className="text-gray-500 font-semibold text-base   ">
+                    <span className="text-gray-500 font-semibold text-base   line-through ">
                       {convertToCurrencyString(Number(price))}
                     </span>
                   </>
-                ) : !!price && !sale ? (
+                ) : !!price && !priceSale && amountShoe > 0 ? (
                   `${convertToCurrencyString(Number(price))}`
                 ) : (
                   "Sản phẩm hiện hết hàng"
                 )}
-                {/* {(!!price && sale == null) || sale == undefined
-                    ? `${convertToCurrencyString(Number(sale))}   `
-                    : "Sản phẩm hiện hết hàng"} */}
-                {/* </p> */}
               </div>
             </div>
             <div className="w-full  px-5">
@@ -389,37 +396,31 @@ const QuickViewDetail = ({
               Xem chi tiết
             </button>
             <button
-              // className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
-              // onClick={handleCloseClick as any}
               className={`cursor-pointer  text-white   flex  items-center justify-center  rounded font-medium  px-3 py-2 w-[45%]
                 ${!!price ? "bg-[#0161e7]" : "bg-[#5ae0d7]"}
                 `}
-              onClick={
-                // () =>
-
-                () => {
-                  setShowQuickView(false);
-                  if (
-                    !!idAddToCart &&
-                    !!price &&
-                    amountShoe >= amountItemInCart + amount &&
-                    amountItemInCart <= 10
-                  ) {
-                    addMultipleToCart(idAddToCart, amount);
-                    openCart();
-                    setAmount(1);
-                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
-                  } else if (
-                    (!!price && amount < amountShoe - amountItemInCart) ||
-                    amount >= 10
-                  ) {
-                    toast("Sản phẩm đã tối đa trong giỏ hàng");
-                    return;
-                  } else {
-                    toast("Bạn cần chọn sản phẩm khác");
-                  }
+              onClick={() => {
+                setShowQuickView(false);
+                if (
+                  !!idAddToCart &&
+                  !!price &&
+                  amountShoe >= amountItemInCart + amount &&
+                  amountItemInCart <= 10
+                ) {
+                  addMultipleToCart(idAddToCart, amount);
+                  openCart();
+                  setAmount(1);
+                  toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                } else if (
+                  (!!price && amount < amountShoe - amountItemInCart) ||
+                  amount >= 10
+                ) {
+                  toast("Sản phẩm đã tối đa trong giỏ hàng");
+                  return;
+                } else {
+                  toast("Bạn cần chọn sản phẩm khác");
                 }
-              }
+              }}
             >
               Thêm vào giỏ hàng
             </button>

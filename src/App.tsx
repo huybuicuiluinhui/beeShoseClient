@@ -20,6 +20,9 @@ import { ShoppingCartProvider } from "./context/shoppingCart.context";
 import "react-toastify/dist/ReactToastify.css";
 import ListProductsByBrandWithSearch from "./pages/listProductsByBrandWithSearch";
 import PageNotFound from "./pages/pageNotFound404";
+import LookUpOrders from "./pages/lookUpOrders";
+import FormLogin from "./pages/loginAndRegister";
+import LoginScreen from "./pages/loginAndRegister/login";
 
 function App() {
   const location = useLocation();
@@ -44,7 +47,7 @@ function App() {
         },
         {
           path: path.listProductsByBrandWithSearch,
-          element: <ListProductsByBrandWithSearch />,
+          element: <ListProductsByBrandWithSearch key={location.key} />,
           children: [{ index: true, element: <ProductPage /> }],
         },
 
@@ -57,6 +60,8 @@ function App() {
         { path: path.addAddress, element: <AddAddress /> },
         { path: path.addAddress, element: <ReturnProduct /> },
         { path: path.detailReturn, element: <DetailReturn /> },
+        { path: path.lookUpOrders, element: <LookUpOrders /> },
+        { path: path.loginScreen, element: <LoginScreen /> },
         { path: "*", element: <PageNotFound /> },
       ],
     },

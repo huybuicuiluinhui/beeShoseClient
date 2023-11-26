@@ -114,7 +114,9 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
           <div className="w-full h-full" onClick={() => closeCart()}></div>
           <div className="bg-white  shadow-lg h-screen w-[30%]  transform   transition-transform ease-in-out   ">
             <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
-              <h2 className="text-lg font-semibold  uppercase   ">Giỏ hàng</h2>
+              <h2 className="text-lg font-semibold  uppercase   ">
+                Giỏ hàng ({cartItems.length} sản phẩm)
+              </h2>
               <div onClick={() => closeCart()} className="cursor-pointer">
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAVklEQVR4nGNgoBAwMjAw8BGhjg+qFkVgCQMDgygeTaJQNXzYJFYyMDBI4NC0EoccTgWihDRhUyhKrCZ0/ywh4G/qaBQlx6mi5ASOKDnRQXYCIDvJkQwARZsQRRiqQN4AAAAASUVORK5CYII=" />{" "}
               </div>
@@ -158,7 +160,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                 className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
                 onClick={() => [navigate(path.cart), closeCart()]}
               >
-                Thanh toán
+                Thanh toán ({cartItems.length})
               </button>
             </div>
           </div>

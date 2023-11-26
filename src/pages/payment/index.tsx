@@ -70,7 +70,7 @@ const PaymentPage = () => {
   const getVoucher = async () => {
     const res = await axios({
       method: "get",
-      url: API.getVoucher(),
+      url: API.getVoucherSearch(inputValue),
     });
     if (res.status) {
       setVoucher(res?.data?.data);
@@ -321,6 +321,7 @@ const PaymentPage = () => {
                 placeholder="Hãy nhập mã voucher của bạn vào đây..."
                 className="placeholder:text-gray-700 p-2 w-full rounded-t-[4px] border-gray-200 "
               />
+              .
             </div>
             <div
               className={`w-full  mt-2  ${
@@ -465,7 +466,7 @@ const PaymentPage = () => {
                   htmlFor="floating_standard"
                   className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                  Nhập emmai
+                  Nhập email
                 </label>
               </div>
             </div>

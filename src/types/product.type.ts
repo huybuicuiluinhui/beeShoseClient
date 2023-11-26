@@ -55,6 +55,7 @@ export interface IDetailProduct {
   sole: string;
   status: boolean;
   weight: number;
+  discountPercent: number | null | string;
 }
 export interface IInforShoe {
   createAt: string;
@@ -109,4 +110,12 @@ export interface IVoucher {
   percentReduce: number;
   quantity: number;
   status: number;
+}
+export interface Token {
+  id: string;
+  email: string;
+  role: string;
+  fullName: string;
+  avata: string;
+  exp: number;
 }

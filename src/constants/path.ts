@@ -1,5 +1,5 @@
 const path = {
-  login: "/api/login-zalo-miniapp",
+  login: "/api/",
   logout: "/api/logout",
   home: "/",
   shop: "/shop",
@@ -17,5 +17,7 @@ const path = {
   addAddress: "/addAddress",
   returnProduct: "/returnProduct",
   detailReturn: "/detailReturn",
+  lookUpOrders: "/lookUpOrders",
+  loginScreen: "/loginScreen",
 } as const;
 export default path;

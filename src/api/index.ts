@@ -1,5 +1,8 @@
-export const baseUrl = "http://localhost:8080/";
+export const baseUrl = "http://localhost:8080/client/";
+export const baseUrlLogin = "http://localhost:8080/";
 const API = {
+  login: () => baseUrlLogin + `login-v2/singin`,
+  register: () => baseUrlLogin + `login-v2/singup`,
   // thương hiệu
   getBrand: () => baseUrl + "api/brand",
   getBrandChoose: (id: number, page: number, sizePage: number) =>
@@ -44,8 +47,11 @@ const API = {
     `api/shoe-detail?name=${name}&size=${size}&color=${color}&sizePage=100000`,
   // Lấy danh sách voucher
   getVoucher: () => baseUrl + `api/voucher?sizePage=100000`,
+  getVoucherSearch: (name: string) =>
+    baseUrl + `api/voucher?name=${name}&status=1`,
   getShoeSearch: (name: string, page: number) =>
     baseUrl + `api/shoe?name=${name}&page=${page}&sizePage=20`,
+
   // lọc sản phẩm
   getFilter: (
     colorID: string,
@@ -57,5 +63,7 @@ const API = {
   ) =>
     baseUrl +
     `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${20}`,
+  getSearchBill: (code: string) => baseUrl + `api/bill?code=${code}`,
 };
+
 export default API;
