@@ -19,5 +19,6 @@ const path = {
   detailReturn: "/detailReturn",
   lookUpOrders: "/lookUpOrders",
   loginScreen: "/loginScreen",
+  vnpayment: "/vnpay-payment",
 } as const;
 export default path;

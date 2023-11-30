@@ -103,36 +103,79 @@ const PaymentPage = () => {
       toast.warning("Hãy chọn phương thức thanh toán");
     } else {
       try {
-        const response = await axios.post(
-          baseUrl + "api/bill/create-bill-client",
-          {
-            customerName: textHVT,
-            email: email,
-            district: selectedDistrict,
-            province: selectedProvince,
-            ward: selectedWard,
-            specificAddress: specificAddress,
-            moneyShip: feeShip,
-            moneyReduce: (percent / 100) * location?.state?.total,
-            totalMoney:
-              Number(location?.state?.total) +
-              Number(feeShip ? feeShip : 0) -
-              (percent / 100) * location?.state?.total,
-            note: note,
-            paymentMethod: paymentMethod,
-            carts: cartItems,
+        const newBill = {
+          customerName: textHVT,
+          email: email,
+          district: selectedDistrict,
+          province: selectedProvince,
+          ward: selectedWard,
+          specificAddress: specificAddress,
+          moneyShip: feeShip,
+          moneyReduce: (percent / 100) * location?.state?.total,
+          totalMoney:
+            Number(location?.state?.total) +
+            Number(feeShip ? feeShip : 0) -
+            (percent / 100) * location?.state?.total,
+          note: note,
+          paymentMethod: paymentMethod,
+          carts: cartItems,
+        };
+        if (radioChoose === "option2") {
+          const response = await axios.post(
+            baseUrl + "api/bill/create-bill-client",
+            newBill
+          );
+          if (response.status) {
+            toast.success("Đặt hàng thành công");
+            navigate(path.home);
+            clearCart();
           }
-        );
-        if (response.status) {
-          toast.success("Đặt hàng thành công");
-          navigate(path.home);
-          clearCart();
+        }
+        if (radioChoose === "option3") {
+          const tempNewBill = { ...newBill, id: generateUUID() };
+          localStorage.setItem("checkout", JSON.stringify(tempNewBill));
+          try {
+            const response = await axios.get(
+              baseUrl +
+                `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+            );
+            if (response.status) {
+              window.location.href = response.data.data;
+            }
+          } catch (error) {
+            console.error("Error making axios request:", error);
+          }
         }
       } catch (error) {
         console.log(error);
       }
     }
   };
+  function generateUUID() {
+    // Public Domain/MIT
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== "undefined" &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+  }
   const configApi = {
     headers: {
       Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
@@ -257,8 +300,7 @@ const PaymentPage = () => {
                     key={index}
                     className={`flex px-6 py-2 w-full  ${
                       index === arrShoes.length - 1
-                    } ? "": " border-b-[1px] border-dotted  border-gray-200`}
-                  >
+                    } ? "": " border-b-[1px] border-dotted  border-gray-200`}>
                     {
                       <LazyLoadImage
                         className="h-auto w-[20%] object-cpnatin"
@@ -306,8 +348,7 @@ const PaymentPage = () => {
 
           <div className=" w-full font-medium ">
             <div
-              className={`bg-white w-full  flex items-center justify-between rounded my-3 `}
-            >
+              className={`bg-white w-full  flex items-center justify-between rounded my-3 `}>
               MÃ GIẢM GIÁ
             </div>
             <div className="w-full bg-white ">
@@ -326,8 +367,7 @@ const PaymentPage = () => {
             <div
               className={`w-full  mt-2  ${
                 open ? "max-h-60" : "max-h-0"
-              } overflow-y-auto`}
-            >
+              } overflow-y-auto`}>
               {!!openList &&
                 voucher?.map((voucher, index) => (
                   <div
@@ -357,13 +397,11 @@ const PaymentPage = () => {
                       } else {
                         toast.warning("Bạn cần chọn voucher khác");
                       }
-                    }}
-                  >
+                    }}>
                     <div className={`w-[50%] `}>
                       <div
                         key={voucher?.name}
-                        className={`w-full  text-xs  text-[#BFAEE3] `}
-                      >
+                        className={`w-full  text-xs  text-[#BFAEE3] `}>
                         {voucher?.name}
                       </div>
 
@@ -377,8 +415,7 @@ const PaymentPage = () => {
                     <div className={`w-[50%] flex flex-col justify-between `}>
                       <div
                         key={voucher?.name}
-                        className={`w-full  text-[8px]   `}
-                      >
+                        className={`w-full  text-[8px]   `}>
                         Mã voucher: {voucher?.code}
                       </div>
 
@@ -393,8 +430,7 @@ const PaymentPage = () => {
                 ))}
               {selected && percent && minPrice && quantity && (
                 <div
-                  className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}
-                >
+                  className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}>
                   <div className={`w-[50%] `}>
                     <div className={`w-full  text-xs  text-[#BFAEE3] `}>
                       {inputValue}
@@ -445,8 +481,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập họ và tên
                 </label>
               </div>
@@ -464,8 +499,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập email
                 </label>
               </div>
@@ -477,13 +511,11 @@ const PaymentPage = () => {
                     value={selectedProvince}
                     onChange={(e: any) => setSelectedProvince(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                  >
+                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                     {provinces.map((province) => (
                       <option
                         key={province.ProvinceID}
-                        value={province.ProvinceID}
-                      >
+                        value={province.ProvinceID}>
                         {province.ProvinceName}
                       </option>
                     ))}
@@ -492,8 +524,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập Tỉnh/Thành Phố
                 </label>
               </div>
@@ -503,13 +534,11 @@ const PaymentPage = () => {
                     value={selectedDistrict}
                     onChange={(e: any) => setSelectedDistrict(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                  >
+                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                     {districts.map((district) => (
                       <option
                         key={district.DistrictID}
-                        value={district.DistrictID.toString()}
-                      >
+                        value={district.DistrictID.toString()}>
                         {district.DistrictName}
                       </option>
                     ))}
@@ -518,8 +547,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập Quận/Huyện
                 </label>
               </div>
@@ -532,13 +560,11 @@ const PaymentPage = () => {
                     value={selectedWard}
                     onChange={(e: any) => setSelectedWard(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
-                  >
+                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
                     {wards.map((ward) => (
                       <option
                         key={ward.WardCode}
-                        value={ward.WardCode.toString()}
-                      >
+                        value={ward.WardCode.toString()}>
                         {ward.WardName}
                       </option>
                     ))}
@@ -547,8 +573,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập Phường/Xã
                 </label>
               </div>
@@ -563,16 +588,14 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                >
+                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                   Nhập địa chỉ cụ thể
                 </label>
               </div>
             </div>
             <label
               htmlFor="card-holder"
-              className="mt-4 mb-2 block text-sm font-medium text-gray-500"
-            >
+              className="mt-4 mb-2 block text-sm font-medium text-gray-500">
               Chọn phương thức thanh toán
             </label>
             <div className="flex">
@@ -591,8 +614,7 @@ const PaymentPage = () => {
               <div className="ml-2 text-sm">
                 <label
                   htmlFor="option1"
-                  className="font-medium text-gray-900  peer-checked:text-gray-500 "
-                >
+                  className="font-medium text-gray-900  peer-checked:text-gray-500 ">
                   Thanh toán ngay
                 </label>
               </div>
@@ -613,9 +635,29 @@ const PaymentPage = () => {
               <div className="ml-2 text-sm">
                 <label
                   htmlFor="option2"
-                  className="font-medium text-gray-900 dark:text-gray-300"
-                >
+                  className="font-medium text-gray-900 dark:text-gray-300">
                   Thanh toán khi nhận hàng
+                </label>
+              </div>
+            </div>
+            <div className="flex">
+              <div className="flex items-center h-5">
+                <input
+                  value={"option3"}
+                  checked={radioChoose === "option3"}
+                  name="payment"
+                  onChange={handleChange}
+                  id="option3"
+                  aria-describedby="helper-radio-text"
+                  type="radio"
+                  className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
+                />
+              </div>
+              <div className="ml-2 text-sm">
+                <label
+                  htmlFor="option3"
+                  className="font-medium text-gray-900 dark:text-gray-300">
+                  Thanh toán vnpay
                 </label>
               </div>
             </div>
@@ -623,8 +665,7 @@ const PaymentPage = () => {
               <div>
                 <label
                   htmlFor="card-holder"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
+                  className="mt-4 mb-2 block text-sm font-medium">
                   Tên tài khoản
                 </label>
                 <div className="relative">
@@ -641,8 +682,7 @@ const PaymentPage = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
-                      strokeWidth={2}
-                    >
+                      strokeWidth={2}>
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -653,8 +693,7 @@ const PaymentPage = () => {
                 </div>
                 <label
                   htmlFor="card-no"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
+                  className="mt-4 mb-2 block text-sm font-medium">
                   Số tài khoản
                 </label>
                 <div className="flex">
@@ -672,8 +711,7 @@ const PaymentPage = () => {
                         width={16}
                         height={16}
                         fill="currentColor"
-                        viewBox="0 0 16 16"
-                      >
+                        viewBox="0 0 16 16">
                         <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
                         <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
                       </svg>
@@ -764,8 +802,7 @@ const PaymentPage = () => {
             className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white"
             onClick={() => {
               setShowMoal(true);
-            }}
-          >
+            }}>
             Đặt hàng
           </button>
         </div>
@@ -776,16 +813,14 @@ const PaymentPage = () => {
           isVisible={showModal}
           onClose={() => {
             setShowMoal(false);
-          }}
-        >
+          }}>
           <div className="w-full flex flex-col justify-center">
             <svg
               className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              viewBox="0 0 20 20"
-            >
+              viewBox="0 0 20 20">
               <path
                 stroke="currentColor"
                 strokeLinecap="round"
@@ -805,8 +840,7 @@ const PaymentPage = () => {
                 }}
                 data-modal-hide="popup-modal"
                 type="button"
-                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
-              >
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 ">
                 Hủy
               </button>
               <button
@@ -816,8 +850,7 @@ const PaymentPage = () => {
                 }}
                 data-modal-hide="popup-modal"
                 type="button"
-                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-              >
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                 Đặt hàng
               </button>
             </div>
