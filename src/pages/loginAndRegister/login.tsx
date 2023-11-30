@@ -7,6 +7,11 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import path from "../../constants/path";
 import Fade from "react-reveal/Fade";
+import {
+  regexPhoneNumber,
+  validateEmail,
+  validatePassword,
+} from "../../utils/format";
 interface CustomError {
   message: string;
   response?: {
@@ -19,12 +24,12 @@ const Registration = ({
   checkRegister,
   setCheckRegister,
 }: {
-  checkRegister: boolean;
+  checkRegister: number;
   setCheckRegister: any;
 }) => {
   return (
     <div className="flex flex-col items-center p-4">
-      {checkRegister ? (
+      {checkRegister === 2 ? (
         <>
           <h2 className="text-lg mb-4 font-semibold">
             Khách hàng đã có tài khoản
@@ -37,7 +42,7 @@ const Registration = ({
           <button
             className="bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
-            onClick={() => setCheckRegister(false)}
+            onClick={() => setCheckRegister(1)}
           >
             ĐĂNG NHẬP NGAY
           </button>
@@ -53,7 +58,7 @@ const Registration = ({
           <button
             className="bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="button"
-            onClick={() => setCheckRegister(true)}
+            onClick={() => setCheckRegister(2)}
           >
             ĐĂNG KÝ NGAY
           </button>
@@ -62,9 +67,11 @@ const Registration = ({
     </div>
   );
 };
+
 const LoginScreen = () => {
-  const [checkRegister, setCheckRegister] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [checkRegister, setCheckRegister] = useState<number>(1);
+  const [emailForgot, setEmailForgot] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailR, setEmailR] = useState("");
@@ -72,36 +79,27 @@ const LoginScreen = () => {
   const [newPassword, setNewPassWord] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors3, setErrors3] = useState({ email: "" });
   const [errors2, setErrors2] = useState({
     email: "",
     phone: "",
     newPassword: "",
     newPassword2: "",
   });
-
-  const validateEmail = (email: string) => {
-    const re = /\S+@\S+\.\S+/; // Regex đơn giản cho định dạng email
-    return re.test(email);
-  };
-  const validatePassword = (password: string) => {
-    const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-    return re.test(password);
-  };
-  const regexPhoneNumber = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
   const login = async () => {
-    // if (!validateEmail(email)) {
-    //   setErrors((prev) => ({ ...prev, email: "Email không hợp lệ." }));
-    //   return;
-    // } else {
-    //   setErrors((prev) => ({ ...prev, email: "" }));
-    // }
+    if (!validateEmail(email)) {
+      setErrors((prev) => ({ ...prev, email: "Email không hợp lệ." }));
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, email: "" }));
+    }
 
-    // if (!validatePassword(password)) {
-    //   setErrors((prev) => ({ ...prev, password: "Mật khẩu không hợp lệ." }));
-    //   return;
-    // } else {
-    //   setErrors((prev) => ({ ...prev, password: "" }));
-    // }
+    if (!validatePassword(password)) {
+      setErrors((prev) => ({ ...prev, password: "Mật khẩu không hợp lệ." }));
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, password: "" }));
+    }
     try {
       const res = await axios({
         method: "post",
@@ -148,7 +146,6 @@ const LoginScreen = () => {
       setErrors2((prev) => ({ ...prev, email: "" }));
     }
     if (!regexPhoneNumber.test(phone)) {
-      console.log("Ahihih");
       setErrors2((prev) => ({
         ...prev,
         phone: "Số điện thoại không đúng định dạng",
@@ -200,7 +197,7 @@ const LoginScreen = () => {
           newPassword: "",
           newPassword2: "",
         });
-        setCheckRegister(false);
+        setCheckRegister(1);
       } else {
       }
     } catch (error) {
@@ -218,18 +215,55 @@ const LoginScreen = () => {
         }
       } else {
         // Trường hợp khác, hiển thị một thông báo mặc định
-        toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
+        toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
       }
     }
   };
-
+  const forgotPasss = async () => {
+    if (!validateEmail(emailForgot)) {
+      setErrors3((prev) => ({ ...prev, email: "Email không hợp lệ." }));
+      return;
+    } else {
+      setErrors3((prev) => ({ ...prev, email: "" }));
+    }
+    try {
+      const res = await axios({
+        method: "post",
+        url: API.forgot(),
+        data: {
+          emailForgot: emailForgot,
+        },
+      });
+      if (res.status) {
+        toast.success("Mật khẩu đã được gửi qua mail của bạn");
+        console.log(res.data);
+        setCheckRegister(1);
+      }
+    } catch (error) {
+      if (typeof error === "string") {
+        // Nếu error là một chuỗi, giả sử đó là một thông báo lỗi từ server
+        toast.error(error);
+      } else if (error instanceof Error) {
+        // Nếu error là một đối tượng Error và có response
+        const customError = error as CustomError;
+        if (customError.response && customError.response.data) {
+          toast.error(customError.response.data);
+        } else {
+          toast.error(customError.message);
+        }
+      } else {
+        // Trường hợp khác, hiển thị một thông báo mặc định
+        toast.error("Thất bại. Vui lòng thử lại sau.");
+      }
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-100 flex ">
       <Fade top distance="10%" duration={1000}>
         <div className="flex justify-between items-start bg-white p-6 rounded-lg shadow-lg">
           <div className="w-[50%]">
             <div className="flex flex-col items-center p-4">
-              {checkRegister ? (
+              {checkRegister === 2 ? (
                 <>
                   <div className="flex gap-4 mb-4 font-bold text-lg">
                     Đăng ký ngay
@@ -272,7 +306,7 @@ const LoginScreen = () => {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="email"
                         type="email"
-                        placeholder="Your email"
+                        placeholder="Số điện thoại"
                       />
                       {errors2.phone && (
                         <p className="text-red-500 text-xs italic">
@@ -333,7 +367,7 @@ const LoginScreen = () => {
                     </div>
                   </form>
                 </>
-              ) : (
+              ) : checkRegister === 1 ? (
                 <>
                   <div className="flex gap-4 mb-4 font-bold text-lg">
                     Đăng nhập ngay
@@ -394,12 +428,53 @@ const LoginScreen = () => {
                       >
                         ĐĂNG NHẬP
                       </button>
-                      <a
-                        className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                        href="#"
+                      <button
+                        className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer"
+                        onClick={() => setCheckRegister(3)}
                       >
                         Quên mật khẩu?
-                      </a>
+                      </button>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-4 mb-4 font-bold text-lg">
+                    Đặt lại mật khẩu
+                  </div>
+                  <form
+                    className="w-full max-w-xs"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    <div className="mb-4">
+                      <label
+                        className="block text-gray-700 text-sm font-bold mb-2"
+                        htmlFor="email"
+                      >
+                        Email*
+                      </label>
+                      <input
+                        value={emailForgot}
+                        onChange={(e) => setEmailForgot(e?.target?.value)}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email"
+                        type="email"
+                        placeholder="Your email"
+                      />
+                      {errors3.email && (
+                        <p className="text-red-500 text-xs italic">
+                          {errors3.email}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <button
+                        className="bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        onClick={forgotPasss}
+                      >
+                        Gửi yêu cầu xác nhận
+                      </button>
                     </div>
                   </form>
                 </>

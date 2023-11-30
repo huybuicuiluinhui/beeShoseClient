@@ -63,14 +63,7 @@ const ProductPage = () => {
   const Tab01 = () => {
     return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">
-        <p
-          className="font-semibold my-4 cursor-pointer text-xs"
-          onClick={() => {
-            navigate(`/product/${toSlug(inforShoe.name)}`, {
-              state: inforShoe.id,
-            });
-          }}
-        >
+        <p className="font-semibold my-4 cursor-pointer text-xs">
           Mô tả sản phẩm:{" "}
           <span className="underline font-normal ">{inforShoe?.name}</span>{" "}
         </p>
@@ -152,7 +145,6 @@ const ProductPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  console.log("inforShoe", inforShoe);
   return (
     <div className="w-full h-full  px-4">
       {!!inforShoe && !!dataDetailProduct && !!dataDetailProduct.length && (

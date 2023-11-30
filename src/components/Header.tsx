@@ -12,7 +12,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getCookie } from "../helper/CookiesRequest";
 const Header = () => {
   const navigate = useNavigate();
-  const { cartQuantity, openCart, cartItems } = useShoppingCart();
+  const { cartQuantity, openCart, cartItems, userPrf } = useShoppingCart();
   const [showTable, setShowTable] = useState<boolean>(false);
   const [results, setResults] = useState<IProduct[]>([]);
   const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
@@ -22,7 +22,7 @@ const Header = () => {
   const [typeModal, setTypeModal] = useState<number>(1);
   const [searchValue, setSearchValue] = useState<string>();
   const token = getCookie("customerToken");
-
+  console.log("userPrf", userPrf);
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
       const key = event.target.value;
@@ -245,9 +245,7 @@ const Header = () => {
                                 onClick={() => {
                                   setSearchValue(result.name);
                                   setResults([]);
-                                  navigate(`/product/${result.id}`, {
-                                    state: result.id,
-                                  });
+                                  navigate(`/product/${result.id}`);
                                 }}
                               >
                                 {result.name}
@@ -349,10 +347,21 @@ const Header = () => {
                       }
                     }}
                   >
-                    <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
+                    {!!token && !!userPrf ? (
+                      <img
+                        src={userPrf.avata}
+                        className={"w-10 h-10 rounded-full"}
+                      />
+                    ) : (
+                      <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
+                    )}
                     <div className="ml-3">
                       <p className="text-xs">Tài khoản</p>
-                      <p className="text-sm font-medium">Đăng nhập/Đăng ký</p>
+                      <p className="text-sm font-medium">
+                        {!!token && !!userPrf
+                          ? userPrf.fullName
+                          : "Đăng nhập/Đăng ký"}
+                      </p>
                     </div>
                   </div>
                 </li>

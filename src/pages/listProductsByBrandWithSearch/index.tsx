@@ -166,7 +166,6 @@ const ListProductsByBrandWithSearch = () => {
         url: API.getShoeSearch(key, page),
       });
       if (res.status) {
-        console.log("resss", res.data.data);
         setListShoes(res?.data?.data);
       }
     } catch (error) {
@@ -640,24 +639,7 @@ const ListProductsByBrandWithSearch = () => {
               {!!listShoes && listShoes.length > 0 ? (
                 listShoes.map((e: any, i: number) => {
                   return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        if (
-                          !!e.minPrice &&
-                          !!e.maxPrice &&
-                          e.images &&
-                          !!e.quantity &&
-                          e.images.length > 0
-                        ) {
-                          navigate(`/product/${e.id}`, {
-                            state: e.id,
-                          });
-                        } else {
-                          return;
-                        }
-                      }}
-                    >
+                    <div key={i}>
                       <ProductStanding product={e} />
                     </div>
                   );
@@ -674,14 +656,7 @@ const ListProductsByBrandWithSearch = () => {
                   .map((item, index) => {
                     return (
                       <Fragment>
-                        <div
-                          key={index}
-                          // onClick={() => {
-                          //   navigate(`/product/${item.id}}`, {
-                          //     state: item.id,
-                          //   });
-                          // }}
-                        >
+                        <div key={index}>
                           <SekeletonItemShoe />
                         </div>
                       </Fragment>

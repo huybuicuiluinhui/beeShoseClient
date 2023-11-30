@@ -51,3 +51,28 @@ export const deleteUserToken = () => {
   setCookie("userToken", "", 1);
   setCookie("userToken1", "", 1);
 };
+
+export const getUserFromCookie = () => {
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
+
+  const token = getCookie("customerToken");
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    console.log("decodedToken", decodedToken);
+    const user = {
+      id: decodedToken?.id,
+      email: decodedToken?.email,
+      role: decodedToken?.role,
+      fullName: decodedToken.fullName,
+      avata: decodedToken.avata,
+      expirationTime: new Date(decodedToken.exp * 1000),
+    };
+    return user;
+  } else {
+    return null;
+  }
+};

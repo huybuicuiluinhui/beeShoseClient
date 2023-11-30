@@ -10,6 +10,7 @@ import ModalComponent from "./Modal";
 import Images from "../static";
 import MyReactImageMagnify from "./ReactImageMagnify";
 import { toast } from "react-toastify";
+import { getTokenCustomer } from "../helper/useCookie";
 
 const ProductItem = ({
   product,
@@ -21,7 +22,9 @@ const ProductItem = ({
   shoeId: number;
 }) => {
   const navigate = useNavigate();
-  const { getItemQuantity, openCart, addMultipleToCart } = useShoppingCart();
+  const { getItemQuantity, openCart, addMultipleToCart, userPrf } =
+    useShoppingCart();
+  const token = getTokenCustomer();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
@@ -36,6 +39,34 @@ const ProductItem = ({
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
+
+  const addToCart = async () => {
+    // console.log("amount", amount);
+    // console.log(" idAddToCart", idAddToCart);
+    // console.log("userPrf", userPrf);
+    try {
+      const res = await axios({
+        method: "post",
+        url: API.addToCart(),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          id: userPrf?.id,
+          quantity: amount,
+          shoeDetail: idAddToCart,
+        },
+      });
+      console.log(res);
+      if (res.status === 200) {
+        toast.success("Thêm vào giỏ hàng thành công");
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getDataSize = async () => {
     let combinedData: Product[] = [];
     let currentPage = 1;
@@ -129,7 +160,6 @@ const ProductItem = ({
     }
     return colors;
   }, [product]);
-  console.log("product", product);
   const uniqueSizes = useMemo(() => {
     const sizes: any[] = [];
     for (let i = 0; i < product.length; i++) {
@@ -313,24 +343,28 @@ const ProductItem = ({
                 ${!!price ? "bg-[#0161e7]" : "bg-[#0161e767]"}
                 `}
                 onClick={() => {
-                  if (
-                    !!idAddToCart &&
-                    !!price &&
-                    amountShoe >= amountItemInCart + amount &&
-                    amountItemInCart <= 10
-                  ) {
-                    addMultipleToCart(idAddToCart, amount);
-                    openCart();
-                    setAmount(1);
-                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
-                  } else if (
-                    (!!price && amount < amountShoe - amountItemInCart) ||
-                    amount >= 10
-                  ) {
-                    toast("Sản phẩm đã tối đa trong giỏ hàng");
-                    return;
+                  if (!!userPrf) {
+                    addToCart();
                   } else {
-                    toast("Bạn cần chọn sản phẩm khác");
+                    if (
+                      !!idAddToCart &&
+                      !!price &&
+                      amountShoe >= amountItemInCart + amount &&
+                      amountItemInCart <= 10
+                    ) {
+                      addMultipleToCart(idAddToCart, amount);
+                      openCart();
+                      setAmount(1);
+                      toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                    } else if (
+                      (!!price && amount < amountShoe - amountItemInCart) ||
+                      amount >= 10
+                    ) {
+                      toast("Sản phẩm đã tối đa trong giỏ hàng");
+                      return;
+                    } else {
+                      toast("Bạn cần chọn sản phẩm khác");
+                    }
                   }
                 }}
               >

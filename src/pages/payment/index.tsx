@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import ShippingProcess from "../../components/shippingProcess";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { IListDeatilShoe, IVoucher } from "../../types/product.type";
+import {
+  District,
+  IListDeatilShoe,
+  IVoucher,
+  Province,
+  Ward,
+} from "../../types/product.type";
 import { convertToCurrencyString, toSlug } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -11,20 +17,6 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { toast } from "react-toastify";
 import path from "../../constants/path";
 import ModalComponent from "../../components/Modal";
-interface Province {
-  ProvinceID: number;
-  ProvinceName: string;
-}
-
-interface District {
-  DistrictID: number;
-  DistrictName: string;
-}
-
-interface Ward {
-  WardCode: number;
-  WardName: string;
-}
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -57,7 +49,6 @@ const PaymentPage = () => {
   const [email, setEmail] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<number>(1);
-  console.log(location);
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -67,6 +58,7 @@ const PaymentPage = () => {
       setListDetailShoe(res?.data?.data);
     }
   };
+
   const getVoucher = async () => {
     const res = await axios({
       method: "get",

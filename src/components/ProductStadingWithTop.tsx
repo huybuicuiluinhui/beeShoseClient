@@ -25,9 +25,7 @@ const ProductStandingTop = ({
           className="border-[0.2px] py-4   h-[300px]  leading-none overflow-hidden  border-gray-100"
           onClick={() => {
             if (!!product.minPrice && !!product.maxPrice && product.images) {
-              navigate(`/product/${product.id}`, {
-                state: product.id,
-              });
+              navigate(`/product/${product.id}`);
             } else {
               return;
             }

@@ -297,42 +297,6 @@ const HomePage = () => {
           <NavPage page={page} totalPages={totalPages} setPage={setPage} />
         )}
       </div>
-      {/* <div className="w-full p-4">
-        <TitleBrand title="Giày Adidas" subtitle="giày thương hiệu nổi bật" />
-        <div className="grid grid-cols-5 gap-0">
-          {!!productsAdidas &&
-            !!productsAdidas.length &&
-            productsAdidas.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  onClick={() => {
-                    navigate(`/product/${item.id}`, {
-                      state: item.id,
-                    });
-                  }}
-                >
-                  <ProductStanding product={item} key={index} />
-                </div>
-              );
-            })}
-        </div>
-        <div className="flex justify-center mt-4">
-          <button
-            className="  border-[1px] border-dashed px-4 py-1 rounded-md border-green-950"
-            onClick={() => {
-              navigate(`/category/${toSlug("Adidas")}`, {
-                state: {
-                  id: 1,
-                  name: "Adidas",
-                },
-              });
-            }}
-          >
-            `` Xem tất cả
-          </button>
-        </div>
-      </div> */}
 
       {/* Tin tức nổi bật */}
       <div className=" w-full pt-5 mt-3">

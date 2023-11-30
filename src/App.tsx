@@ -23,6 +23,9 @@ import PageNotFound from "./pages/pageNotFound404";
 import LookUpOrders from "./pages/lookUpOrders";
 import FormLogin from "./pages/loginAndRegister";
 import LoginScreen from "./pages/loginAndRegister/login";
+import ChangePassword from "./pages/information/changePassword";
+import withAuth from "./pages/auth";
+import PayMentWithUser from "./pages/payment/payMentWithUser";
 
 function App() {
   const location = useLocation();
@@ -54,14 +57,16 @@ function App() {
         { path: path.product, element: <ProductPage /> },
         { path: path.cart, element: <CartPage /> },
         { path: path.payment, element: <PaymentPage /> },
+        { path: path.payMentWithUser, element: <PayMentWithUser /> },
         { path: path.invoice, element: <Invoice /> },
-        { path: path.information, element: <Information /> },
+        { path: path.information, element: withAuth(Information)() },
         { path: path.detailOrder, element: <DetailOrder /> },
         { path: path.addAddress, element: <AddAddress /> },
-        { path: path.addAddress, element: <ReturnProduct /> },
+        // { path: path.addAddress, element: <ReturnProduct /> },
         { path: path.detailReturn, element: <DetailReturn /> },
         { path: path.lookUpOrders, element: <LookUpOrders /> },
         { path: path.loginScreen, element: <LoginScreen /> },
+        { path: path.changePassword, element: <ChangePassword /> },
         { path: "*", element: <PageNotFound /> },
       ],
     },

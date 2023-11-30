@@ -1,8 +1,11 @@
 export const baseUrl = "http://localhost:8080/client/";
 export const baseUrlLogin = "http://localhost:8080/";
 const API = {
+  // Authentication
   login: () => baseUrlLogin + `login-v2/singin`,
   register: () => baseUrlLogin + `login-v2/singup`,
+  changePassword: () => baseUrlLogin + `login-v2/change-password`,
+  forgot: () => baseUrlLogin + `login-v2/reset-password`,
   // thương hiệu
   getBrand: () => baseUrl + "api/brand",
   getBrandChoose: (id: number, page: number, sizePage: number) =>
@@ -64,6 +67,22 @@ const API = {
     baseUrl +
     `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${20}`,
   getSearchBill: (code: string) => baseUrl + `api/bill?code=${code}`,
+
+  // lấy thông tin người dùng
+  getInfoUser: (idUser: number) => baseUrl + `api/customer/${idUser}`,
+  updateInfo: (idUser: number) => baseUrl + `api/customer/${idUser}`,
+
+  // Lấy địa chỉ  người dùng
+  getAddress: (idUser: number) =>
+    baseUrl + `api/address/${idUser}?status=false&sizePage=100000`,
+  addAdrress: () => baseUrl + `api/address`,
+  deleteAdr: (id: number) => baseUrl + `api/address/${id}`,
+  putAdr: (id: number | string) => baseUrl + `api/address/${id}`,
+  // giỏ hangf
+  addToCart: () => baseUrl + `api/cart`,
+  getListDetailCart: (id: number) => baseUrl + `api/cart/${id}`,
+  updateAmountShoe: () => baseUrl + `api/cart`,
+  removeFromCart: (id: number) => baseUrl + `api/cart/${id}`,
 };
 
 export default API;

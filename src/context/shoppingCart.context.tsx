@@ -1,6 +1,14 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import ShoppingCart from "../components/ModalShoppingCart";
+import { getUserFromCookie } from "../helper/useCookie";
+import { getCookie } from "../helper/CookiesRequest";
 
 type ShoppingCartProviderProps = {
   children: ReactNode;
@@ -10,6 +18,15 @@ type CartItem = {
   id: number;
   quantity: number;
 };
+
+interface User {
+  id: string;
+  email: string;
+  role: string;
+  fullName: string;
+  avata: string;
+  expirationTime: Date;
+}
 
 type ShoppingCartContext = {
   clearCart: () => void;
@@ -24,6 +41,7 @@ type ShoppingCartContext = {
   cartItems: CartItem[];
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
+  userPrf: User | null;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -34,10 +52,21 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
     "shopping-cart",
     []
   );
+  const token = getCookie("customerToken");
+  const [userPrf, setUserPrf] = useState<User | null>(null);
+  useEffect(() => {
+    console.log(token);
+    const userFromCookie = getUserFromCookie();
+    console.log("userFromCookie", userFromCookie);
+    if (userFromCookie) {
+      setUserPrf(userFromCookie);
+    }
+  }, [token]);
   const cartQuantity = cartItems.reduce(
     (quantity, item) => item.quantity + quantity,
     0
@@ -127,6 +156,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         clearCart,
         loading,
         setLoading,
+        userPrf,
       }}
     >
       {children}

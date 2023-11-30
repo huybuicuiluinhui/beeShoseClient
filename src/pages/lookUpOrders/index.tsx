@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../../api";
 import axios from "axios";
+import Images from "../../static";
 
 const LookUpOrders = () => {
   const [show, setShow] = useState(false);
@@ -44,24 +45,31 @@ const LookUpOrders = () => {
       <div className="bg-[#f0f0f0] w-full px-4 py-2">
         Trang chủ / Tra cứu hành trình đơn hàng
       </div>
-      <p className="text-[rgba(68,73,77,1)] font-medium text-xl mt-5">
-        Mã phiếu gửi
-      </p>
-      <input
-        type="text"
-        placeholder="VD: 123567"
-        className="rounded border-[1px] mt-2 w-[40%] border-[#ccc]"
-        value={inputHD}
-      />
-      <div className="mt-3">
-        <button
-          className="bg-red-600 text-white px-4 py-2 rounded "
-          onClick={() => {
-            setShow(true);
-          }}
-        >
-          Tra cứu
-        </button>
+      <div className="w-full flex items-center justify-between">
+        <div className="w-[50%]">
+          <p className="text-[rgba(68,73,77,1)] font-medium text-xl mt-5">
+            Mã phiếu gửi
+          </p>
+          <input
+            type="text"
+            placeholder="VD: 123567"
+            className="rounded border-[1px] mt-2 w-[60%] border-[#ccc]"
+            value={inputHD}
+          />
+          <div className="mt-3">
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded "
+              onClick={() => {
+                setShow(true);
+              }}
+            >
+              Tra cứu
+            </button>
+          </div>
+        </div>
+        <div className="w-[50%]">
+          <img src={Images.imgTrack} className="w-[220px] object-contain" />
+        </div>
       </div>
       {show && (
         <div className="w-full">

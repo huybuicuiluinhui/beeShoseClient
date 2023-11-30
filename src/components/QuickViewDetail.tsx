@@ -212,7 +212,11 @@ const QuickViewDetail = ({
     getInfoDetailProduct();
   }, [product.id]);
   return (
-    <div>
+    <div
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
       <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    ">
         <div className="bg-white  shadow-lg h-screen w-[30%]  transform  transition-transform ease-in-out   ">
           <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
@@ -223,7 +227,7 @@ const QuickViewDetail = ({
           </div>
           <div className="w-full bg-gray-500 h-[1px]  " />
 
-          <div className="w-full overflow-y-auto max-h-[550px] ">
+          <div className="w-full overflow-y-auto max-h-[550px] mt-2">
             <div className="flex mx-2 ">
               <div className="w-[30%]">
                 <Slider {...settings}>
@@ -231,7 +235,7 @@ const QuickViewDetail = ({
                     return (
                       <img
                         src={!!item ? item : Images.imgNotFound}
-                        className="max-h-[170px] w-[220px]"
+                        className="h-[170px] w-auto max-w-[170px] "
                         key={index}
                       />
                     );
@@ -239,21 +243,14 @@ const QuickViewDetail = ({
                 </Slider>
               </div>
 
-              <div className="ml-[10%] w-full flex flex-col justify-center relative">
+              <div className="ml-[10%] w-full flex flex-col justify-start relative">
                 <div className="flex justify-center ">
                   <p className="text-base font-medium line-clamp-2 w-full">
                     {product.name}
                   </p>
                   {sale && dataDetailProduct && amountShoe > 0 && (
-                    <div className="bg-yellow-300 px-1  h-fit  flex relative ">
-                      <img
-                        src={Images.iconStom}
-                        alt=""
-                        className="  object-contain  absolute -left-[23%]"
-                      />
-                      <span className="text-red-400 ml-1 font-sm">
-                        -{sale}%
-                      </span>
+                    <div className="bg-red-500 px-3 h-fit  flex relative rounded-sm ">
+                      <span className="text-white font-sm">-{sale}%</span>
                     </div>
                   )}
                 </div>

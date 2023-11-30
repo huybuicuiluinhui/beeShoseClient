@@ -48,6 +48,19 @@ import bannerCart from "./bannerCart.png";
 import imgNotFound from "./imgNotFound.png";
 import iconStom from "./icons/iconStom.png";
 import iconBox from "./icons/iconBox.gif";
+import iconSetting from "./icons/iconSetting.png";
+import iconAccount from "./icons/iconAccount.png";
+import iconAddress from "./icons/iconAddress.png";
+import iconAddressRed from "./icons/iconAddressRed.png";
+import iconOrder from "./icons/iconOrder.png";
+import iconOrderReturn from "./icons/iconOrderReturn.png";
+import iconPen from "./icons/iconPen.png";
+import iconChangePassword from "./icons/iconChangePassword.png";
+import imgTrack from "./imgTrack.png";
+import iconPlus from "./icons/iconPlus.png";
+import isEmtyCart from "./icons/isEmtyCart.png";
+import iconVoucher from "./icons/iconVoucher.png";
+
 const Images = {
   banner01,
   banner02,
@@ -99,5 +112,17 @@ const Images = {
   bannerCart,
   iconStom,
   imgNotFound,
+  iconSetting,
+  iconAccount,
+  iconAddress,
+  iconAddressRed,
+  iconOrder,
+  iconOrderReturn,
+  iconPen,
+  iconChangePassword,
+  iconPlus,
+  imgTrack,
+  iconVoucher,
+  isEmtyCart,
 };
 export default Images;

@@ -19,11 +19,11 @@ const Invoice = () => {
     setActiveTab(index);
   };
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full ">
       <div className="grid grid-cols-7">
         {/* Tab buttons */}
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 0
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -33,7 +33,7 @@ const Invoice = () => {
           Tất cả
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 1
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -43,7 +43,7 @@ const Invoice = () => {
           Đang xử lý
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 2
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -53,7 +53,7 @@ const Invoice = () => {
           Vận chuyển
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 3
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -63,7 +63,7 @@ const Invoice = () => {
           Đang giao
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 4
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -73,7 +73,7 @@ const Invoice = () => {
           Hoàn thành
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 5
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "
@@ -83,7 +83,7 @@ const Invoice = () => {
           Đã hủy
         </button>
         <button
-          className={`px-4 py-2  ${
+          className={`px-4 py-2 h-fit  ${
             activeTab === 6
               ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
               : "text-[#333]  font-bold text-base  "

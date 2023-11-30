@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { IProduct, Product } from "../types/product.type";
+import { IDetailProductCart, IProduct, Product } from "../types/product.type";
 
 export const convertToCurrencyString = (number: number | string): string => {
   // Kiểm tra xem giá trị đầu vào có phải là kiểu number không
@@ -48,4 +48,39 @@ export function findProductIdByName(
     return null;
   }
 }
-export function filterColor(color: string) {}
+export const validateEmail = (email: string) => {
+  const re = /\S+@\S+\.\S+/; // Regex đơn giản cho định dạng email
+  return re.test(email);
+};
+export const validatePassword = (password: string) => {
+  const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  return re.test(password);
+};
+export const regexPhoneNumber = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
+export const calculateTotal = (items: IDetailProductCart[]): number => {
+  const total = items.reduce((accumulator, currentItem) => {
+    const itemTotal = currentItem.quantity * currentItem.price;
+    return accumulator + itemTotal;
+  }, 0);
+
+  return total;
+};
+export const calculateSale = (items: IDetailProductCart[]): number => {
+  const total = items.reduce((accumulator, currentItem) => {
+    const itemTotal =
+      (currentItem.price - currentItem.discountValue) * currentItem.quantity;
+    return accumulator + itemTotal;
+  }, 0);
+
+  return total;
+};
+export const calculateTotalDone = (items: IDetailProductCart[]): number => {
+  const total = items.reduce((accumulator, currentItem) => {
+    const itemTotal = !!currentItem.discountValue
+      ? currentItem.quantity * currentItem.discountValue
+      : currentItem.quantity * currentItem.price;
+    return accumulator + itemTotal;
+  }, 0);
+
+  return total;
+};

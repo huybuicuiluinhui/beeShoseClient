@@ -6,15 +6,22 @@ import ShippingProcess from "../../components/shippingProcess";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import axios from "axios";
 import {
+  IDetailProductCart,
   IIForDetailShoe,
   IListDeatilShoe,
   IVoucher,
 } from "../../types/product.type";
-import { convertToCurrencyString } from "../../utils/format";
+import {
+  calculateSale,
+  calculateTotal,
+  calculateTotalDone,
+  convertToCurrencyString,
+} from "../../utils/format";
 import API from "../../api";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { toast } from "react-toastify";
 import ModalComponent from "../../components/Modal";
+import ItemCartUser from "./itemCartUser";
 type CartItemProps = {
   id: number;
   quantity: number;
@@ -38,7 +45,6 @@ const Item = ({
       const res = await axios.get(API.getShoeDetailWithId(id));
       if (res.status === 200) {
         const newInfoShoe = res.data;
-
         setInfoShoeList((prevInfoShoeList: any) => {
           const updatedInfoShoeList = [...prevInfoShoeList];
           const existingInfoShoe = updatedInfoShoeList.find(
@@ -59,11 +65,9 @@ const Item = ({
       console.error("Error fetching shoe details: ", error);
     }
   };
-
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
-
   return infoShoe ? (
     <div className="flex items-center hover:bg-gray-100  py-5 border-b-[1px] border-dashed w-full border-gray-500">
       <div
@@ -109,7 +113,7 @@ const Item = ({
         >
           <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
         </svg>
-        <span className=" px-2   ">{quantity}</span>
+        <span className=" px-2">{quantity}</span>
         <svg
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
@@ -192,21 +196,42 @@ const Item = ({
 };
 const CartPage = () => {
   const navigate = useNavigate();
-  const { cartItems } = useShoppingCart();
+  const { cartItems, userPrf } = useShoppingCart();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
   const [showModal, setShowMoal] = useState<boolean>(false);
+  const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
+  const [itemCheckRender, setItemCheckRender] = useState<boolean>(false);
   const getDetailShoe = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getAllShoeDetail(),
-    });
-    if (res.status) {
-      setListDetailShoe(res?.data?.data);
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getAllShoeDetail(),
+      });
+      if (res.status) {
+        setListDetailShoe(res?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
-
+  const getListDetailCart = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getListDetailCart(Number(userPrf?.id)),
+      });
+      if (res.status) {
+        setListProducts(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getListDetailCart();
+  }, [userPrf, itemCheckRender]);
   useEffect(() => {
     // setUserNameCookie();
     getDetailShoe();
@@ -220,7 +245,6 @@ const CartPage = () => {
       }, 0);
     }
   }, [listDetailShoe, cartItems]);
-
   return (
     <div className="container mx-auto ">
       <ShippingProcess type={1} />
@@ -233,32 +257,65 @@ const CartPage = () => {
           <span className="font-medium text-sm  text-gray-500">
             ({cartItems.length} sản phẩm)
           </span>
-          <div className="flex mt-10 mb-5">
-            <h3 className="font-semibold text-gray-600 text-xs  w-[5%]"></h3>
-            <h3 className="font-semibold text-gray-600 text-xs  w-2/5">
-              Thông tin chi tiết sản phẩm
-            </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
-              Số lượng
-            </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
-              Giá
-            </h3>
-            <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
-              Thành tiền
-            </h3>
-          </div>
-          {cartItems.map((item) => {
-            return (
-              <Item
-                key={item.id}
-                {...item}
-                setInfoShoeList={setInfoShoeList}
-                showModal={showModal}
-                setShowModal={setShowMoal}
-              />
-            );
-          })}
+          {!!cartItems && cartItems.length > 0 && (
+            <div className="flex mt-10 mb-5">
+              <h3 className="font-semibold text-gray-600 text-xs  w-[5%]"></h3>
+              <h3 className="font-semibold text-gray-600 text-xs  w-2/5">
+                Thông tin chi tiết sản phẩm
+              </h3>
+              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+                Số lượng
+              </h3>
+              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+                Giá
+              </h3>
+              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+                Thành tiền
+              </h3>
+            </div>
+          )}
+
+          {!!userPrf ? (
+            <div>
+              {!!listProducts &&
+                listProducts.length > 0 &&
+                listProducts.map((item, index) => {
+                  return (
+                    <ItemCartUser
+                      item={item}
+                      key={index}
+                      idUser={userPrf?.id}
+                      loading={itemCheckRender}
+                      setLoading={setItemCheckRender}
+                    />
+                  );
+                })}
+            </div>
+          ) : (
+            <div>
+              {!!cartItems && cartItems.length > 0 ? (
+                cartItems.map((item) => {
+                  return (
+                    <Item
+                      key={item.id}
+                      {...item}
+                      setInfoShoeList={setInfoShoeList}
+                      showModal={showModal}
+                      setShowModal={setShowMoal}
+                    />
+                  );
+                })
+              ) : (
+                <div className="w-full">
+                  <img
+                    src={Images.isEmtyCart}
+                    className="w-[60%] h-auto mx-auto"
+                    alt="Tiếp tục mua sắm"
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           <a
             href={path.home}
@@ -281,8 +338,15 @@ const CartPage = () => {
           />
 
           <div className="flex justify-between mt-10 mb-5">
-            <span className="font-semibold text-sm uppercase">Tạm tính</span>
-            {!!listDetailShoe && (
+            <span className="font-semibold text-sm uppercase">
+              Tổng tiền hàng
+            </span>
+            {/* calculateTotal */}
+            {!!userPrf && !!listProducts && listProducts.length > 0 ? (
+              <span className="font-semibold text-sm uppercase text-red-400">
+                {formatCurrency(calculateTotal(listProducts))}
+              </span>
+            ) : !!listDetailShoe ? (
               <span className="font-semibold text-sm uppercase text-red-400">
                 {" "}
                 {formatCurrency(
@@ -294,12 +358,38 @@ const CartPage = () => {
                   }, 0)
                 )}
               </span>
-            )}
+            ) : null}
+          </div>
+          <div className="flex justify-between mt-10 mb-5 ">
+            <span className="font-semibold text-sm uppercase">
+              Giảm giá sản phẩm
+            </span>
+            {/* calculateTotal */}
+            {!!userPrf && !!listProducts && listProducts.length > 0 ? (
+              <span className="font-semibold text-sm uppercase text-red-400">
+                {formatCurrency(calculateSale(listProducts))}
+              </span>
+            ) : !!listDetailShoe ? (
+              <span className="font-semibold text-sm uppercase text-red-400">
+                {formatCurrency(
+                  cartItems.reduce((total, cartItem) => {
+                    const item = listDetailShoe.find(
+                      (i) => i.id === cartItem.id
+                    );
+                    return total + (item?.price || 0) * cartItem.quantity;
+                  }, 0)
+                )}
+              </span>
+            ) : null}
           </div>
           <div className="border-t ">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Tổng tiền</span>
-              {!!listDetailShoe && !!total ? (
+              {!!userPrf && !!listProducts && listProducts.length > 0 ? (
+                <span className="text-red-800">
+                  {formatCurrency(calculateTotalDone(listProducts))}
+                </span>
+              ) : !!listDetailShoe && !!total ? (
                 <span className="text-red-800">
                   {formatCurrency(
                     cartItems.reduce((total, cartItem) => {
@@ -314,7 +404,9 @@ const CartPage = () => {
                 0
               )}
             </div>
-            {total === 0 || cartItems.length === 0 ? (
+            {total === 0 ||
+            cartItems.length === 0 ||
+            listProducts?.length === 0 ? (
               <button
                 className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"
                 onClick={() => {
@@ -326,14 +418,16 @@ const CartPage = () => {
             ) : (
               <button
                 className="bg-[#fe662b] font-semibold hover:bg-red-600  py-3 text-sm text-white uppercase w-full"
-                onClick={() =>
-                  navigate(path.payment, {
-                    state: {
-                      infoShoeList,
-                      total,
-                    },
-                  })
-                }
+                onClick={() => {
+                  !!userPrf
+                    ? navigate(path.payMentWithUser)
+                    : navigate(path.payment, {
+                        state: {
+                          infoShoeList,
+                          total,
+                        },
+                      });
+                }}
               >
                 Mua hàng
               </button>

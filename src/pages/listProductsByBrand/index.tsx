@@ -639,24 +639,7 @@ const ListProductsByBrand = () => {
               {!!listShoes && !!listShoes.length ? (
                 listShoes.map((item, index) => {
                   return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        if (
-                          !!item.minPrice &&
-                          !!item.maxPrice &&
-                          item.images &&
-                          !!item.quantity &&
-                          item.images.length > 0
-                        ) {
-                          navigate(`/product/${item.id}`, {
-                            state: item.id,
-                          });
-                        } else {
-                          return;
-                        }
-                      }}
-                    >
+                    <div key={index}>
                       <ProductStanding product={item} key={index} />
                     </div>
                   );

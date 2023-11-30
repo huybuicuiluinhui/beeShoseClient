@@ -11,6 +11,7 @@ const path = {
   listProductsByCategory: "/category/:idCategory/:nameCategory",
   listProductsByBrandWithSearch: "/search/:category",
   payment: "/payment",
+  payMentWithUser: "/payMentWithUser",
   invoice: "/invoice",
   information: "/information",
   detailOrder: "/detailOrder",
@@ -19,5 +20,6 @@ const path = {
   detailReturn: "/detailReturn",
   lookUpOrders: "/lookUpOrders",
   loginScreen: "/loginScreen",
+  changePassword: "/changePassword",
 } as const;
 export default path;

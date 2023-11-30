@@ -29,7 +29,6 @@ const DetailReturn = () => {
       setSelectedImages(imagesArray);
     }
   };
-  console.log("selectedImages", selectedImages);
   return (
     <div className="w-full h-full  mb-20">
       <p className="uppercase font-bold mt-4 text-[#FFBA00]">Hoàn trả hàng</p>

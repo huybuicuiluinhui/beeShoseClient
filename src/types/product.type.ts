@@ -119,3 +119,59 @@ export interface Token {
   avata: string;
   exp: number;
 }
+export interface CustomError {
+  message: string;
+  response?: {
+    data?: string;
+    status?: number;
+  };
+}
+export interface IAddress {
+  defaultAddress: boolean;
+  district: string;
+  id: number;
+  index: number;
+  name: string;
+  phoneNumber: string;
+  province: string;
+  specificAddress: string;
+  status: boolean;
+  ward: string;
+}
+export interface Province {
+  ProvinceID: number;
+  ProvinceName: string;
+}
+
+export interface District {
+  DistrictID: number;
+  DistrictName: string;
+}
+
+export interface Ward {
+  WardCode: number;
+  WardName: string;
+}
+export interface Iinfo {
+  avatar: string;
+  addresses: any[];
+  birthday: string;
+  cccd: string;
+  email: string;
+  gender: string;
+  id: number;
+  name: string;
+  username: string;
+  phoneNumber: string;
+}
+export interface IDetailProductCart {
+  discountPercent: number;
+  discountValue: number;
+  id: number;
+  image: string;
+  index: number;
+  name: string;
+  price: number;
+  quantity: number;
+  sole: string;
+}

@@ -1,7 +1,5 @@
 import React from "react";
-import { IOrderType } from "../../../types/product.type";
 import { useNavigate } from "react-router-dom";
-import path from "../../../constants/path";
 import Images from "../../../static";
 type ItemProps = {
   name: string;
@@ -35,8 +33,8 @@ const InvoiceAll = () => {
 
   const Item: React.FC<ItemProps> = ({ name, price, color, quantity }) => {
     return (
-      <div className="flex justify-between items-center p-4 border-b">
-        <img src={Images.iconAdidas} className="w-[110px] h-auto" />
+      <div className="flex justify-between items-center p-2 border-b">
+        <img src={Images.giay01} className="w-[110px] h-auto" />
         <div>
           <div className="text-lg font-semibold">{name}</div>
           <div className="text-sm text-gray-500">{color}</div>
@@ -53,6 +51,9 @@ const InvoiceAll = () => {
   return (
     <div className="w-full h-full">
       <div className="w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col">
+        <div className="w-full bg-red-500 text-end text-white px-4 py-1">
+          HOÀN THÀNH
+        </div>
         {items.map((item, index) => (
           <Item key={index} {...item} />
         ))}

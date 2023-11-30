@@ -52,9 +52,7 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
                   key={index}
                   className="group relative px-5  "
                   onClick={() => {
-                    navigate(`/product/${item.id}`, {
-                      state: item.id,
-                    });
+                    navigate(`/product/${item.id}`);
                   }}
                 >
                   <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
