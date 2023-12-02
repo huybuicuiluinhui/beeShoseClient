@@ -29,7 +29,6 @@ interface ShoeColor {
 const ListProductsByBrandWithSearch = () => {
   const location = useLocation();
   const param = location.state;
-  console.log("param", param);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);

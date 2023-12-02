@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Images from "../static";
 import path from "../constants/path";
 import axios from "axios";
-import { IProduct, Product } from "../types/product.type";
+import { IDetailProductCart, IProduct, Product } from "../types/product.type";
 import FormLogin from "../pages/loginAndRegister";
 import { toSlug } from "../utils/format";
 import { useShoppingCart } from "../context/shoppingCart.context";
@@ -12,7 +12,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getCookie } from "../helper/CookiesRequest";
 const Header = () => {
   const navigate = useNavigate();
-  const { cartQuantity, openCart, cartItems, userPrf } = useShoppingCart();
+
+  const { cartQuantity, openCart, cartItems, userPrf, listProducts } =
+    useShoppingCart();
   const [showTable, setShowTable] = useState<boolean>(false);
   const [results, setResults] = useState<IProduct[]>([]);
   const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
@@ -22,7 +24,21 @@ const Header = () => {
   const [typeModal, setTypeModal] = useState<number>(1);
   const [searchValue, setSearchValue] = useState<string>();
   const token = getCookie("customerToken");
-  console.log("userPrf", userPrf);
+  // const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
+  // const getListDetailCart = async () => {
+  //   try {
+  //     const res = await axios({
+  //       method: "get",
+  //       url: API.getListDetailCart(Number(userPrf?.id)),
+
+  //     });
+  //     if (res.status) {
+  //       setListProducts(res?.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
       const key = event.target.value;
@@ -34,6 +50,7 @@ const Header = () => {
       setResults([]);
     }
   };
+
   const handleHover = (isHovering: boolean) => {
     if (!showModal) {
       setShowTable(isHovering);
@@ -84,6 +101,9 @@ const Header = () => {
     getDataBrand();
     getCategory();
   }, []);
+  // useEffect(() => {
+  //   getListDetailCart();
+  // }, [userPrf?.id]);
   useEffect(() => {
     const handleScroll = () => {
       setIsHeaderSticky(window.scrollY > 0);
@@ -303,7 +323,9 @@ const Header = () => {
                       {!!cartQuantity && cartQuantity > 0 && (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                            {cartItems.length}
+                            {!!userPrf && listProducts
+                              ? listProducts.length
+                              : cartItems.length}
                           </p>
                         </div>
                       )}
@@ -325,7 +347,10 @@ const Header = () => {
                     <div className="ml-3">
                       <p className="text-xs">Giỏ hàng</p>
                       <span className="text-sm font-medium">
-                        {cartItems.length} sản phẩm{" "}
+                        {!!userPrf && listProducts
+                          ? listProducts.length
+                          : cartItems.length}{" "}
+                        sản phẩm
                       </span>
                     </div>
                   </div>

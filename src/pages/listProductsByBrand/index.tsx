@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import path from "../../constants/path";
 import "rc-slider/assets/index.css"; // Import CSS cho slider
 import axios from "axios";
@@ -31,9 +31,7 @@ interface ShoseColor {
   selected: boolean;
 }
 const ListProductsByBrand = () => {
-  const location = useLocation();
   const params = useParams();
-  console.log("params", params);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [pageColor, setPageColor] = useState<number>(1);
@@ -284,7 +282,6 @@ const ListProductsByBrand = () => {
     page,
     idBrands,
     idCategories,
-    location,
     params,
   ]);
   return (

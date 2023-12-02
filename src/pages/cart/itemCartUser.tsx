@@ -5,6 +5,8 @@ import { convertToCurrencyString } from "../../utils/format";
 import axios from "axios";
 import API from "../../api";
 import { toast } from "react-toastify";
+import { useShoppingCart } from "../../context/shoppingCart.context";
+import { getTokenCustomer } from "../../helper/useCookie";
 
 const ItemCartUser = ({
   item,
@@ -17,7 +19,7 @@ const ItemCartUser = ({
   loading: any;
   setLoading: any;
 }) => {
-  console.log("item", item);
+  const token = getTokenCustomer();
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(item?.quantity);
   const reduceShoe = async (idShoeDetail: number) => {
@@ -29,6 +31,9 @@ const ItemCartUser = ({
           id: Number(idUser),
           quantity: quantity - 1,
           shoeDetail: idShoeDetail,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       });
       if (res.status) {
@@ -51,6 +56,9 @@ const ItemCartUser = ({
           quantity: quantity + 1,
           shoeDetail: idShoeDetail,
         },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status) {
         toast("tăng");
@@ -67,6 +75,9 @@ const ItemCartUser = ({
       const res = await axios({
         method: "delete",
         url: API.removeFromCart(idShoeDetail),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (res.status) {
         toast("xóa " + idShoeDetail);

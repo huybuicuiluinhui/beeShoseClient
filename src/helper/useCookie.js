@@ -62,7 +62,6 @@ export const getUserFromCookie = () => {
   const token = getCookie("customerToken");
   if (token) {
     const decodedToken = jwtDecode(token);
-    console.log("decodedToken", decodedToken);
     const user = {
       id: decodedToken?.id,
       email: decodedToken?.email,

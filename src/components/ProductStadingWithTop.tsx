@@ -12,7 +12,6 @@ const ProductStandingTop = ({
   product: IProduct;
   checkTop: boolean;
 }) => {
-  console.log("product,productsAll", product);
   const navigate = useNavigate();
   const soldPercentage =
     product.quantitySold !== null

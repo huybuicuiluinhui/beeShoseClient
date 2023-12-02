@@ -9,6 +9,7 @@ import ListProductsByBrand from "./pages/listProductsByBrand";
 import ScrollToTopButton from "./components/scrollToTop";
 import CartPage from "./pages/cart";
 import PaymentPage from "./pages/payment";
+import VnPayPayment from "./pages/vnpay-payment";
 import Invoice from "./pages/invoice";
 import Footer from "./components/Footer";
 import Information from "./pages/information";
@@ -67,6 +68,7 @@ function App() {
         { path: path.lookUpOrders, element: <LookUpOrders /> },
         { path: path.loginScreen, element: <LoginScreen /> },
         { path: path.changePassword, element: <ChangePassword /> },
+        { path: path.vnpayment, element: <VnPayPayment /> },
         { path: "*", element: <PageNotFound /> },
       ],
     },

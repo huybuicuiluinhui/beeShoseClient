@@ -6,11 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Address from "./address";
 import ReturnProduct from "./returnProduct";
 import { IDataAside } from "../../types/product.type";
-import {
-  deleteToken,
-  deleteUserToken,
-  getUserFromCookie,
-} from "../../helper/useCookie";
+import { deleteToken, deleteUserToken } from "../../helper/useCookie";
 import path from "../../constants/path";
 import ChangePassword from "./changePassword";
 import ModalComponent from "../../components/Modal";
@@ -79,6 +75,7 @@ const Information = () => {
     deleteUserToken();
     sessionStorage.removeItem("idAccount");
     navigate(path.loginScreen);
+    window.location.reload();
   };
   useEffect(() => {
     window.scrollTo(0, 0);

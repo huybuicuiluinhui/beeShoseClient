@@ -17,6 +17,7 @@ import { calculateTotalDone } from "../../utils/format";
 import { toast } from "react-toastify";
 import path from "../../constants/path";
 import ModalComponent from "../../components/Modal";
+import { configApi } from "../../utils/config";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf } = useShoppingCart();
@@ -31,7 +32,8 @@ const PayMentWithUser = () => {
   const [selectedWard, setSelectedWard] = useState<number>();
   const [method, setMethod] = useState<number>(0);
   const [feeShip, setFeeShip] = useState();
-  const [showModal, setShowModal] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [carts, setCarts] = useState({ quantity: null, id: null });
   const getListDetailCart = async () => {
     try {
       const res = await axios({
@@ -39,18 +41,17 @@ const PayMentWithUser = () => {
         url: API.getListDetailCart(Number(userPrf?.id)),
       });
       if (res.status) {
+        const cartsData = res?.data.map((product: IDetailProductCart) => ({
+          quantity: product.quantity,
+          id: product.idProductDetail,
+        }));
+
         setListProducts(res?.data);
+        setCarts(cartsData);
       }
     } catch (error) {
       console.log(error);
     }
-  };
-  const configApi = {
-    headers: {
-      Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
-      "Content-Type": "application/json",
-      ShopId: 124173,
-    },
   };
 
   const fetchProvinces = async () => {
@@ -77,6 +78,31 @@ const PayMentWithUser = () => {
       console.error("Error fetching districts:", error);
     }
   };
+  function generateUUID() {
+    // Public Domain/MIT
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== "undefined" &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+  }
   const fetchWardsByDistrict = async (districtId: number) => {
     try {
       const response = await axios.get(
@@ -91,7 +117,6 @@ const PayMentWithUser = () => {
   };
   const caculateFee = async () => {
     if (!!dataAddress && dataAddress.length > 0) {
-      console.log("ahihih");
       try {
         const response = await axios.post(
           "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
@@ -127,30 +152,47 @@ const PayMentWithUser = () => {
   const postBill = async () => {
     if (!!dataAddress && dataAddress.length > 0 && !!listProducts) {
       try {
-        const response = await axios.post(
-          baseUrl + "api/bill/create-bill-client",
-          {
-            account: userPrf?.id,
-            customerName: dataAddress[0].name,
-            email: userPrf?.email,
-            district: dataAddress[0].district,
-            province: dataAddress[0].province,
-            ward: dataAddress[0].ward,
-            specificAddress: dataAddress[0].specificAddress,
-            moneyShip: feeShip,
-            moneyReduce: (10 / 100) * calculateTotalDone(listProducts),
-            totalMoney:
-              calculateTotalDone(listProducts) + Number(feeShip ? feeShip : 0),
+        const newBill = {
+          account: userPrf?.id,
+          customerName: dataAddress[0].name,
+          email: userPrf?.email,
+          district: dataAddress[0].district,
+          province: dataAddress[0].province,
+          ward: dataAddress[0].ward,
+          specificAddress: dataAddress[0].specificAddress,
+          moneyShip: feeShip,
+          moneyReduce: (10 / 100) * calculateTotalDone(listProducts),
+          totalMoney:
+            calculateTotalDone(listProducts) + Number(feeShip ? feeShip : 0),
 
-            note: "",
-            paymentMethod: method,
-            // carts: ,
+          note: "",
+          paymentMethod: method,
+          carts: carts,
+        };
+        if (method === 0) {
+          const response = await axios.post(
+            baseUrl + "api/bill/create-bill-client",
+            newBill
+          );
+          if (response.status) {
+            toast.success("Đặt hàng thành công");
+            navigate(path.home);
+            // clearCart();
           }
-        );
-        if (response.status) {
-          toast.success("Đặt hàng thành công");
-          navigate(path.home);
-          // clearCart();
+        } else if (method === 1) {
+          const tempNewBill = { ...newBill, id: generateUUID() };
+          localStorage.setItem("checkout", JSON.stringify(tempNewBill));
+          try {
+            const response = await axios.get(
+              baseUrl +
+                `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+            );
+            if (response.status) {
+              window.location.href = response.data.data;
+            }
+          } catch (error) {
+            console.error("Error making axios request:", error);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -356,7 +398,7 @@ const PayMentWithUser = () => {
             <div className="flex items-center gap-6">
               <button
                 className={`border-[1px]  text-sm px-2 py-1 rounded ${
-                  method === 1 ? "border-red-500" : ""
+                  method === 0 ? "border-red-500" : ""
                 } `}
                 onClick={() => setMethod(0)}
               >
@@ -364,7 +406,7 @@ const PayMentWithUser = () => {
               </button>
               <button
                 className={`border-[1px]  text-sm px-2 py-1 rounded ${
-                  method === 2 ? "border-red-500" : ""
+                  method === 1 ? "border-red-500" : ""
                 } `}
                 onClick={() => setMethod(1)}
               >

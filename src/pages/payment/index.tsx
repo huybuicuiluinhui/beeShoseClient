@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import ShippingProcess from "../../components/shippingProcess";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import {
-  District,
-  IListDeatilShoe,
-  IVoucher,
-  Province,
-  Ward,
-} from "../../types/product.type";
+import { IListDeatilShoe, IVoucher } from "../../types/product.type";
 import { convertToCurrencyString, toSlug } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -17,6 +11,21 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { toast } from "react-toastify";
 import path from "../../constants/path";
 import ModalComponent from "../../components/Modal";
+import { configApi } from "../../utils/config";
+interface Province {
+  ProvinceID: number;
+  ProvinceName: string;
+}
+
+interface District {
+  DistrictID: number;
+  DistrictName: string;
+}
+
+interface Ward {
+  WardCode: number;
+  WardName: string;
+}
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -29,7 +38,7 @@ const PaymentPage = () => {
   const [openList, setOpenList] = useState<boolean>(false);
   const [percent, setPrecent] = useState<number>(0);
   const [minPrice, setMinPrice] = useState<number>(0);
-  const [radioChoose, setRadioChoose] = React.useState<string>("option1");
+  const [radioChoose, setRadioChoose] = React.useState<number>(0);
   const [voucher, setVoucher] = useState<IVoucher[]>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
@@ -58,7 +67,6 @@ const PaymentPage = () => {
       setListDetailShoe(res?.data?.data);
     }
   };
-
   const getVoucher = async () => {
     const res = await axios({
       method: "get",
@@ -95,43 +103,81 @@ const PaymentPage = () => {
       toast.warning("Hãy chọn phương thức thanh toán");
     } else {
       try {
-        const response = await axios.post(
-          baseUrl + "api/bill/create-bill-client",
-          {
-            customerName: textHVT,
-            email: email,
-            district: selectedDistrict,
-            province: selectedProvince,
-            ward: selectedWard,
-            specificAddress: specificAddress,
-            moneyShip: feeShip,
-            moneyReduce: (percent / 100) * location?.state?.total,
-            totalMoney:
-              Number(location?.state?.total) +
-              Number(feeShip ? feeShip : 0) -
-              (percent / 100) * location?.state?.total,
-            note: note,
-            paymentMethod: paymentMethod,
-            carts: cartItems,
+        const newBill = {
+          customerName: textHVT,
+          email: email,
+          district: selectedDistrict,
+          province: selectedProvince,
+          ward: selectedWard,
+          specificAddress: specificAddress,
+          moneyShip: feeShip,
+          moneyReduce: (percent / 100) * location?.state?.total,
+          totalMoney:
+            Number(location?.state?.total) +
+            Number(feeShip ? feeShip : 0) -
+            (percent / 100) * location?.state?.total,
+          note: note,
+          paymentMethod: paymentMethod,
+          carts: cartItems,
+        };
+        if (radioChoose === 0) {
+          const response = await axios.post(
+            baseUrl + "api/bill/create-bill-client",
+            newBill
+          );
+          if (response.status) {
+            toast.success("Đặt hàng thành công");
+            navigate(path.home);
+            clearCart();
           }
-        );
-        if (response.status) {
-          toast.success("Đặt hàng thành công");
-          navigate(path.home);
-          clearCart();
+        }
+        if (radioChoose === 1) {
+          const tempNewBill = { ...newBill, id: generateUUID() };
+          localStorage.setItem("checkout", JSON.stringify(tempNewBill));
+          try {
+            const response = await axios.get(
+              baseUrl +
+                `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+            );
+            if (response.status) {
+              window.location.href = response.data.data;
+            }
+          } catch (error) {
+            console.error("Error making axios request:", error);
+          }
         }
       } catch (error) {
         console.log(error);
       }
     }
   };
-  const configApi = {
-    headers: {
-      Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
-      "Content-Type": "application/json",
-      ShopId: 124173,
-    },
-  };
+
+  function generateUUID() {
+    // Public Domain/MIT
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== "undefined" &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    );
+  }
+
   const caculateFee = async () => {
     try {
       const response = await axios.post(
@@ -227,9 +273,9 @@ const PaymentPage = () => {
   }, [selectedWard]);
 
   const handleChange = (event: any) => {
+    setPaymentMethod(event.target.value);
     setRadioChoose(event?.target?.value);
   };
-
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
@@ -567,7 +613,7 @@ const PaymentPage = () => {
             >
               Chọn phương thức thanh toán
             </label>
-            <div className="flex">
+            {/* <div className="flex">
               <div className="flex items-center h-5">
                 <input
                   checked={radioChoose === "option1"}
@@ -588,12 +634,12 @@ const PaymentPage = () => {
                   Thanh toán ngay
                 </label>
               </div>
-            </div>
+            </div> */}
             <div className="flex">
               <div className="flex items-center h-5">
                 <input
-                  value={"option2"}
-                  checked={radioChoose === "option2"}
+                  value={0}
+                  checked={radioChoose === 0}
                   name="payment"
                   onChange={handleChange}
                   id="option2"
@@ -611,7 +657,29 @@ const PaymentPage = () => {
                 </label>
               </div>
             </div>
-            {radioChoose === "option1" && (
+            <div className="flex">
+              <div className="flex items-center h-5">
+                <input
+                  value={1}
+                  checked={radioChoose === 1}
+                  name="payment"
+                  onChange={handleChange}
+                  id="option3"
+                  aria-describedby="helper-radio-text"
+                  type="radio"
+                  className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
+                />
+              </div>
+              <div className="ml-2 text-sm">
+                <label
+                  htmlFor="option3"
+                  className="font-medium text-gray-900 dark:text-gray-300"
+                >
+                  Thanh toán vnpay
+                </label>
+              </div>
+            </div>
+            {/* {radioChoose === "option1" && (
               <div>
                 <label
                   htmlFor="card-holder"
@@ -685,7 +753,7 @@ const PaymentPage = () => {
                   />
                 </div>
               </div>
-            )}
+            )} */}
             {/* Total */}
             <div className="mt-6 border-t border-b py-2">
               <div className="flex items-center justify-between">

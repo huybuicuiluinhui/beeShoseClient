@@ -26,7 +26,6 @@ const InforMe = () => {
         method: "get",
         url: API.getInfoUser(Number(userPrf?.id)),
       });
-      console.log("ssssssssssssssssssssssss", res);
 
       if (res.data) {
         setUser(res?.data);
@@ -35,8 +34,6 @@ const InforMe = () => {
       console.log(error);
     }
   };
-  console.log("userPrf", userPrf);
-  console.log("user", user);
   useEffect(() => {
     if (userPrf) {
       loadInfoUser();
@@ -129,38 +126,39 @@ const InforMe = () => {
           </p>
         </div>
         <div className="w-[70%]  mx-auto">
-          <div className="flex items-center justify-around  ">
-            <img
-              src={imagePreview ? imagePreview : Images.imgNotFound}
-              alt="Ảnh đại diện"
-              className="mt-2 w-[120px] h-[120px] rounded-[100%]"
-            />
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="file-input"
+          <div>
+            {" "}
+            <div className="flex items-center justify-around  ">
+              <img
+                src={imagePreview ? imagePreview : Images.imgNotFound}
+                alt="Ảnh đại diện"
+                className="mt-2 w-[120px] h-[120px] rounded-[100%]"
               />
-              <label
-                htmlFor="file-input"
-                className="cursor-pointer  text-gray-500 py-2 px-4 rounded-md hover:bg-[#dbdada] transition duration-300  border-[2px] border-[#f5f5f5]"
-              >
-                Chọn ảnh
-              </label>
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="file-input"
+                />
+                <label
+                  htmlFor="file-input"
+                  className="cursor-pointer  text-gray-500 py-2 px-4 rounded-md hover:bg-[#dbdada] transition duration-300  border-[2px] border-[#f5f5f5]"
+                >
+                  Chọn ảnh
+                </label>
+              </div>
             </div>
+            {selectedFile && (
+              <div className="mt-4">
+                <p className="text-gray-600 text-xs">
+                  Đã chọn: {selectedFile.name} (
+                  {(selectedFile.size / 1024).toFixed(2)} KB)
+                </p>
+              </div>
+            )}
           </div>
-
-          {selectedFile && (
-            <div className="mt-4">
-              <p className="text-gray-600 text-xs">
-                Đã chọn: {selectedFile.name} (
-                {(selectedFile.size / 1024).toFixed(2)} KB)
-              </p>
-            </div>
-          )}
-
           <div className="relative z-0 w-full mb-6 group">
             <div className="">
               Họ và tên:

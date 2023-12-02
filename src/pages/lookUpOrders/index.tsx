@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  DetailedHTMLProps,
+  TdHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 import API from "../../api";
 import axios from "axios";
 import Images from "../../static";
+import { IBill } from "../../types/product.type";
+import { formatCurrency } from "../../utils/formatCurrency";
 
 const LookUpOrders = () => {
-  const [show, setShow] = useState(false);
-  const [inputHD, setInputHD] = useState("");
+  const [inputHD, setInputHD] = useState<string>("");
+  const [listDataBill, setListDataBill] = useState<IBill>();
   const getInfoDetailProduct = async () => {
     try {
       const res = await axios({
@@ -13,13 +20,21 @@ const LookUpOrders = () => {
         url: API.getSearchBill(inputHD),
       });
       if (res.status) {
-        console.log(res.data);
+        setListDataBill(res.data);
         //   setDetail(res)
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const timestampString = listDataBill?.createAt;
+  const timestamp = new Date(String(timestampString));
+
+  const day = timestamp.getDate();
+  const month = timestamp.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
+  const year = timestamp.getFullYear();
+  const formattedDate = `${day}-${month}-${year}`;
+
   useEffect(() => {
     getInfoDetailProduct();
   }, [inputHD]);
@@ -55,12 +70,13 @@ const LookUpOrders = () => {
             placeholder="VD: 123567"
             className="rounded border-[1px] mt-2 w-[60%] border-[#ccc]"
             value={inputHD}
+            onChange={(e) => setInputHD(e.target.value)}
           />
           <div className="mt-3">
             <button
               className="bg-red-600 text-white px-4 py-2 rounded "
               onClick={() => {
-                setShow(true);
+                getInfoDetailProduct();
               }}
             >
               Tra cứu
@@ -71,12 +87,12 @@ const LookUpOrders = () => {
           <img src={Images.imgTrack} className="w-[220px] object-contain" />
         </div>
       </div>
-      {show && (
+      {listDataBill && (
         <div className="w-full">
           <p className="font-semibold text-2xl my-2">Danh sách phiếu gửi</p>
           <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+              <thead className="text-xs text-white uppercase bg-gray-500  ">
                 <tr>
                   <th scope="col" className="px-6 py-3">
                     Mã phiếu gửi
@@ -85,16 +101,17 @@ const LookUpOrders = () => {
                     Người gửi
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Bưu cục nhận
+                    Ngày tạo đơn
                   </th>
-                  <th scope="col" className="px-6 py-3">
-                    Ngày trạng thái
-                  </th>
+
                   <th scope="col" className="px-6 py-3">
                     Trạng thái
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Trọng lượng
+                    Phí ship
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Tổng tiền
                   </th>
                 </tr>
               </thead>
@@ -104,17 +121,33 @@ const LookUpOrders = () => {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    170987654345678
+                    {listDataBill?.code}
                   </th>
-                  <td className="px-6 py-4">10/10/2021</td>
-                  <td className="px-6 py-4">Quận NTL</td>
-                  <td className="px-6 py-4">10/10/2021</td>
-                  <td className="px-6 py-4">Đang giao hàng</td>
-                  <td className="px-6 py-4">69999</td>
+                  <td className="px-6 py-4">{listDataBill?.customer?.name}</td>
+                  <td className="px-6 py-4">{formattedDate}</td>
+                  <td className="px-6 py-4">
+                    {listDataBill?.status === 2
+                      ? "Chờ xác nhận"
+                      : listDataBill.status === 4
+                      ? "Chờ giao"
+                      : listDataBill.status === 5
+                      ? "Đang giao"
+                      : listDataBill.status === 6
+                      ? "Hoàn Thành"
+                      : listDataBill.status === 7
+                      ? "Đã hủy"
+                      : ""}
+                  </td>
+                  <td className="px-6 py-4">
+                    {formatCurrency(listDataBill.moneyShip)}{" "}
+                  </td>
+                  <td className="px-6 py-4">
+                    {formatCurrency(listDataBill.totalMoney)}{" "}
+                  </td>
                 </tr>
               </tbody>
             </table>
-            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div className="bg-[#f0f0f0] shadow-md rounded px-8 pt-6 pb-8 my-4">
               <div className="mb-4">
                 <h1 className="text-lg font-bold mb-3">THÔNG TIN VẬN ĐƠN</h1>
                 <div className="grid grid-cols-2 gap-4">
@@ -122,21 +155,21 @@ const LookUpOrders = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Mã phiếu gửi:
                     </label>
-                    <p className="text-gray-700">1751015429162</p>
+                    <p className="text-gray-700">{listDataBill.code}</p>
                   </div>
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Khối lượng(Gram):
+                      Phí ship:
                     </label>
-                    <p className="text-gray-700">5000</p>
+                    <p className="text-gray-700">
+                      {formatCurrency(listDataBill.moneyShip)}
+                    </p>
                   </div>
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Người gửi:
                     </label>
-                    <p className="text-gray-700">
-                      N***** - T.Nghệ An - H.Đô Lương
-                    </p>
+                    <p className="text-gray-700">Shop giày BeeShoe</p>
                   </div>
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -151,14 +184,27 @@ const LookUpOrders = () => {
                       Người nhận:
                     </label>
                     <p className="text-gray-700">
-                      S***** - TP.Hà Nội - Q.Nam Từ Liêm
+                      {listDataBill?.customer?.name}
                     </p>
                   </div>
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Trạng thái:
                     </label>
-                    <p className="text-gray-700">Đang giao hàng</p>
+                    <p className="text-gray-700">
+                      {" "}
+                      {listDataBill?.status === 2
+                        ? "Chờ xác nhận"
+                        : listDataBill.status === 4
+                        ? "Chờ giao"
+                        : listDataBill.status === 5
+                        ? "Đang giao"
+                        : listDataBill.status === 6
+                        ? "Hoàn Thành"
+                        : listDataBill.status === 7
+                        ? "Đã hủy"
+                        : ""}
+                    </p>
                   </div>
                 </div>
               </div>

@@ -8,45 +8,107 @@ import {
 import axios from "axios";
 import API from "../../../api";
 import { toast } from "react-toastify";
+import { configApi } from "../../../utils/config";
 
 const UpdateAdr = ({
   item,
   isOpen,
   onClose,
-  selectedProvince,
-  selectedDistrict,
-  selectedWard,
-  setSelectedDistrict,
-  setSelectedProvince,
-  setSelectedWard,
-  provinces,
-  districts,
-  wards,
-}: {
-  item: IAddress;
+}: // selectedProvince,
+// selectedDistrict,
+// selectedWard,
+// setSelectedDistrict,
+// setSelectedProvince,
+// setSelectedWard,
+// provinces,
+// districts,
+// wards,
+{
+  item: IAddress | null;
   isOpen: boolean;
   onClose: any;
-  provinces: Province[];
-  selectedProvince: any;
-  selectedDistrict: any;
-  selectedWard: any;
-  districts: District[];
-  setSelectedDistrict: any;
-  setSelectedWard: any;
-  setSelectedProvince: any;
-  wards: Ward[];
+  // provinces: Province[];
+  // selectedProvince: any;
+  // selectedDistrict: any;
+  // selectedWard: any;
+  // districts: District[];
+  // setSelectedDistrict: any;
+  // setSelectedWard: any;
+  // setSelectedProvince: any;
+  // wards: Ward[];
 }) => {
   const [checkDefault, setCheckDefault] = useState<boolean>();
   const [user, setUser] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [specificAddress, setSpecificAddress] = useState<number | string>("");
-  const configApi = {
-    headers: {
-      Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
-      "Content-Type": "application/json",
-      ShopId: 124173,
-    },
+  const [idProvince, setIdProvice] = useState<number | string>();
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [idDistrict, setIdDistrict] = useState<number | string>();
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [idWard, setIdWard] = useState<string>();
+  const [wards, setWards] = useState<Ward[]>([]);
+  console.log("idProvince", idProvince);
+  console.log("idDistrict", idDistrict);
+  console.log("idWard", idWard);
+  const fetchProvinces = async () => {
+    try {
+      const response = await axios.get(
+        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+        configApi
+      );
+      if (response.status) {
+        console.log("lấy thành công dannh sách tỉnh");
+        setProvinces(response?.data?.data);
+      }
+    } catch (error) {
+      console.error("Lỗi:", error);
+    }
   };
+  const fetchDistrictsByProvince = async (provinceId: number) => {
+    try {
+      const response = await axios.get(
+        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
+        configApi
+      );
+      if (response.status) {
+        setDistricts(response?.data?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
+  const fetchWardsByDistrict = async (districtId: number) => {
+    console.log("dấ ds xã");
+    try {
+      const response = await axios.get(
+        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
+        configApi
+      );
+      if (response.status) {
+        setWards(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+    }
+  };
+  useEffect(() => {
+    if (item) {
+      setIdDistrict(item?.district);
+      setIdProvice(item?.province);
+      setIdWard(item?.ward);
+      fetchProvinces();
+    }
+  }, [item]);
+  useEffect(() => {
+    if (idProvince) {
+      fetchDistrictsByProvince(Number(idProvince));
+    }
+  }, [idProvince]);
+  useEffect(() => {
+    if (idWard) {
+      fetchWardsByDistrict(Number(idDistrict));
+    }
+  }, [idDistrict]);
 
   useEffect(() => {
     if (!!item) {
@@ -56,7 +118,6 @@ const UpdateAdr = ({
       setCheckDefault(item?.defaultAddress);
     }
   }, [item]);
-
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -70,26 +131,28 @@ const UpdateAdr = ({
   if (!isOpen) return null;
 
   const updateAdress = async () => {
-    try {
-      const res = await axios({
-        method: "put",
-        url: API.putAdr(item?.id),
-        data: {
-          name: user,
-          phoneNumber: phoneNumber,
-          specificAddress: specificAddress,
-          ward: selectedWard,
-          district: selectedDistrict,
-          province: selectedProvince,
-          defaultAddress: checkDefault,
-        },
-      });
-      if (res.data) {
-        toast.success("Đã thay đổi địa chỉ thành công");
-        onClose();
+    if (!!item) {
+      try {
+        const res = await axios({
+          method: "put",
+          url: API.putAdr(item?.id),
+          data: {
+            name: user,
+            phoneNumber: phoneNumber,
+            specificAddress: specificAddress,
+            ward: idWard,
+            district: idDistrict,
+            province: idProvince,
+            defaultAddress: checkDefault,
+          },
+        });
+        if (res.data) {
+          toast.success("Đã thay đổi địa chỉ thành công");
+          onClose();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -139,8 +202,8 @@ const UpdateAdr = ({
                   Nhập Tỉnh/Thành Phố
                 </span>
                 <select
-                  value={selectedProvince}
-                  onChange={(e: any) => setSelectedProvince(e?.target?.value)}
+                  value={idProvince}
+                  onChange={(e: any) => setIdProvice(e?.target?.value)}
                   id="underline_select"
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                 >
@@ -157,8 +220,8 @@ const UpdateAdr = ({
               <div className="relative z-0  w-[45%]  flex flex-col items-start">
                 <span className="text-xs text-gray-700 ">Nhập Quận/Huyện</span>
                 <select
-                  value={selectedDistrict}
-                  onChange={(e: any) => setSelectedDistrict(e?.target?.value)}
+                  value={idDistrict}
+                  onChange={(e: any) => setIdDistrict(e?.target?.value)}
                   id="underline_select"
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                 >
@@ -178,8 +241,8 @@ const UpdateAdr = ({
               <div className="relative z-0  w-[45%]  flex flex-col items-start">
                 <span className="text-xs text-gray-700 ">Nhập Phường/Xã</span>
                 <select
-                  value={selectedWard}
-                  onChange={(e: any) => setSelectedWard(e?.target?.value)}
+                  value={idWard}
+                  onChange={(e: any) => setIdWard(e?.target?.value)}
                   id="underline_select"
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                 >

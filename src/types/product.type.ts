@@ -174,4 +174,26 @@ export interface IDetailProductCart {
   price: number;
   quantity: number;
   sole: string;
+  idProductDetail: number;
+}
+export interface IBill {
+  id: number;
+  type: number;
+  address: string;
+  index: number;
+  status: number;
+  phoneNumber: string;
+  voucher: any;
+  customer: any;
+  moneyShip: number;
+  code: string;
+  note: string;
+  moneyReduce: number;
+  totalMoney: number;
+  employee: any;
+  payDate: any;
+  shipDate: any;
+  desiredDate: any;
+  receiveDate: any;
+  createAt: Date;
 }

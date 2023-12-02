@@ -61,7 +61,7 @@ const AddAddressModal = ({
     } finally {
     }
   };
-
+  // const getData;
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");

@@ -9,6 +9,10 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import ShoppingCart from "../components/ModalShoppingCart";
 import { getUserFromCookie } from "../helper/useCookie";
 import { getCookie } from "../helper/CookiesRequest";
+import { IDetailProductCart } from "../types/product.type";
+import axios from "axios";
+import API from "../api";
+import { toast } from "react-toastify";
 
 type ShoppingCartProviderProps = {
   children: ReactNode;
@@ -38,10 +42,17 @@ type ShoppingCartContext = {
   removeFromCart: (id: number) => void;
   addMultipleToCart: (id: number, quantityToAdd: number) => void;
   cartQuantity: number;
+  cartQuantityUser: number;
   cartItems: CartItem[];
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
   userPrf: User | null;
+  // getListDetailCart: () => void;
+  listProducts: IDetailProductCart[];
+  reduceShoe: (id: number, quantity: number) => void;
+  addShoe: (id: number, quantity: number) => void;
+  removeFromCartUser: (id: number) => void;
+  getProductQuantityById: (id: number) => number;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -52,21 +63,117 @@ export function useShoppingCart() {
 export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const [listProducts, setListProducts] = useState<IDetailProductCart[]>([]);
   const [cartItems, setCartItems] = useLocalStorage<CartItem[]>(
     "shopping-cart",
     []
   );
   const token = getCookie("customerToken");
   const [userPrf, setUserPrf] = useState<User | null>(null);
+  const getListDetailCart = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getListDetailCart(Number(userPrf?.id)),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status) {
+        setListProducts(res?.data || []);
+        console.log("đã chạy lại rồi ");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const reduceShoe = async (idShoeDetail: number, quantity: number) => {
+    try {
+      const res = await axios({
+        method: "put",
+        url: API.updateAmountShoe(),
+        data: {
+          quantity: quantity - 1,
+          id: idShoeDetail,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status) {
+        // setQuantity((prevQuantity) => prevQuantity - 1);
+        toast("giảm");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      getListDetailCart();
+    }
+  };
+  const addShoe = async (idShoeDetail: number, quantity: number) => {
+    try {
+      const res = await axios({
+        method: "put",
+        url: API.updateAmountShoe(),
+        data: {
+          quantity: quantity + 1,
+          id: idShoeDetail,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status) {
+        toast("tăng");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      getListDetailCart();
+    }
+  };
+  const removeFromCartUser = async (idDetailCart: number) => {
+    try {
+      const res = await axios({
+        method: "delete",
+        url: API.removeFromCart(idDetailCart),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status) {
+      }
+    } catch (error) {
+    } finally {
+      getListDetailCart();
+    }
+  };
+  const getProductQuantityById = (productId: number) => {
+    console.log("đã thay đổi số lượng");
+    const product = listProducts.find(
+      (product) => product?.idProductDetail === productId
+    );
+    return product ? product?.quantity : 0;
+  };
+  const cartQuantityUser = listProducts.reduce(
+    (quantity, item) => item.quantity + quantity,
+    0
+  );
+
   useEffect(() => {
-    console.log(token);
     const userFromCookie = getUserFromCookie();
-    console.log("userFromCookie", userFromCookie);
-    if (userFromCookie) {
+    if (
+      userFromCookie &&
+      JSON.stringify(userFromCookie) !== JSON.stringify(userPrf)
+    ) {
       setUserPrf(userFromCookie);
     }
-  }, [token]);
+  }, [userPrf, setUserPrf]);
+  useEffect(() => {
+    if (!!userPrf?.id && !!token) {
+      getListDetailCart();
+    }
+  }, [userPrf?.id, token]);
   const cartQuantity = cartItems.reduce(
     (quantity, item) => item.quantity + quantity,
     0
@@ -75,6 +182,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
 
+  //  Khách vãng lãi
   // Lấy số lượng sản phẩm
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id === id)?.quantity || 0;
@@ -111,7 +219,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       }
     });
   }
-
   function clearCart() {
     setCartItems([]);
   }
@@ -140,7 +247,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       return updatedItems;
     });
   }
-
+  console.log("listProducts.length", listProducts.length);
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -153,10 +260,17 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         closeCart,
         cartItems,
         cartQuantity,
+        cartQuantityUser,
         clearCart,
         loading,
         setLoading,
         userPrf,
+        listProducts,
+        // getListDetailCart,
+        reduceShoe,
+        addShoe,
+        removeFromCartUser,
+        getProductQuantityById,
       }}
     >
       {children}

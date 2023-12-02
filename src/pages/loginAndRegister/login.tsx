@@ -136,6 +136,8 @@ const LoginScreen = () => {
         // Trường hợp khác, hiển thị một thông báo mặc định
         toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
       }
+    } finally {
+      window.location.reload();
     }
   };
   const register = async () => {

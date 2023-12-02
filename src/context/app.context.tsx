@@ -13,7 +13,6 @@ const DataContext = createContext<DataContextValue | undefined>(undefined);
 
 export const DataProvider: React.FC<DataContextProps> = ({ children }) => {
   const [sharedData, setSharedData] = useState<boolean>(false);
-  console.log("sharedData", sharedData);
 
   return (
     <DataContext.Provider value={{ sharedData, setSharedData }}>

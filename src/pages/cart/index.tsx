@@ -404,8 +404,8 @@ const CartPage = () => {
                 0
               )}
             </div>
-            {total === 0 ||
-            cartItems.length === 0 ||
+            {total === 0 &&
+            cartItems.length === 0 &&
             listProducts?.length === 0 ? (
               <button
                 className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"

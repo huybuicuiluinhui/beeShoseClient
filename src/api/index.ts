@@ -66,7 +66,8 @@ const API = {
   ) =>
     baseUrl +
     `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${20}`,
-  getSearchBill: (code: string) => baseUrl + `api/bill?code=${code}`,
+  getSearchBill: (code: string) =>
+    baseUrl + `api/bill/find-by-code?code=${code}`,
 
   // lấy thông tin người dùng
   getInfoUser: (idUser: number) => baseUrl + `api/customer/${idUser}`,
