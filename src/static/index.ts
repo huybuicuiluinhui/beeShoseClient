@@ -60,6 +60,7 @@ import imgTrack from "./imgTrack.png";
 import iconPlus from "./icons/iconPlus.png";
 import isEmtyCart from "./icons/isEmtyCart.png";
 import iconVoucher from "./icons/iconVoucher.png";
+import iconLogoWeb from "./icons/iconLogoWeb.png";
 
 const Images = {
   banner01,
@@ -123,6 +124,7 @@ const Images = {
   iconPlus,
   imgTrack,
   iconVoucher,
+  iconLogoWeb,
   isEmtyCart,
 };
 export default Images;

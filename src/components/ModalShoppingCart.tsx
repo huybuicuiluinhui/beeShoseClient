@@ -110,11 +110,7 @@ const ItemInCart2 = ({
     getProductQuantityById,
   } = useShoppingCart();
   const [quantity, setQuantity] = useState<number>(item?.quantity);
-  console.log(
-    "số lượng sản phẩm của id ",
-    getProductQuantityById(item.idProductDetail),
-    item.id
-  );
+
   // const reduceShoe = async (idShoeDetail: number) => {
   //   try {
   //     const res = await axios({
@@ -317,13 +313,21 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
               >
                 Xem giỏ hàng
               </button>
-              <button
-                className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
-                onClick={() => [navigate(path.cart), closeCart()]}
-              >
-                Thanh toán (
-                {!!listProducts ? listProducts.length : cartItems.length})
-              </button>
+              {!!listProducts ? (
+                <button
+                  className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
+                  onClick={() => [navigate(path.payMentWithUser), closeCart()]}
+                >
+                  Thanh toán ({listProducts.length})
+                </button>
+              ) : (
+                <button
+                  className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
+                  onClick={() => [navigate(path.payment), closeCart()]}
+                >
+                  Thanh toán ({cartItems.length})
+                </button>
+              )}
             </div>
           </div>
         </div>

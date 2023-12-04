@@ -28,6 +28,7 @@ const PayMentWithUser = () => {
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
+  const [specificAddress, setSpecificAddress] = useState<string>();
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [method, setMethod] = useState<number>(0);
@@ -60,8 +61,9 @@ const PayMentWithUser = () => {
         "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
         configApi
       );
-      setProvinces(response?.data?.data);
-      setSelectedProvince(response?.data?.data[0]?.ProvinceID);
+      if (response.status) {
+        setProvinces(response?.data?.data);
+      }
     } catch (error) {
       console.error("Lỗi:", error);
     }
@@ -72,10 +74,25 @@ const PayMentWithUser = () => {
         `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
         configApi
       );
-      setDistricts(response?.data?.data);
-      setSelectedDistrict(response?.data?.data[0]?.DistrictID);
+      if (response.status) {
+        setDistricts(response?.data?.data);
+      }
     } catch (error) {
       console.error("Error fetching districts:", error);
+    }
+  };
+  const fetchWardsByDistrict = async (districtId: number) => {
+    try {
+      const response = await axios.get(
+        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
+        configApi
+      );
+      if (response.status) {
+        setWards(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching wards:", error);
+    } finally {
     }
   };
   function generateUUID() {
@@ -103,18 +120,7 @@ const PayMentWithUser = () => {
       }
     );
   }
-  const fetchWardsByDistrict = async (districtId: number) => {
-    try {
-      const response = await axios.get(
-        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
-        configApi
-      );
-      setWards(response.data.data);
-      setSelectedWard(response?.data?.data[0]?.WardCode);
-    } catch (error) {
-      console.error("Error fetching wards:", error);
-    }
-  };
+
   const caculateFee = async () => {
     if (!!dataAddress && dataAddress.length > 0) {
       try {
@@ -202,6 +208,9 @@ const PayMentWithUser = () => {
   useEffect(() => {
     caculateFee();
   }, [dataAddress]);
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
   const loadAddress = async () => {
     try {
       const res = await axios({
@@ -216,26 +225,31 @@ const PayMentWithUser = () => {
     }
   };
   useEffect(() => {
-    fetchProvinces();
-  }, []);
+    if (dataAddress && dataAddress.length > 0) {
+      setSelectedProvince(Number(dataAddress[0]?.province));
+      setSelectedDistrict(Number(dataAddress[0]?.district));
+      setSelectedWard(Number(dataAddress[0]?.ward));
+      setSpecificAddress(dataAddress[0]?.specificAddress);
+    }
+  }, [dataAddress]);
   useEffect(() => {
     if (selectedProvince) {
       fetchDistrictsByProvince(selectedProvince);
     }
   }, [selectedProvince]);
-
   useEffect(() => {
     if (selectedDistrict) {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
   useEffect(() => {
-    loadAddress();
+    if (userPrf?.id) {
+      getListDetailCart();
+      loadAddress();
+    }
   }, [userPrf?.id]);
-  useEffect(() => {
-    getListDetailCart();
-  }, [userPrf]);
   const provinceName = (mang: Province[], idCanTim: number) => {
+    console.log(mang, idCanTim);
     const doiTuongCanTim = mang.find((item) => item.ProvinceID === idCanTim);
     return doiTuongCanTim?.ProvinceName;
   };
@@ -279,6 +293,7 @@ const PayMentWithUser = () => {
                   {dataAddress[0].name}
                 </span>
                 <span className="text-sm font-normal text-black ">
+                  {specificAddress},
                   {wardName(wards, Number(dataAddress[0]?.ward))},
                   {districtName(districts, Number(dataAddress[0]?.district))},
                   {provinceName(provinces, Number(dataAddress[0]?.province))}

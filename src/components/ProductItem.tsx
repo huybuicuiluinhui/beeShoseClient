@@ -22,8 +22,13 @@ const ProductItem = ({
   shoeId: number;
 }) => {
   const navigate = useNavigate();
-  const { getItemQuantity, openCart, addMultipleToCart, userPrf } =
-    useShoppingCart();
+  const {
+    getItemQuantity,
+    openCart,
+    addMultipleToCart,
+    userPrf,
+    addToCartUser,
+  } = useShoppingCart();
   const token = getTokenCustomer();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
@@ -40,10 +45,8 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
 
+  console.log("idProductDetail", product);
   const addToCart = async () => {
-    // console.log("amount", amount);
-    // console.log(" idAddToCart", idAddToCart);
-    // console.log("userPrf", userPrf);
     try {
       const res = await axios({
         method: "post",
@@ -344,7 +347,7 @@ const ProductItem = ({
                 `}
                 onClick={() => {
                   if (!!userPrf) {
-                    addToCart();
+                    addToCartUser(idAddToCart, amount);
                   } else {
                     if (
                       !!idAddToCart &&

@@ -320,14 +320,20 @@ const Header = () => {
                 >
                   <div className=" flex justify-center items-center my-auto ">
                     <div className=" relative">
-                      {!!cartQuantity && cartQuantity > 0 && (
+                      {!!cartQuantity && cartQuantity > 0 ? (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
-                            {!!userPrf && listProducts
-                              ? listProducts.length
-                              : cartItems.length}
+                            {cartItems.length}
                           </p>
                         </div>
+                      ) : !!userPrf && listProducts.length > 0 ? (
+                        <div className=" absolute left-3 -top-[30%]">
+                          <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
+                            {listProducts.length}
+                          </p>
+                        </div>
+                      ) : (
+                        ""
                       )}
                       <svg
                         fill="none"

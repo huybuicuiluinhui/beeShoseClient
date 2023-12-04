@@ -17,8 +17,14 @@ const QuickViewDetail = ({
   setShowQuickView: any;
 }) => {
   const navigate = useNavigate();
-  const { getItemQuantity, openCart, addMultipleToCart, closeCart } =
-    useShoppingCart();
+  const {
+    getItemQuantity,
+    openCart,
+    addMultipleToCart,
+    closeCart,
+    userPrf,
+    addToCartUser,
+  } = useShoppingCart();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
   const [dataDetailProduct, setDataDetailProduct] =
@@ -46,7 +52,7 @@ const QuickViewDetail = ({
     autoplaySpeed: 2000,
   };
   const handleCloseClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation(); // Ngăn chặn sự kiện lan truyền
+    event.stopPropagation();
     setShowQuickView(false);
   };
   const getInfoDetailProduct = async () => {
@@ -204,7 +210,7 @@ const QuickViewDetail = ({
         );
       }
 
-      return arr.flat(); // hoặc arr.flatMap(e => e);
+      return arr.flat();
     }
     return [];
   }, [dataDetailProduct]);
@@ -397,25 +403,31 @@ const QuickViewDetail = ({
                 ${!!price ? "bg-[#0161e7]" : "bg-[#5ae0d7]"}
                 `}
               onClick={() => {
-                setShowQuickView(false);
-                if (
-                  !!idAddToCart &&
-                  !!price &&
-                  amountShoe >= amountItemInCart + amount &&
-                  amountItemInCart <= 10
-                ) {
-                  addMultipleToCart(idAddToCart, amount);
+                if (userPrf) {
+                  addToCartUser(idAddToCart, amount);
+                  setShowQuickView(false);
                   openCart();
-                  setAmount(1);
-                  toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
-                } else if (
-                  (!!price && amount < amountShoe - amountItemInCart) ||
-                  amount >= 10
-                ) {
-                  toast("Sản phẩm đã tối đa trong giỏ hàng");
-                  return;
                 } else {
-                  toast("Bạn cần chọn sản phẩm khác");
+                  if (
+                    !!idAddToCart &&
+                    !!price &&
+                    amountShoe >= amountItemInCart + amount &&
+                    amountItemInCart <= 10
+                  ) {
+                    setShowQuickView(false);
+                    addMultipleToCart(idAddToCart, amount);
+                    openCart();
+                    setAmount(1);
+                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                  } else if (
+                    (!!price && amount < amountShoe - amountItemInCart) ||
+                    amount >= 10
+                  ) {
+                    toast("Sản phẩm đã tối đa trong giỏ hàng");
+                    return;
+                  } else {
+                    toast("Bạn cần chọn sản phẩm khác");
+                  }
                 }
               }}
             >

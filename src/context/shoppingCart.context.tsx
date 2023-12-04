@@ -47,7 +47,7 @@ type ShoppingCartContext = {
   loading: boolean;
   setLoading: (isLoading: boolean) => void;
   userPrf: User | null;
-  // getListDetailCart: () => void;
+  addToCartUser: (idDetailShoe: number, quantity: number) => void;
   listProducts: IDetailProductCart[];
   reduceShoe: (id: number, quantity: number) => void;
   addShoe: (id: number, quantity: number) => void;
@@ -130,6 +130,31 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       console.log(error);
     } finally {
       getListDetailCart();
+    }
+  };
+  const addToCartUser = async (idDetailShoe: number, quantity: number) => {
+    if (userPrf) {
+      try {
+        const res = await axios({
+          method: "post",
+          url: API.addToCart(),
+          data: {
+            id: userPrf.id,
+            quantity: quantity,
+            shoeDetail: idDetailShoe,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.status) {
+          toast("đã thêm thành công");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        getListDetailCart();
+      }
     }
   };
   const removeFromCartUser = async (idDetailCart: number) => {
@@ -266,7 +291,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         setLoading,
         userPrf,
         listProducts,
-        // getListDetailCart,
+        addToCartUser,
         reduceShoe,
         addShoe,
         removeFromCartUser,

@@ -124,7 +124,7 @@ const ItemAdr = ({
       });
       if (res.data) {
         toast.success("Đã sửa thành công");
-        // loadAddress();
+        setCheck(!check);
       }
     } catch (error) {
       console.log(error);
@@ -183,7 +183,7 @@ const ItemAdr = ({
           <span
             className="text-[#000000de] text-xs"
             onClick={() => {
-              // updateStatus(item);
+              updateStatus(item);
             }}
           >
             Thiết lập mặc định
@@ -191,18 +191,9 @@ const ItemAdr = ({
         </button>
       </div>
       <UpdateAdr
-        // selectedProvince={item?.province}
-        // selectedDistrict={item?.district}
-        // selectedWard={item.ward}
-        // setSelectedProvince={setSelectedProvince}
-        // setSelectedDistrict={setSelectedDistrict}
-        // setSelectedWard={setSelectedWard}
         item={itemRef.current}
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}
-        // provinces={provinces}
-        // districts={districts}
-        // wards={wards}
       />
     </div>
   );
