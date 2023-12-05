@@ -61,6 +61,7 @@ import iconPlus from "./icons/iconPlus.png";
 import isEmtyCart from "./icons/isEmtyCart.png";
 import iconVoucher from "./icons/iconVoucher.png";
 import iconLogoWeb from "./icons/iconLogoWeb.png";
+import iconBeeShoe from "./icons/iconBeeShoe.png";
 
 const Images = {
   banner01,
@@ -126,5 +127,6 @@ const Images = {
   iconVoucher,
   iconLogoWeb,
   isEmtyCart,
+  iconBeeShoe,
 };
 export default Images;

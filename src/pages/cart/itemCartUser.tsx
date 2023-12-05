@@ -129,12 +129,20 @@ const ItemCartUser = ({
         </svg>
       </div>
       <div className="w-1/5">
-        <p className="text-center  font-semibold text-sm">
-          {convertToCurrencyString(item?.discountValue)}
-        </p>
-        <p className="text-center  font-semibold text-xs  line-through">
-          {convertToCurrencyString(item.price)}
-        </p>
+        {!!item.discountPercent && item.discountValue ? (
+          <>
+            <p className="text-center  font-semibold text-sm text-red-500">
+              {convertToCurrencyString(item?.discountValue)}
+            </p>
+            <p className="text-center  font-semibold text-xs  line-through">
+              {convertToCurrencyString(item.price)}
+            </p>
+          </>
+        ) : (
+          <p className="text-center  font-semibold text-xs  line-through">
+            {convertToCurrencyString(item.price)}
+          </p>
+        )}
       </div>
       {!!item?.discountPercent && !!item.discountValue ? (
         <span className="text-center w-1/5 font-semibold text-sm ">

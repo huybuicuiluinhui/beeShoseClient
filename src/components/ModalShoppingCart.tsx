@@ -172,9 +172,21 @@ const ItemInCart2 = ({
       <img src={item.image} className="w-[90px] h-[90px] object-contain" />
       <div className="w-[70%] flex flex-col gap-2">
         <p className="text-xs font-medium line-clamp-2 ">{item.name}</p>
-        <p className=" text-sm">
-          {convertToCurrencyString(item.discountValue)}
-        </p>
+        {!!item.discountPercent && item.discountValue ? (
+          <div className="flex items-center gap-2">
+            <p className="  font-semibold text-sm text-red-500">
+              {convertToCurrencyString(item?.discountValue)}
+            </p>
+            <p className="  font-semibold text-xs  line-through">
+              {convertToCurrencyString(item.price)}
+            </p>
+          </div>
+        ) : (
+          <p className="  font-semibold text-xs  line-through">
+            {convertToCurrencyString(item.price)}
+          </p>
+        )}
+
         <div className="flex justify-between">
           <div className="flex ">
             <div

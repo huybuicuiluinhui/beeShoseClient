@@ -84,6 +84,7 @@ const API = {
   getListDetailCart: (id: number) => baseUrl + `api/cart/${id}`,
   updateAmountShoe: () => baseUrl + `api/cart`,
   removeFromCart: (id: number) => baseUrl + `api/cart/${id}`,
+  removeAll: (id: number) => baseUrl + `api/delete-all/${id}`,
 };
 
 export default API;

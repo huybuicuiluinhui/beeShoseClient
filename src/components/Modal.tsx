@@ -21,13 +21,33 @@ const ModalComponent = ({
       id="wrapper"
       onClick={handleClose}
     >
-      <div className={`${check ? "w-[25%]" : "w-[600px]"} flex flex-col`}>
+      <div
+        className={`${check ? "w-[25%]" : "w-[600px]"} flex flex-col relative`}
+      >
         <button
+          onClick={onClose}
+          className="absolute top-0 right-0 mt-4 mr-4 text-gray-700 hover:text-gray-900"
+        >
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        {/* <button
           className="text-white text-xl place-self-end"
           onClick={() => onClose()}
         >
           X
-        </button>
+        </button> */}
         <div className="bg-white p-2 rounded-xl">{children}</div>
       </div>
     </div>

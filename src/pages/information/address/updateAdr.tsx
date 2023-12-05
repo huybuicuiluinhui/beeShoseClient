@@ -14,28 +14,10 @@ const UpdateAdr = ({
   item,
   isOpen,
   onClose,
-}: // selectedProvince,
-// selectedDistrict,
-// selectedWard,
-// setSelectedDistrict,
-// setSelectedProvince,
-// setSelectedWard,
-// provinces,
-// districts,
-// wards,
-{
+}: {
   item: IAddress | null;
   isOpen: boolean;
   onClose: any;
-  // provinces: Province[];
-  // selectedProvince: any;
-  // selectedDistrict: any;
-  // selectedWard: any;
-  // districts: District[];
-  // setSelectedDistrict: any;
-  // setSelectedWard: any;
-  // setSelectedProvince: any;
-  // wards: Ward[];
 }) => {
   const [checkDefault, setCheckDefault] = useState<boolean>();
   const [user, setUser] = useState<string>("");
@@ -47,9 +29,6 @@ const UpdateAdr = ({
   const [districts, setDistricts] = useState<District[]>([]);
   const [idWard, setIdWard] = useState<string>();
   const [wards, setWards] = useState<Ward[]>([]);
-  console.log("idProvince", idProvince);
-  console.log("idDistrict", idDistrict);
-  console.log("idWard", idWard);
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(

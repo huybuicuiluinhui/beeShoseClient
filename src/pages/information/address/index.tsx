@@ -11,8 +11,6 @@ import {
   Ward,
 } from "../../../types/product.type";
 import AddAddressModal from "./modalAddAdr";
-import { toast } from "react-toastify";
-import UpdateAdr from "./updateAdr";
 import { useShoppingCart } from "../../../context/shoppingCart.context";
 import ItemAdr from "./itemAdr";
 import { configApi } from "../../../utils/config";

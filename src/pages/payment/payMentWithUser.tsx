@@ -18,9 +18,11 @@ import { toast } from "react-toastify";
 import path from "../../constants/path";
 import ModalComponent from "../../components/Modal";
 import { configApi } from "../../utils/config";
+import ChangeAdr from "./changeAdr";
+import ShowVoucher from "./showVoucher";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
-  const { userPrf } = useShoppingCart();
+  const { userPrf, removeAllCart } = useShoppingCart();
   const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
   const [dataAddress, setDataAddress] = useState<IAddress[]>();
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -29,12 +31,16 @@ const PayMentWithUser = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
   const [specificAddress, setSpecificAddress] = useState<string>();
-  const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [method, setMethod] = useState<number>(0);
   const [feeShip, setFeeShip] = useState();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [indexArr, setIndexArr] = useState<number>(0);
   const [carts, setCarts] = useState({ quantity: null, id: null });
+  const [isModalOpen, setModalOpen] = useState(false);
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
   const getListDetailCart = async () => {
     try {
       const res = await axios({
@@ -96,23 +102,20 @@ const PayMentWithUser = () => {
     }
   };
   function generateUUID() {
-    // Public Domain/MIT
-    var d = new Date().getTime(); //Timestamp
+    var d = new Date().getTime();
     var d2 =
       (typeof performance !== "undefined" &&
         performance.now &&
         performance.now() * 1000) ||
-      0; //Time in microseconds since page-load or 0 if unsupported
+      0;
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
       /[xy]/g,
       function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
+        var r = Math.random() * 16;
         if (d > 0) {
-          //Use timestamp until depleted
           r = (d + r) % 16 | 0;
           d = Math.floor(d / 16);
         } else {
-          //Use microseconds since page-load if supported
           r = (d2 + r) % 16 | 0;
           d2 = Math.floor(d2 / 16);
         }
@@ -182,6 +185,7 @@ const PayMentWithUser = () => {
           );
           if (response.status) {
             toast.success("Đặt hàng thành công");
+            removeAllCart();
             navigate(path.home);
             // clearCart();
           }
@@ -205,12 +209,7 @@ const PayMentWithUser = () => {
       }
     }
   };
-  useEffect(() => {
-    caculateFee();
-  }, [dataAddress]);
-  useEffect(() => {
-    fetchProvinces();
-  }, []);
+
   const loadAddress = async () => {
     try {
       const res = await axios({
@@ -224,6 +223,12 @@ const PayMentWithUser = () => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    caculateFee();
+  }, [dataAddress]);
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
   useEffect(() => {
     if (dataAddress && dataAddress.length > 0) {
       setSelectedProvince(Number(dataAddress[0]?.province));
@@ -280,7 +285,11 @@ const PayMentWithUser = () => {
                 );
               })}
           </div>
-          {!!dataAddress && dataAddress.length > 0 ? (
+          {!!dataAddress &&
+          dataAddress.length > 0 &&
+          selectedWard &&
+          selectedDistrict &&
+          selectedProvince ? (
             <div className="w-full m-4">
               <div className="flex items-end">
                 <img src={Images.iconAddressRed} alt="" className="w-[20px]" />
@@ -293,14 +302,13 @@ const PayMentWithUser = () => {
                   {dataAddress[0].name}
                 </span>
                 <span className="text-sm font-normal text-black ">
-                  {specificAddress},
-                  {wardName(wards, Number(dataAddress[0]?.ward))},
-                  {districtName(districts, Number(dataAddress[0]?.district))},
-                  {provinceName(provinces, Number(dataAddress[0]?.province))}
+                  {specificAddress},{wardName(wards, selectedWard)},
+                  {districtName(districts, selectedDistrict)},
+                  {provinceName(provinces, selectedProvince)}
                 </span>
-                <button className="border-red-500 px-1 text-xs  border-[1px] text-red-500 ">
+                <div className="border-red-500 px-1 text-xs  border-[1px] text-red-500 ">
                   Mặc định
-                </button>
+                </div>
                 <button
                   className=" px-1 text-blue-500 text-xs"
                   onClick={() => {
@@ -323,9 +331,9 @@ const PayMentWithUser = () => {
                   <th scope="col" className="px-6 py-3">
                     Sản phẩm
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  {/* <th scope="col" className="px-6 py-3">
                     Size
-                  </th>
+                  </th> */}
                   <th scope="col" className="px-6 py-3">
                     Số lượng
                   </th>
@@ -366,7 +374,7 @@ const PayMentWithUser = () => {
                             </span>
                           </div>
                         </th>
-                        <td className="px-6 py-4">đây là size</td>
+                        {/* <td className="px-6 py-4">đây là size</td> */}
                         <td className="px-6 py-4">{item.quantity}</td>
                         <td className="px-6 py-4">
                           {!!item.discountValue
@@ -403,7 +411,10 @@ const PayMentWithUser = () => {
               Kho voucher
             </span>
           </div>
-          <button className="text-sm font-medium text-red-500">
+          <button
+            className="text-sm font-medium text-red-500"
+            onClick={toggleModal}
+          >
             Chọn voucher
           </button>
         </div>
@@ -490,53 +501,19 @@ const PayMentWithUser = () => {
           }}
         >
           <div className="bg-white ">
-            <div className="border-b-[1px] border-b-gray-400 border-dashed w-full p-2">
+            <div className="border-b-[1px] border-b-gray-400 border-solid w-full p-2">
               <span>Địa Chỉ Của Tôi</span>
             </div>
             {!!dataAddress &&
               dataAddress.length > 0 &&
               dataAddress.map((item, index) => {
                 return (
-                  <div
-                    className={`flex items-center  py-5 px-5
-                      border-b-[1px] border-dashed border-gray-500
-                 `}
-                  >
-                    <input
-                      id={`default-radio-${index}`}
-                      type="radio"
-                      name="default-radio"
-                      className="w-4 h-4 text-gray-500 bg-gray-100   "
-                    />
-                    <div className="flex w-full justify-between ml-2">
-                      <div className="flex flex-col w-full  ">
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center">
-                            {" "}
-                            <span className="text-sm font-medium ">
-                              {item.name}
-                            </span>
-                            <div className="border-l-[1px] border-l-gray-400 ml-2 pl-2 text-xs text-gray-500">
-                              {item.phoneNumber}
-                            </div>
-                          </div>
-                          <button className="text-blue-500 text-sm">
-                            Cập nhật
-                          </button>
-                        </div>
-                        <span className="text-gray-500 text-sm ">
-                          {wardName(wards, Number(item?.ward))},
-                          {districtName(districts, Number(item?.district))},
-                          {provinceName(provinces, Number(item?.province))}
-                        </span>
-                        {!!item.defaultAddress && (
-                          <button className="border-red-500 px-1 text-xs  border-[1px] text-red-500 w-fit">
-                            Mặc định
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <ChangeAdr
+                    item={item}
+                    key={index}
+                    setIndexArr={setIndexArr}
+                    indexArr={index}
+                  />
                 );
               })}
             <div className="w-full flex items-center p-4  justify-around">
@@ -548,13 +525,29 @@ const PayMentWithUser = () => {
               >
                 Hủy
               </button>
-              <button className="bg-red-500 border-[1px] py-1 px-2 text-white">
+
+              <button
+                className="bg-red-500 border-[1px] py-1 px-2 text-white"
+                onClick={() => {
+                  if (dataAddress) {
+                    setSelectedDistrict(
+                      Number(dataAddress[indexArr]?.district)
+                    );
+                    setSelectedProvince(
+                      Number(dataAddress[indexArr]?.province)
+                    );
+                    setSelectedWard(Number(dataAddress[indexArr]?.ward));
+                  }
+                  setShowModal(false);
+                }}
+              >
                 Xác nhận
               </button>
             </div>
           </div>
         </ModalComponent>
       )}
+      <ShowVoucher isOpen={isModalOpen} onClose={toggleModal} />
     </div>
   );
 };

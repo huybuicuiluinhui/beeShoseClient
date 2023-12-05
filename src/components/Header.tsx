@@ -24,21 +24,6 @@ const Header = () => {
   const [typeModal, setTypeModal] = useState<number>(1);
   const [searchValue, setSearchValue] = useState<string>();
   const token = getCookie("customerToken");
-  // const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
-  // const getListDetailCart = async () => {
-  //   try {
-  //     const res = await axios({
-  //       method: "get",
-  //       url: API.getListDetailCart(Number(userPrf?.id)),
-
-  //     });
-  //     if (res.status) {
-  //       setListProducts(res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const handleKeyPress = (event: any) => {
     if (event.key === "Enter") {
       const key = event.target.value;
@@ -101,9 +86,6 @@ const Header = () => {
     getDataBrand();
     getCategory();
   }, []);
-  // useEffect(() => {
-  //   getListDetailCart();
-  // }, [userPrf?.id]);
   useEffect(() => {
     const handleScroll = () => {
       setIsHeaderSticky(window.scrollY > 0);
@@ -201,16 +183,16 @@ const Header = () => {
     <div
       className={`${
         isHeaderSticky ? "sticky top-0 bg-white shadow-md" : "relative"
-      } top-0 left-0 w-full z-10`}
+      } top-0 left-0 w-full z-10  `}
     >
       <header>
         <nav className="bg-white  ">
-          <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2 ">
-            <div className="w-[5%]">
+          <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-2">
+            <div className="w-[8%] h-fit">
               <a href="/" className="flex items-center w-fit ">
                 <LazyLoadImage
-                  src={Images.BeeShoes}
-                  className="w-[80px] object-cover h-auto"
+                  src={Images.iconBeeShoe}
+                  className="w-[300px] object-contain h-auto"
                 />
               </a>
             </div>

@@ -9,7 +9,7 @@ import { useShoppingCart } from "../../context/shoppingCart.context";
 export default function Payment() {
   const navigate = useNavigate();
   // eslint-disable-next-line
-  const { cartItems, clearCart } = useShoppingCart();
+  const { removeAllCart } = useShoppingCart();
 
   useEffect(() => {
     let isMounted = true;
@@ -41,8 +41,8 @@ export default function Payment() {
             );
             if (response.status) {
               toast.success("Đặt hàng thành công");
+              removeAllCart();
               navigate(path.home);
-              clearCart();
             }
           } else {
             localStorage.removeItem("checkout");

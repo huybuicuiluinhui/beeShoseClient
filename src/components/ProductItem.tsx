@@ -45,7 +45,6 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
 
-  console.log("idProductDetail", product);
   const addToCart = async () => {
     try {
       const res = await axios({
@@ -426,7 +425,7 @@ const ProductItem = ({
             </span>
           </div>
           <div className="h-8">
-            {!!amountShoe && (
+            {!!amountShoe && !!price && (
               <span className="font-semibold text-sm">
                 Số lượng hàng có sẵn :{" "}
                 <span className="font-normal text-[11px]">{amountShoe}</span>{" "}

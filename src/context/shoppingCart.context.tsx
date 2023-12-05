@@ -53,6 +53,7 @@ type ShoppingCartContext = {
   addShoe: (id: number, quantity: number) => void;
   removeFromCartUser: (id: number) => void;
   getProductQuantityById: (id: number) => number;
+  removeAllCart: () => void;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -173,8 +174,25 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       getListDetailCart();
     }
   };
+  const removeAllCart = async () => {
+    try {
+      const res = await axios({
+        method: "delete",
+        url: API.removeAll(Number(userPrf?.id)),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("trước khi xóa ", res);
+      if (res.status) {
+        console.log("Đã xóa hết rồi", res);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
   const getProductQuantityById = (productId: number) => {
-    console.log("đã thay đổi số lượng");
     const product = listProducts.find(
       (product) => product?.idProductDetail === productId
     );
@@ -296,6 +314,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         addShoe,
         removeFromCartUser,
         getProductQuantityById,
+        removeAllCart,
       }}
     >
       {children}

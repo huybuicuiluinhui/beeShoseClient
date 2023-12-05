@@ -44,7 +44,6 @@ const ListProductsByBrand = () => {
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
   const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
   const [isDropdownOpen5, setIsDropdownOpen5] = useState<boolean>(true);
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [priceRange2, setPriceRange2] = useState([
     {
       id: 1,
@@ -142,9 +141,7 @@ const ListProductsByBrand = () => {
       }
     });
   };
-  const handlePriceChange = (value: any) => {
-    setPriceRange(value);
-  };
+
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -408,68 +405,7 @@ const ListProductsByBrand = () => {
                   </div>
                 </div>
               )}
-              {/* Theo thương hiệu */}
-              {/* <button
-                onClick={handleDropdownToggleBrand}
-                id="dropdownDefault"
-                data-dropdown-toggle="dropdown"
-                className="relative btn4 self-start  bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center flex justify-between items-center border border-white  uppercase  tracking-wider leading-none overflow-hidden w-full "
-                type="button"
-              >
-                <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-medium text-xs">Thương hiệu</p>
 
-                <svg
-                  className="w-4 h-4 ml-2"
-                  aria-hidden="true"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button> */}
-              {/* Dropdown menu */}
-              {/* {isDropdownOpen4 && (
-                <div className="  w-full  rounded-lg p-2 ">
-                  <ul
-                    className="space-y-2 text-sm"
-                    aria-labelledby="dropdownDefault"
-                  >
-                    {!!brands &&
-                      !!brands.length &&
-                      brands.map((brand, index) => {
-                        const isSelected = selectedBrands.some(
-                          (s) => s.brand === brand.name && s.selected
-                        );
-                        return (
-                          <li
-                            key={brand.id}
-                            className="flex items-center cursor-pointer"
-                            onClick={() => handleBrandsSelect(brand)}
-                          >
-                            <input
-                              // onChange={handleChangeBrand}
-                              id={`brand-${brand.id}`}
-                              type="checkbox"
-                              checked={isSelected}
-                              className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-600  focus:ring-0 "
-                            />
-                            <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                              {brand.name}
-                            </label>
-                          </li>
-                        );
-                      })}
-                  </ul>
-                </div>
-              )} */}
-              {/* theo chất liệu */}
               <button
                 onClick={handleDropdownToggleMaterial}
                 id="dropdownDefault"
@@ -615,7 +551,7 @@ const ListProductsByBrand = () => {
                 /<span className=" text-sm font-medium ">{name}</span>
               </div>
               {/* Lọc sản phẩm */}
-              <div>
+              {/* <div>
                 <select
                   value={selectedOption}
                   onChange={handleChangeSelect}
@@ -629,7 +565,7 @@ const ListProductsByBrand = () => {
                   <option value="FR">Giá giảm dần</option>
                   <option value="DE">Bán chạy</option>
                 </select>
-              </div>
+              </div> */}
             </div>
             <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {/* <Fade top distance="10%" duration={1500}> */}

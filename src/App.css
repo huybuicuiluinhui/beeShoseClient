@@ -52,3 +52,6 @@
     top: 0px;
   }
 }
+input[type="radio"]:focus {
+  outline: none !important;
+}

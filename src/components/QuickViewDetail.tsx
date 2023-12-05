@@ -241,7 +241,7 @@ const QuickViewDetail = ({
                     return (
                       <img
                         src={!!item ? item : Images.imgNotFound}
-                        className="h-[170px] w-auto max-w-[170px] "
+                        className="h-auto w-[170px]  "
                         key={index}
                       />
                     );
@@ -265,9 +265,12 @@ const QuickViewDetail = ({
                     {product.brand}
                   </p>
                 </div>
-                <span className="font-normal text-[11px]">
-                  Số lượng còn: {amountShoe}
-                </span>{" "}
+                {!!!!price && (
+                  <span className="font-normal text-[11px]">
+                    Số lượng còn: {amountShoe}
+                  </span>
+                )}
+
                 {!!price && !!priceSale && amountShoe > 0 ? (
                   <>
                     <span className="text-red-500 font-semibold text-sm  ">
@@ -334,7 +337,7 @@ const QuickViewDetail = ({
               <span className="text-sm font-semibold ">Chọn số lượng :</span>
 
               <div className="flex flex-row  w-full ">
-                <div className="w-[15%] border-l-[1px] border-t-[1px] border-b-[1px] border-[#e9e9e9]  flex items-center justify-center">
+                <div className="w-[10%] border-l-[1px] border-t-[1px] border-b-[1px] border-[#e9e9e9]  flex items-center justify-center">
                   <span className=" px-3 rounded-lg w-8">{amount}</span>
                 </div>
                 <div className="flex flex-col">

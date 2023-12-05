@@ -35,10 +35,6 @@ const LookUpOrders = () => {
   const year = timestamp.getFullYear();
   const formattedDate = `${day}-${month}-${year}`;
 
-  useEffect(() => {
-    getInfoDetailProduct();
-  }, [inputHD]);
-
   return (
     <div className="w-full h-full bg-white min-h-screen">
       <div className="relative w-fit h-fit">

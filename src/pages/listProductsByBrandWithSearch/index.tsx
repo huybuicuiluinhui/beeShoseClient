@@ -221,10 +221,9 @@ const ListProductsByBrandWithSearch = () => {
     getShoeWithKeyParams(param?.key);
   }, [param]);
   return (
-    <div className="w-full h-full ">
+    <div className="w-full h-full min-h-screen ">
       <div className="flex w-full relative h-full">
-        {/* Lọc */}
-        {!!listShoes && listShoes.length > 0 ? (
+        {/* {!!listShoes && listShoes.length > 0 ? (
           <aside
             id="logo-sidebar"
             className="sticky  left-0  w-64 h-full transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
@@ -233,7 +232,6 @@ const ListProductsByBrandWithSearch = () => {
             <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
             <div className=" mx-2 my-5 h-fit border-[1px] border-solid border-[#EDEDED]  ">
               <div className="flex flex-col items-center justify-center  w-full ">
-                {/* Theo size */}
                 <button
                   onClick={handleDropdownToggle}
                   className="flex relative btn4 self-start bg-[#EDEDED] text-black font-medium  text-sm  py-2 px-2 text-center justify-between items-center border border-white  uppercase  tracking-wider  overflow-hidden w-full"
@@ -256,7 +254,6 @@ const ListProductsByBrandWithSearch = () => {
                     />
                   </svg>
                 </button>
-                {/* Dropdown menu */}
                 {isDropdownOpen && (
                   <div className="  w-full  rounded-lg mt-1  px-2">
                     <div
@@ -292,7 +289,6 @@ const ListProductsByBrandWithSearch = () => {
                     </div>
                   </div>
                 )}
-                {/* Theo thương hiệu */}
                 <button
                   onClick={handleDropdownToggleBrand}
                   id="dropdownDefault"
@@ -318,7 +314,6 @@ const ListProductsByBrandWithSearch = () => {
                     />
                   </svg>
                 </button>
-                {/* Dropdown menu */}
                 {isDropdownOpen4 && (
                   <div className="  w-full  rounded-lg ">
                     <ul
@@ -356,7 +351,6 @@ const ListProductsByBrandWithSearch = () => {
                     </ul>
                   </div>
                 )}
-                {/* theo màu sắc */}
                 <button
                   onClick={handleDropdownToggleColor}
                   id="dropdownDefault"
@@ -382,7 +376,6 @@ const ListProductsByBrandWithSearch = () => {
                     />
                   </svg>
                 </button>
-                {/* Dropdown menu */}
                 {isDropdownOpen5 && (
                   <div className="  w-full  rounded-lg ">
                     <ul
@@ -420,7 +413,6 @@ const ListProductsByBrandWithSearch = () => {
                     </ul>
                   </div>
                 )}
-                {/* theo chất liệu */}
                 <button
                   onClick={handleDropdownToggleMaterial}
                   id="dropdownDefault"
@@ -446,7 +438,6 @@ const ListProductsByBrandWithSearch = () => {
                     />
                   </svg>
                 </button>
-                {/* Dropdown menu */}
                 {isDropdownOpen3 && (
                   <div className="  w-full  rounded-lg ">
                     <ul
@@ -582,9 +573,8 @@ const ListProductsByBrandWithSearch = () => {
           </aside>
         ) : (
           ""
-        )}
+        )} */}
 
-        {/* danh sách sản phẩm */}
         <div className="w-full mb-10">
           <div className="mx-auto  flex flex-col  my-4 items-center ">
             {!!param ? (
@@ -619,19 +609,6 @@ const ListProductsByBrandWithSearch = () => {
                 )}
               </div>
               {/* Lọc sản phẩm */}
-              <div>
-                <select
-                  value={selectedOption}
-                  onChange={handleChangeSelect}
-                  id="underline_select"
-                  className="block py-1 px-2 w-full text-sm text-gray-500 bg-transparent border-solid border-1 border-gray-200  "
-                >
-                  <option value="US">Sản phẩm mới</option>
-                  <option value="CA">Giá tăng dần</option>
-                  <option value="FR">Giá giảm dần</option>
-                  <option value="DE">Bán chạy</option>
-                </select>
-              </div>
             </div>
             <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
               {/* <Fade top distance="10%" duration={1500}> */}

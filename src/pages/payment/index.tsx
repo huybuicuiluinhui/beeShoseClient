@@ -613,28 +613,7 @@ const PaymentPage = () => {
             >
               Chọn phương thức thanh toán
             </label>
-            {/* <div className="flex">
-              <div className="flex items-center h-5">
-                <input
-                  checked={radioChoose === "option1"}
-                  onChange={handleChange}
-                  value={"option1"}
-                  name="payment"
-                  id="option1"
-                  aria-describedby="helper-radio-text"
-                  type="radio"
-                  className=" peer-checked:border-gray-500   peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
-                />
-              </div>
-              <div className="ml-2 text-sm">
-                <label
-                  htmlFor="option1"
-                  className="font-medium text-gray-900  peer-checked:text-gray-500 "
-                >
-                  Thanh toán ngay
-                </label>
-              </div>
-            </div> */}
+
             <div className="flex">
               <div className="flex items-center h-5">
                 <input
