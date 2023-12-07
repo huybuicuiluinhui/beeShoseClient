@@ -62,10 +62,11 @@ const API = {
     sole: string,
     brand: string,
     category: string,
-    page: number
+    minPrice: number,
+    maxPrice: any
   ) =>
     baseUrl +
-    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&page=${page}&sizePage=${20}`,
+    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
   getSearchBill: (code: string) =>
     baseUrl + `api/bill/find-by-code?code=${code}`,
 

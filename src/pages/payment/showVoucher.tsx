@@ -24,7 +24,7 @@ const ShowVoucher = ({
       className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
       id="my-modal"
     >
-      <div className="relative top-20 mx-auto p-5 border w-11/12 sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 2xl:w-1/5 shadow-lg rounded-md bg-white">
+      <div className="relative top-20 mx-auto p-5 border w-[30%] shadow-lg rounded-md bg-white">
         <button
           onClick={onClose}
           className="absolute top-0 right-0 mt-4 mr-4 text-gray-700 hover:text-gray-900"
@@ -43,11 +43,20 @@ const ShowVoucher = ({
             />
           </svg>
         </button>
-        <div className="text-center">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Chọn Shopee Voucher
-          </h3>
-          {/* Modal content goes here... */}
+        <div className="">
+          <span className="text-lg leading-6 font-medium text-gray-900">
+            Chọn BeeShoes Voucher
+          </span>
+          <div className="bg-[#f8f8f8] px-3 py-2 flex items-center justify-between">
+            <p className="text-[#0000008a] text-xs font-light">Mã voucher</p>
+            <input
+              type="text"
+              className="flex-1 mx-2 border-[#00000024] border-[1px] rounded-[2px] text-sm"
+            />
+            <button className="bg-white text-[#0000008a] px-3 py-[5px]">
+              Áp dụng
+            </button>
+          </div>
           <div className="mt-2 px-7 py-3">
             {/* Content based on the provided image */}
             <p className="text-sm text-gray-500">

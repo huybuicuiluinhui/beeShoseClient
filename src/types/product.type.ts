@@ -197,3 +197,21 @@ export interface IBill {
   receiveDate: any;
   createAt: Date;
 }
+export interface IInfoAccount {
+  addresses: any;
+  authorities: any;
+  avatar: string;
+  birthday: string;
+  cccd: string;
+  email: string;
+  gender: string;
+  id: number;
+  name: string;
+  password: string;
+  phoneNumber: string;
+  role: {
+    id: number;
+    name: string;
+  };
+  username: string;
+}

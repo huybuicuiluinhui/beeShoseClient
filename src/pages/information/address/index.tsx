@@ -14,10 +14,12 @@ import AddAddressModal from "./modalAddAdr";
 import { useShoppingCart } from "../../../context/shoppingCart.context";
 import ItemAdr from "./itemAdr";
 import { configApi } from "../../../utils/config";
+import { toast } from "react-toastify";
 
 const Address = () => {
   const { userPrf } = useShoppingCart();
   const [check, setCheck] = useState<boolean>(false);
+  const [checkUp, setCheckUp] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [dataAddress, setDataAddress] = useState<IAddress[]>();
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -25,7 +27,6 @@ const Address = () => {
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [wards, setWards] = useState<Ward[]>([]);
-  // const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const [selectedWard, setSelectedWard] = useState<number>();
   const fetchProvinces = async () => {
     try {
@@ -63,6 +64,28 @@ const Address = () => {
       console.error("Error fetching wards:", error);
     }
   };
+  const updateStatus = async (item: IAddress) => {
+    try {
+      const res = await axios({
+        method: "put",
+        url: API.putAdr(item.id),
+        data: {
+          name: item.name,
+          phoneNumber: item.phoneNumber,
+          specificAddress: item.specificAddress,
+          ward: item.ward,
+          district: item.district,
+          province: item.province,
+          defaultAddress: true,
+        },
+      });
+      if (res.data) {
+        toast.success("Đã sửa thành công");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const loadAddress = async () => {
     try {
       const res = await axios({
@@ -76,12 +99,16 @@ const Address = () => {
       console.log(error);
     }
   };
-
   useEffect(() => {
-    if (userPrf) {
-      loadAddress();
+    if (dataAddress?.length === 1 && dataAddress[0].defaultAddress !== true) {
+      updateStatus(dataAddress[0]);
     }
-  }, [userPrf?.id, isModalOpen, check]);
+  }, [dataAddress]);
+  useEffect(() => {
+    // if (userPrf) {
+    loadAddress();
+    // }
+  }, [userPrf?.id, isModalOpen, check, checkUp]);
 
   useEffect(() => {
     fetchProvinces();
@@ -125,7 +152,9 @@ const Address = () => {
                 item={item}
                 key={index}
                 check={check}
+                checkUp={checkUp}
                 setCheck={setCheck}
+                setCheckUp={setCheckUp}
               />
             );
           })

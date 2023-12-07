@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import path from "../../constants/path";
 import "rc-slider/assets/index.css"; // Import CSS cho slider
@@ -30,8 +36,16 @@ interface ShoseColor {
   color: string;
   selected: boolean;
 }
+interface PriceRange {
+  id: number;
+  minPrice: number;
+  maxPrice: any;
+  priceRange: string;
+}
+
 const ListProductsByBrand = () => {
   const params = useParams();
+  console.log("params,params", params);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
   const [pageColor, setPageColor] = useState<number>(1);
@@ -47,27 +61,39 @@ const ListProductsByBrand = () => {
   const [priceRange2, setPriceRange2] = useState([
     {
       id: 1,
+      minPrice: 0,
+      maxPrice: 1000000,
       priceRange: "0₫ - 1.000.000₫",
     },
     {
       id: 2,
+      minPrice: 1000000,
+      maxPrice: 3000000,
       priceRange: "1.000.000₫ - 3.000.000₫",
     },
     {
       id: 3,
+      minPrice: 3000000,
+      maxPrice: 5000000,
       priceRange: "3.000.000₫ - 5.000.000₫",
     },
     {
       id: 4,
+      minPrice: 5000000,
+      maxPrice: 7000000,
       priceRange: "5.000.000₫ - 7.000.000₫",
     },
     {
       id: 5,
+      minPrice: 7000000,
+      maxPrice: 10000000,
       priceRange: "7.000.000₫ - 10.000.000₫",
     },
     {
       id: 6,
-      priceRange: "10.000.000₫ - 40.000.000₫",
+      minPrice: 10000000,
+      maxPrice: "",
+      priceRange: "lớn hơn 10.000.000₫ ",
     },
   ]);
   const [selectedSizes, setSelectedSizes] = useState<ShoeSize[]>([]);
@@ -75,6 +101,14 @@ const ListProductsByBrand = () => {
   const [selectedMaterials, setSelectedMaterials] = useState<ShoeMaterial[]>(
     []
   );
+
+  const [selectedPriceRange, setSelectedPriceRange] = useState<PriceRange>({
+    id: 0,
+    minPrice: 0,
+    maxPrice: "",
+    priceRange: "",
+  });
+
   const [selectedBrands, setSelectedBrands] = useState<ShoseBrand[]>([]);
   const [shoeSizes, setShoesSize] = useState<Product[]>();
   const [colors, setColors] = useState<Product[]>();
@@ -141,6 +175,16 @@ const ListProductsByBrand = () => {
       }
     });
   };
+  const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedId = parseInt(event.target.value);
+    const selectedRange = priceRange2.find((item) => item.id === selectedId);
+
+    if (selectedRange) {
+      setSelectedPriceRange({
+        ...selectedRange,
+      });
+    }
+  };
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -187,12 +231,6 @@ const ListProductsByBrand = () => {
       setShoesSize(res?.data?.data);
     }
   };
-  const getDataSizePage = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getSize(pageSize),
-    });
-  };
   const getDataColor = async () => {
     const res = await axios({
       method: "get",
@@ -228,9 +266,9 @@ const ListProductsByBrand = () => {
     const myBrand = selectedBrands.map((i) => i.id);
     const myMaterials = selectedMaterials.map((i) => i.id);
     const idMaterials = myMaterials.join(",");
-    if (!!params.idBrand) {
+    if (!!params?.idBrand) {
       setIdBrands(params?.idBrand);
-    } else if (!!params.idCategory) {
+    } else if (!!params?.idCategory) {
       setIDCategories(params?.idCategory);
     } else if (!!selectedBrands && selectedBrands.length > 0) {
       setIdBrands(myBrand.join(","));
@@ -244,9 +282,12 @@ const ListProductsByBrand = () => {
           idMaterials,
           !!idBrands ? idBrands : "",
           idCategories,
-          page
+          selectedPriceRange?.minPrice,
+          selectedPriceRange?.maxPrice
+          // page
         ),
       });
+
       if (res.status) {
         setTotalPage(res?.data?.totalPages);
         setListShoes(res?.data?.data);
@@ -280,6 +321,7 @@ const ListProductsByBrand = () => {
     idBrands,
     idCategories,
     params,
+    selectedPriceRange,
   ]);
   return (
     <div className="w-full h-full ">
@@ -287,7 +329,7 @@ const ListProductsByBrand = () => {
         {/* Lọc */}
         <aside
           id="logo-sidebar"
-          className="  w-64 h-auto transition-transform -translate-x-full sm:translate-x-0 mt-[78px] "
+          className="  w-64 h-auto transition-transform -translate-x-full sm:translate-x-0 mt-[68px] "
           aria-label="Sidebar"
         >
           <span className="text-xl font-semibold text-gray-700">Bộ lọc</span>
@@ -511,8 +553,11 @@ const ListProductsByBrand = () => {
                             <input
                               id={`default-radio-${item.id}`}
                               type="radio"
-                              value={item.priceRange}
+                              value={item.id}
                               name="default-radio"
+                              onChange={(value) => {
+                                handleRadioChange(value);
+                              }}
                               className="w-4 h-4 text-blue-600 bg-white border-gray-300 checked:bg-gray-600  focus:ring-0"
                             />
                             <label

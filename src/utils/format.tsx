@@ -53,7 +53,7 @@ export const validateEmail = (email: string) => {
   return re.test(email);
 };
 export const validatePassword = (password: string) => {
-  const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  const re = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   return re.test(password);
 };
 export const regexPhoneNumber = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;

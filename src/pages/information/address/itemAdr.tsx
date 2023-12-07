@@ -10,15 +10,20 @@ import UpdateAdr from "./updateAdr";
 import { configApi } from "../../../utils/config";
 import API from "../../../api";
 import { toast } from "react-toastify";
+import { getTokenCustomer } from "../../../helper/useCookie";
 
 const ItemAdr = ({
   item,
   check,
   setCheck,
+  checkUp,
+  setCheckUp,
 }: {
   item: IAddress;
   check: boolean;
   setCheck: any;
+  checkUp: boolean;
+  setCheckUp: any;
 }) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<boolean>(false);
@@ -35,8 +40,9 @@ const ItemAdr = ({
         "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
         configApi
       );
-
-      setProvinces(response?.data?.data);
+      if (response.status) {
+        setProvinces(response?.data?.data);
+      }
     } catch (error) {
       console.error("Lỗi:", error);
     } finally {
@@ -49,7 +55,9 @@ const ItemAdr = ({
         `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
         configApi
       );
-      setDistricts(response?.data?.data);
+      if (response.status) {
+        setDistricts(response?.data?.data);
+      }
     } catch (error) {
       console.error("Error fetching districts:", error);
     } finally {
@@ -62,36 +70,42 @@ const ItemAdr = ({
         `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
         configApi
       );
-      setWards(response.data.data);
+      if (response.status) {
+        setWards(response?.data?.data);
+      }
     } catch (error) {
       console.error("Error fetching wards:", error);
     } finally {
       setSelectedWard(true);
     }
   };
-
   useEffect(() => {
     if (!!item) {
       fetchProvinces();
     }
   }, [item]);
   useEffect(() => {
-    if (selectedProvince === true) {
-      fetchDistrictsByProvince(Number(item.province));
+    if (selectedProvince === true && !!item?.province) {
+      fetchDistrictsByProvince(Number(item?.province));
     }
-  }, [selectedProvince]);
+  }, [selectedProvince, item?.province]);
   useEffect(() => {
-    if (selectedDistrict === true) {
-      fetchWardsByDistrict(Number(item.district));
+    if (selectedDistrict === true && !!item?.district) {
+      fetchWardsByDistrict(Number(item?.district));
     }
-  }, [selectedDistrict]);
-  const nameProvince = provinces.find(
-    (d) => d.ProvinceID === Number(item.province)
-  );
-  const nameDistrict = districts.find(
-    (d) => d.DistrictID === Number(item.district)
-  );
-  const nameWard = wards.find((d) => Number(d.WardCode) === Number(item.ward));
+  }, [selectedDistrict, item?.district]);
+  const nameProvince =
+    selectedProvince === true
+      ? provinces.find((d) => d?.ProvinceID === Number(item?.province))
+      : null;
+  const nameDistrict =
+    selectedDistrict === true
+      ? districts.find((d) => d?.DistrictID === Number(item?.district))
+      : null;
+  const nameWard =
+    selectedWard === true
+      ? wards.find((d) => Number(d?.WardCode) === Number(item?.ward))
+      : null;
   const deleteAdrID = async (id: number | string) => {
     try {
       const res = await axios({
@@ -106,19 +120,18 @@ const ItemAdr = ({
       console.log(error);
     }
   };
-
   const updateStatus = async (item: IAddress) => {
     try {
       const res = await axios({
         method: "put",
-        url: API.putAdr(item.id),
+        url: API.putAdr(item?.id),
         data: {
-          name: item.name,
-          phoneNumber: item.phoneNumber,
-          specificAddress: item.specificAddress,
-          ward: item.ward,
-          district: item.district,
-          province: item.province,
+          name: item?.name,
+          phoneNumber: item?.phoneNumber,
+          specificAddress: item?.specificAddress,
+          ward: item?.ward,
+          district: item?.district,
+          province: item?.province,
           defaultAddress: true,
         },
       });
@@ -139,22 +152,22 @@ const ItemAdr = ({
       <div className="w-[80%] flex flex-col justify-between">
         <div className="flex items-center">
           <span className="text-[#000000de]  text-xs">
-            {item.name ? item.name : "Chưa có tên"}
+            {item?.name ? item?.name : ""}
           </span>
           <div className="h-full w-[0.5px] ml-2 bg-[#0000008a]" />
           <span className="text-[#0000008a] ml-2 text-xs">
-            {item?.phoneNumber ? item?.phoneNumber : "Chưa sđt"}
+            {item?.phoneNumber ? item?.phoneNumber : ""}
           </span>
         </div>
         <p className="text-[#0000008a]  text-xs">
           {" "}
-          {item.specificAddress}, {nameWard ? nameWard.WardName : "ko được "}
+          {item?.specificAddress}, {nameWard ? nameWard?.WardName : " "}
         </p>
         <p className="text-[#0000008a]  text-xs">
-          {nameDistrict ? nameDistrict.DistrictName : "không được"},{" "}
-          {nameProvince ? nameProvince.ProvinceName : "không được"}
+          {nameDistrict ? nameDistrict?.DistrictName : ""},{" "}
+          {nameProvince ? nameProvince?.ProvinceName : ""}
         </p>
-        {item.defaultAddress && (
+        {item?.defaultAddress && (
           <button className="px-2  mt-2 border-red-400 border-[1px] w-fit text-red-500 text-xs">
             Mặc định
           </button>
@@ -170,27 +183,37 @@ const ItemAdr = ({
           >
             Cập nhật
           </button>
-          <button
-            className="text-xs text-blue-400"
-            onClick={() => {
-              deleteAdrID(item.id);
-            }}
-          >
-            Xóa
-          </button>
+          {item?.defaultAddress === true ? (
+            <></>
+          ) : (
+            <button
+              className="text-xs text-blue-400"
+              onClick={() => {
+                deleteAdrID(item?.id);
+              }}
+            >
+              Xóa
+            </button>
+          )}
         </div>
-        <button className="border-[#d8d8d8] border-[1px] h-fit px-2 rounded mt-2 ">
-          <span
-            className="text-[#000000de] text-xs"
-            onClick={() => {
-              updateStatus(item);
-            }}
-          >
-            Thiết lập mặc định
-          </span>
-        </button>
+        {item?.defaultAddress === true ? (
+          <></>
+        ) : (
+          <button className="border-[#d8d8d8] border-[1px] h-fit px-2 rounded mt-2 ">
+            <span
+              className="text-[#000000de] text-xs"
+              onClick={() => {
+                updateStatus(item);
+              }}
+            >
+              Thiết lập mặc định
+            </span>
+          </button>
+        )}
       </div>
       <UpdateAdr
+        checkUp={checkUp}
+        setCheckUp={setCheckUp}
         item={itemRef.current}
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}

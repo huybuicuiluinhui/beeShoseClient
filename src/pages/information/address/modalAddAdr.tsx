@@ -59,9 +59,11 @@ const AddAddressModal = ({
       }
     } catch (error) {
     } finally {
+      setSpecificAddress("");
+      setTextHVT("");
+      setPhoneNumber("");
     }
   };
-  // const getData;
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");

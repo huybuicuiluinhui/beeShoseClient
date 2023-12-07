@@ -20,6 +20,7 @@ import ModalComponent from "../../components/Modal";
 import { configApi } from "../../utils/config";
 import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
+import AddAddressModal from "../information/address/modalAddAdr";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf, removeAllCart } = useShoppingCart();
@@ -32,14 +33,18 @@ const PayMentWithUser = () => {
   const [wards, setWards] = useState<Ward[]>([]);
   const [specificAddress, setSpecificAddress] = useState<string>();
   const [selectedWard, setSelectedWard] = useState<number>();
+  const [selectedDefault, setSelectedDefault] = useState<boolean>();
   const [method, setMethod] = useState<number>(0);
   const [feeShip, setFeeShip] = useState();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [indexArr, setIndexArr] = useState<number>(0);
   const [carts, setCarts] = useState({ quantity: null, id: null });
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
+  const [chooseRadio, setChooseRadio] = useState<number>();
+  const [selectedName, setSelectedName] = useState<string>("");
   const toggleModal = () => {
-    setModalOpen(!isModalOpen);
+    setModalOpenVoucher(!isModalOpenVoucher);
   };
   const getListDetailCart = async () => {
     try {
@@ -231,10 +236,20 @@ const PayMentWithUser = () => {
   }, []);
   useEffect(() => {
     if (dataAddress && dataAddress.length > 0) {
-      setSelectedProvince(Number(dataAddress[0]?.province));
-      setSelectedDistrict(Number(dataAddress[0]?.district));
-      setSelectedWard(Number(dataAddress[0]?.ward));
-      setSpecificAddress(dataAddress[0]?.specificAddress);
+      const defaultAddressIndex = dataAddress.findIndex(
+        (address) => address.defaultAddress
+      );
+      if (defaultAddressIndex !== -1) {
+        const defaultAddress = dataAddress[defaultAddressIndex];
+        setSelectedProvince(Number(defaultAddress.province));
+        setSelectedDistrict(Number(defaultAddress.district));
+        setSelectedWard(Number(defaultAddress.ward));
+        setSpecificAddress(defaultAddress.specificAddress);
+        setSelectedDefault(defaultAddress.defaultAddress);
+        setSelectedName(defaultAddress?.name);
+        // Log the index
+        setChooseRadio(defaultAddressIndex);
+      }
     }
   }, [dataAddress]);
   useEffect(() => {
@@ -250,11 +265,14 @@ const PayMentWithUser = () => {
   useEffect(() => {
     if (userPrf?.id) {
       getListDetailCart();
-      loadAddress();
     }
   }, [userPrf?.id]);
+  useEffect(() => {
+    if (userPrf?.id) {
+      loadAddress();
+    }
+  }, [userPrf?.id, isModalOpen]);
   const provinceName = (mang: Province[], idCanTim: number) => {
-    console.log(mang, idCanTim);
     const doiTuongCanTim = mang.find((item) => item.ProvinceID === idCanTim);
     return doiTuongCanTim?.ProvinceName;
   };
@@ -290,25 +308,44 @@ const PayMentWithUser = () => {
           selectedWard &&
           selectedDistrict &&
           selectedProvince ? (
-            <div className="w-full m-4">
-              <div className="flex items-end">
+            <div className="w-full m-4 ">
+              <div className="flex items-end ">
                 <img src={Images.iconAddressRed} alt="" className="w-[20px]" />
-                <span className="font-medium text-sm ml-2 text-red-600 mr-2">
-                  Địa chỉ nhận hàng
-                </span>
+                <div className="flex items-center">
+                  <span className="font-medium text-sm ml-2 text-red-600 mr-2">
+                    Địa chỉ nhận hàng
+                  </span>
+                  {!!dataAddress && dataAddress.length > 0 && (
+                    <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
+                      <img
+                        src={Images.iconPlus}
+                        className="w-[15px] h-auto object-contain"
+                      />
+
+                      <button
+                        className="text-white text-xs "
+                        onClick={() => setModalOpen(true)}
+                      >
+                        Thêm địa chỉ mới
+                      </button>
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="flex gap-3 mt-2">
                 <span className="text-sm font-semibold text-black ">
-                  {dataAddress[0].name}
+                  {selectedName}
                 </span>
                 <span className="text-sm font-normal text-black ">
                   {specificAddress},{wardName(wards, selectedWard)},
                   {districtName(districts, selectedDistrict)},
                   {provinceName(provinces, selectedProvince)}
                 </span>
-                <div className="border-red-500 px-1 text-xs  border-[1px] text-red-500 ">
-                  Mặc định
-                </div>
+                {selectedDefault && (
+                  <div className="border-red-500 px-1 text-xs  border-[1px] text-red-500 ">
+                    Mặc định
+                  </div>
+                )}
                 <button
                   className=" px-1 text-blue-500 text-xs"
                   onClick={() => {
@@ -500,25 +537,29 @@ const PayMentWithUser = () => {
             setShowModal(false);
           }}
         >
-          <div className="bg-white ">
+          <div className="bg-white  ">
             <div className="border-b-[1px] border-b-gray-400 border-solid w-full p-2">
               <span>Địa Chỉ Của Tôi</span>
             </div>
-            {!!dataAddress &&
-              dataAddress.length > 0 &&
-              dataAddress.map((item, index) => {
-                return (
-                  <ChangeAdr
-                    item={item}
-                    key={index}
-                    setIndexArr={setIndexArr}
-                    indexArr={index}
-                  />
-                );
-              })}
-            <div className="w-full flex items-center p-4  justify-around">
+            <div className="h-80 overflow-y-auto">
+              {!!dataAddress &&
+                dataAddress.length > 0 &&
+                dataAddress.map((item, index) => {
+                  return (
+                    <ChangeAdr
+                      item={item}
+                      key={index}
+                      setIndexArr={setIndexArr}
+                      indexArr={index}
+                      chooseRadio={chooseRadio}
+                      setChooseRadio={setChooseRadio}
+                    />
+                  );
+                })}
+            </div>
+            <div className="w-full flex items-center   justify-around ">
               <button
-                className="border-red-500 border-[1px] py-[2px] px-3 text-red-500 "
+                className="border-red-500 border-[1px] py-[2px] px-4 text-red-500  text-sm"
                 onClick={() => {
                   setShowModal(false);
                 }}
@@ -527,7 +568,7 @@ const PayMentWithUser = () => {
               </button>
 
               <button
-                className="bg-red-500 border-[1px] py-1 px-2 text-white"
+                className="bg-red-500 border-[1px] py-1 px-4 text-white text-sm "
                 onClick={() => {
                   if (dataAddress) {
                     setSelectedDistrict(
@@ -537,6 +578,9 @@ const PayMentWithUser = () => {
                       Number(dataAddress[indexArr]?.province)
                     );
                     setSelectedWard(Number(dataAddress[indexArr]?.ward));
+                    setSpecificAddress(dataAddress[indexArr]?.specificAddress);
+                    setSelectedDefault(dataAddress[indexArr]?.defaultAddress);
+                    setSelectedName(dataAddress[indexArr]?.name);
                   }
                   setShowModal(false);
                 }}
@@ -547,7 +591,20 @@ const PayMentWithUser = () => {
           </div>
         </ModalComponent>
       )}
-      <ShowVoucher isOpen={isModalOpen} onClose={toggleModal} />
+      <AddAddressModal
+        selectedProvince={selectedProvince}
+        selectedDistrict={selectedDistrict}
+        selectedWard={selectedWard}
+        setSelectedProvince={setSelectedProvince}
+        setSelectedDistrict={setSelectedDistrict}
+        setSelectedWard={setSelectedWard}
+        wards={wards}
+        districts={districts}
+        provinces={provinces}
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
+      <ShowVoucher isOpen={isModalOpenVoucher} onClose={toggleModal} />
     </div>
   );
 };

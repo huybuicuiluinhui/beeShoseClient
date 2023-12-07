@@ -28,6 +28,7 @@ const ProductItem = ({
     addMultipleToCart,
     userPrf,
     addToCartUser,
+    getItemQuantityUser,
   } = useShoppingCart();
   const token = getTokenCustomer();
   const [chooseSize, setChooseSize] = useState<any>();
@@ -45,29 +46,28 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
 
-  const addToCart = async () => {
-    try {
-      const res = await axios({
-        method: "post",
-        url: API.addToCart(),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        data: {
-          id: userPrf?.id,
-          quantity: amount,
-          shoeDetail: idAddToCart,
-        },
-      });
-      console.log(res);
-      if (res.status === 200) {
-        toast.success("Thêm vào giỏ hàng thành công");
-      } else {
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const addToCart = async () => {
+  //   try {
+  //     const res = await axios({
+  //       method: "post",
+  //       url: API.addToCart(),
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       data: {
+  //         id: userPrf?.id,
+  //         quantity: amount,
+  //         shoeDetail: idAddToCart,
+  //       },
+  //     });
+  //     if (res.status === 200) {
+  //       toast.success("Thêm vào giỏ hàng thành công");
+  //     } else {
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getDataSize = async () => {
     let combinedData: Product[] = [];
@@ -299,24 +299,34 @@ const ProductItem = ({
                 </div>
                 <div className="flex flex-col">
                   <button
-                    className="w-8  h-[50%]  border-[1px] border-[#e9e9e9] "
+                    className="w-8   h-[50%]  border-[1px] border-[#e9e9e9] "
                     onClick={() => {
-                      if (
-                        (amountShoe <= amountItemInCart + amount &&
-                          !!price &&
-                          amountShoe !== 0 &&
-                          amount <= 10) ||
-                        amount > 10
-                      ) {
-                        toast("Số lượng sản phẩm đã đạt tối đa");
-                        return;
-                      } else if (!price) {
-                        toast(
-                          "Sản phẩm hiện hết hàng, vui lòng bạn chọn sản phẩm khác"
-                        );
-                        return;
-                      } else {
-                        setAmount((prev) => prev + 1);
+                      if (!!userPrf) {
+                        if (
+                          amount >= 10 ||
+                          (amountShoe <=
+                            getItemQuantityUser(idAddToCart) + amount &&
+                            amount < 10) ||
+                          getItemQuantityUser(idAddToCart) + amount >= 10
+                        ) {
+                          toast.warning("số lượng thêm đã đạt tối đa");
+                          return;
+                        } else {
+                          setAmount((prev) => prev + 1);
+                        }
+                      } else if (!userPrf) {
+                        console.log("amountItemInCart", amountItemInCart);
+                        if (
+                          amount >= 10 ||
+                          (amountShoe <= amountItemInCart + amount &&
+                            amount < 10) ||
+                          amountItemInCart + amount >= 10
+                        ) {
+                          toast.warning("số lượng thêm đã đạt tối đa ");
+                          return;
+                        } else {
+                          setAmount((prev) => prev + 1);
+                        }
                       }
                     }}
                   >
@@ -347,6 +357,9 @@ const ProductItem = ({
                 onClick={() => {
                   if (!!userPrf) {
                     addToCartUser(idAddToCart, amount);
+                    setAmount(1);
+                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                    openCart();
                   } else {
                     if (
                       !!idAddToCart &&
@@ -355,9 +368,9 @@ const ProductItem = ({
                       amountItemInCart <= 10
                     ) {
                       addMultipleToCart(idAddToCart, amount);
-                      openCart();
                       setAmount(1);
                       toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                      openCart();
                     } else if (
                       (!!price && amount < amountShoe - amountItemInCart) ||
                       amount >= 10
@@ -425,7 +438,7 @@ const ProductItem = ({
             </span>
           </div>
           <div className="h-8">
-            {!!amountShoe && !!price && (
+            {!!amountShoe && amountShoe > 0 && !!price && (
               <span className="font-semibold text-sm">
                 Số lượng hàng có sẵn :{" "}
                 <span className="font-normal text-[11px]">{amountShoe}</span>{" "}

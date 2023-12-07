@@ -13,7 +13,7 @@ import { getCookie } from "../helper/CookiesRequest";
 const Header = () => {
   const navigate = useNavigate();
 
-  const { cartQuantity, openCart, cartItems, userPrf, listProducts } =
+  const { cartQuantity, openCart, cartItems, userPrf, listProducts, infoUser } =
     useShoppingCart();
   const [showTable, setShowTable] = useState<boolean>(false);
   const [results, setResults] = useState<IProduct[]>([]);
@@ -191,8 +191,8 @@ const Header = () => {
             <div className="w-[8%] h-fit">
               <a href="/" className="flex items-center w-fit ">
                 <LazyLoadImage
-                  src={Images.iconBeeShoe}
-                  className="w-[300px] object-contain h-auto"
+                  src={Images.logo}
+                  className="w-auto object-cover h-[60px]"
                 />
               </a>
             </div>
@@ -225,7 +225,7 @@ const Header = () => {
                       id="default-search"
                       value={searchValue}
                       onChange={(e) => handleChange(e?.target?.value)}
-                      className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
+                      className="placeholder:text-gray-600 block w-full p-4 pl-10 text-sm font-normal text-gray-900 border border-gray-100 rounded-lg bg-gray-50 focus:ring-yellow-500 focus:border-yellow-500 h-10  "
                       placeholder="Tìm kiếm sản phẩm tại đây....."
                       required
                       onKeyDown={(e) => handleKeyPress(e)}
@@ -258,7 +258,7 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                <li className="flex-1 cursor-pointer">
+                {/* <li className="flex-1 cursor-pointer">
                   <div className=" flex justify-center items-center my-auto ">
                     <div className="">
                       <LazyLoadImage
@@ -273,8 +273,7 @@ const Header = () => {
                       <p className="text-sm font-medium"> 0376426057</p>
                     </div>
                   </div>
-                </li>
-
+                </li> */}
                 <li
                   className="flex-[1.3] px-0 cursor-pointer"
                   onClick={() => {
@@ -283,13 +282,15 @@ const Header = () => {
                 >
                   <div className=" flex justify-center items-center my-auto ">
                     <LazyLoadImage
-                      src={Images.iconBox}
+                      src={Images.iconShipping}
                       alt=""
-                      className="w-[22px] h-[22px] object-contain"
+                      className="w-auto h-6 object-contain"
                     />
                     <div className="ml-3">
-                      <p className="text-xs">Theo dõi đơn hàng</p>
-                      <p className="text-sm font-medium">Tra cứu đơn hàng</p>
+                      <p className="text-[10px] font-normal">
+                        Theo dõi đơn hàng
+                      </p>
+                      <p className="text-sm font-semibold">Tra cứu đơn hàng</p>
                     </div>
                   </div>
                 </li>
@@ -302,13 +303,13 @@ const Header = () => {
                 >
                   <div className=" flex justify-center items-center my-auto ">
                     <div className=" relative">
-                      {!!cartQuantity && cartQuantity > 0 ? (
+                      {!userPrf && !!cartQuantity && cartQuantity > 0 ? (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
                             {cartItems.length}
                           </p>
                         </div>
-                      ) : !!userPrf && listProducts.length > 0 ? (
+                      ) : !!userPrf ? (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
                             {listProducts.length}
@@ -317,28 +318,17 @@ const Header = () => {
                       ) : (
                         ""
                       )}
-                      <svg
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="file:  h-6 w-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-                        />
-                      </svg>
+                      <img
+                        src={Images.iconCart}
+                        className="h-6 w-auto object-contain"
+                      />
                     </div>
 
                     <div className="ml-3">
-                      <p className="text-xs">Giỏ hàng</p>
-                      <span className="text-sm font-medium">
-                        {!!userPrf && listProducts
-                          ? listProducts.length
-                          : cartItems.length}{" "}
-                        sản phẩm
+                      <p className="text-[10px] font-normal">Giỏ hàng</p>
+                      <span className="text-sm font-semibold">
+                        {!!userPrf ? listProducts.length : cartItems.length} sản
+                        phẩm
                       </span>
                     </div>
                   </div>
@@ -362,17 +352,21 @@ const Header = () => {
                   >
                     {!!token && !!userPrf ? (
                       <img
-                        src={userPrf.avata}
-                        className={"w-10 h-10 rounded-full"}
+                        src={
+                          infoUser?.avatar
+                            ? infoUser?.avatar
+                            : Images.iconAccout2
+                        }
+                        className={"w-8 h-8 rounded-full"}
                       />
                     ) : (
                       <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />
                     )}
                     <div className="ml-3">
-                      <p className="text-xs">Tài khoản</p>
+                      <p className="text-[10px] font-normal">Tài khoản</p>
                       <p className="text-sm font-medium">
                         {!!token && !!userPrf
-                          ? userPrf.fullName
+                          ? infoUser?.username
                           : "Đăng nhập/Đăng ký"}
                       </p>
                     </div>

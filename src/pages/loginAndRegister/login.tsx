@@ -12,6 +12,7 @@ import {
   validateEmail,
   validatePassword,
 } from "../../utils/format";
+import Images from "../../static";
 interface CustomError {
   message: string;
   response?: {
@@ -79,6 +80,8 @@ const LoginScreen = () => {
   const [newPassword, setNewPassWord] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
   const [errors3, setErrors3] = useState({ email: "" });
   const [errors2, setErrors2] = useState({
     email: "",
@@ -86,6 +89,12 @@ const LoginScreen = () => {
     newPassword: "",
     newPassword2: "",
   });
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+  const togglePasswordVisibility2 = () => {
+    setShowPassword2(!showPassword2);
+  };
   const login = async () => {
     if (!validateEmail(email)) {
       setErrors((prev) => ({ ...prev, email: "Email không hợp lệ." }));
@@ -160,7 +169,7 @@ const LoginScreen = () => {
       setErrors2((prev) => ({
         ...prev,
         newPassword:
-          "Mật khẩu không hợp lệ. Định dạng mật khẩu: ít nhất 6 ký tự, ít nhất một số, một chữ hoa",
+          "Mật khẩu không hợp lệ. Định dạng mật khẩu: ít nhất 8 ký tự, ít nhất một số, một chữ hoa",
       }));
       return;
     } else {
@@ -203,7 +212,8 @@ const LoginScreen = () => {
       } else {
       }
     } catch (error) {
-      console.log(error);
+      console.log(emailR, newPassword, phone);
+
       if (typeof error === "string") {
         // Nếu error là một chuỗi, giả sử đó là một thông báo lỗi từ server
         toast.error(error);
@@ -215,9 +225,6 @@ const LoginScreen = () => {
         } else {
           toast.error(customError.message);
         }
-      } else {
-        // Trường hợp khác, hiển thị một thông báo mặc định
-        toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
       }
     }
   };
@@ -262,7 +269,7 @@ const LoginScreen = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex ">
       <Fade top distance="10%" duration={1000}>
-        <div className="flex justify-between items-start bg-white p-6 rounded-lg shadow-lg">
+        <div className="flex justify-between items-start bg-white p-6  ">
           <div className="w-[50%]">
             <div className="flex flex-col items-center p-4">
               {checkRegister === 2 ? (
@@ -323,14 +330,32 @@ const LoginScreen = () => {
                       >
                         Mật khẩu*
                       </label>
-                      <input
-                        value={newPassword}
-                        onChange={(e) => setNewPassWord(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        placeholder="******************"
-                      />
+                      <div className="relative">
+                        <input
+                          value={newPassword}
+                          onChange={(e) => setNewPassWord(e.target.value)}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                          id="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="******************"
+                        />
+                        <span
+                          onClick={togglePasswordVisibility}
+                          className="absolute right-0 top-0 mt-3 mr-4 cursor-pointer"
+                        >
+                          {showPassword ? (
+                            <img
+                              src={Images.iconEye}
+                              className="w-4 h-4 object-contain"
+                            />
+                          ) : (
+                            <img
+                              src={Images.iconCloseEye}
+                              className="w-4 h-4 object-contain"
+                            />
+                          )}
+                        </span>
+                      </div>
                       {errors2.newPassword && (
                         <p className="text-red-500 text-xs italic">
                           {errors2.newPassword}
@@ -344,14 +369,32 @@ const LoginScreen = () => {
                       >
                         Nhập lại mật khẩu*
                       </label>
-                      <input
-                        value={newPassword2}
-                        onChange={(e) => setNewPassword2(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password2"
-                        type="password"
-                        placeholder="******************"
-                      />
+                      <div className="relative">
+                        <input
+                          value={newPassword2}
+                          onChange={(e) => setNewPassword2(e.target.value)}
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                          id="password2"
+                          type={showPassword2 ? "text" : "password"}
+                          placeholder="******************"
+                        />
+                        <span
+                          onClick={togglePasswordVisibility2}
+                          className="absolute right-0 top-0 mt-3 mr-4 cursor-pointer"
+                        >
+                          {showPassword2 ? (
+                            <img
+                              src={Images.iconEye}
+                              className="w-4 h-4 object-contain"
+                            />
+                          ) : (
+                            <img
+                              src={Images.iconCloseEye}
+                              className="w-4 h-4 object-contain"
+                            />
+                          )}
+                        </span>
+                      </div>
                       {errors2.newPassword2 && (
                         <p className="text-red-500 text-xs italic">
                           {errors2.newPassword2}
@@ -431,7 +474,8 @@ const LoginScreen = () => {
                         ĐĂNG NHẬP
                       </button>
                       <button
-                        className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer"
+                        className="  font-bold text-sm text-blue-500 hover:text-blue-800 cursor-pointer"
+                        type="button"
                         onClick={() => setCheckRegister(3)}
                       >
                         Quên mật khẩu?

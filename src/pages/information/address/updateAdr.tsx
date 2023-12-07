@@ -14,10 +14,14 @@ const UpdateAdr = ({
   item,
   isOpen,
   onClose,
+  checkUp,
+  setCheckUp,
 }: {
   item: IAddress | null;
   isOpen: boolean;
   onClose: any;
+  checkUp: boolean;
+  setCheckUp: any;
 }) => {
   const [checkDefault, setCheckDefault] = useState<boolean>();
   const [user, setUser] = useState<string>("");
@@ -36,7 +40,6 @@ const UpdateAdr = ({
         configApi
       );
       if (response.status) {
-        console.log("lấy thành công dannh sách tỉnh");
         setProvinces(response?.data?.data);
       }
     } catch (error) {
@@ -57,7 +60,6 @@ const UpdateAdr = ({
     }
   };
   const fetchWardsByDistrict = async (districtId: number) => {
-    console.log("dấ ds xã");
     try {
       const response = await axios.get(
         `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
@@ -126,7 +128,7 @@ const UpdateAdr = ({
           },
         });
         if (res.data) {
-          toast.success("Đã thay đổi địa chỉ thành công");
+          setCheckUp(!checkUp);
           onClose();
         }
       } catch (error) {

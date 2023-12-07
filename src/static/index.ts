@@ -62,6 +62,13 @@ import isEmtyCart from "./icons/isEmtyCart.png";
 import iconVoucher from "./icons/iconVoucher.png";
 import iconLogoWeb from "./icons/iconLogoWeb.png";
 import iconBeeShoe from "./icons/iconBeeShoe.png";
+import iconCloseEye from "./icons/iconCloseEye.png";
+import iconEye from "./icons/iconEye.png";
+import iconAccout2 from "./icons/iconAccout2.png";
+import iconShipping from "./icons/iconShipping.svg";
+import iconAccout3 from "./icons/iconAccout3.svg";
+import iconChangeAvatar from "./icons/iconChangeAvatar.png";
+import logo from "./icons/logo.png";
 
 const Images = {
   banner01,
@@ -128,5 +135,12 @@ const Images = {
   iconLogoWeb,
   isEmtyCart,
   iconBeeShoe,
+  iconCloseEye,
+  iconEye,
+  iconAccout2,
+  iconShipping,
+  iconChangeAvatar,
+  iconAccout3,
+  logo,
 };
 export default Images;

@@ -9,7 +9,11 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import ShoppingCart from "../components/ModalShoppingCart";
 import { getUserFromCookie } from "../helper/useCookie";
 import { getCookie } from "../helper/CookiesRequest";
-import { IDetailProductCart } from "../types/product.type";
+import {
+  CustomError,
+  IDetailProductCart,
+  IInfoAccount,
+} from "../types/product.type";
 import axios from "axios";
 import API from "../api";
 import { toast } from "react-toastify";
@@ -54,6 +58,8 @@ type ShoppingCartContext = {
   removeFromCartUser: (id: number) => void;
   getProductQuantityById: (id: number) => number;
   removeAllCart: () => void;
+  infoUser: IInfoAccount | undefined;
+  getItemQuantityUser: (id: number) => number;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -69,6 +75,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     "shopping-cart",
     []
   );
+  const [infoUser, setInfoUser] = useState<IInfoAccount>();
   const token = getCookie("customerToken");
   const [userPrf, setUserPrf] = useState<User | null>(null);
   const getListDetailCart = async () => {
@@ -82,12 +89,26 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       });
       if (res.status) {
         setListProducts(res?.data || []);
-        console.log("đã chạy lại rồi ");
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const loadInfoUser = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getInfoUser(Number(userPrf?.id)),
+      });
+
+      if (res.data) {
+        setInfoUser(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const reduceShoe = async (idShoeDetail: number, quantity: number) => {
     try {
       const res = await axios({
@@ -152,7 +173,21 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
           toast("đã thêm thành công");
         }
       } catch (error) {
-        console.log(error);
+        if (typeof error === "string") {
+          // Nếu error là một chuỗi, giả sử đó là một thông báo lỗi từ server
+          toast.error(error);
+        } else if (error instanceof Error) {
+          // Nếu error là một đối tượng Error và có response
+          const customError = error as CustomError;
+          if (customError.response && customError.response.data) {
+            toast.error(customError.response.data);
+          } else {
+            toast.error(customError.message);
+          }
+        } else {
+          // Trường hợp khác, hiển thị một thông báo mặc định
+          toast.error("Thất bại. Vui lòng thử lại sau.");
+        }
       } finally {
         getListDetailCart();
       }
@@ -174,6 +209,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       getListDetailCart();
     }
   };
+
   const removeAllCart = async () => {
     try {
       const res = await axios({
@@ -204,6 +240,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   );
 
   useEffect(() => {
+    if (userPrf) {
+      loadInfoUser();
+    }
+  }, [userPrf]);
+  useEffect(() => {
     const userFromCookie = getUserFromCookie();
     if (
       userFromCookie &&
@@ -211,7 +252,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     ) {
       setUserPrf(userFromCookie);
     }
-  }, [userPrf, setUserPrf]);
+  }, [userPrf]);
   useEffect(() => {
     if (!!userPrf?.id && !!token) {
       getListDetailCart();
@@ -229,6 +270,11 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
   // Lấy số lượng sản phẩm
   function getItemQuantity(id: number) {
     return cartItems.find((item) => item.id === id)?.quantity || 0;
+  }
+  function getItemQuantityUser(id: number) {
+    return (
+      listProducts.find((item) => item.idProductDetail === id)?.quantity || 0
+    );
   }
   // tăng số lượng
   function increaseCartQuantity(id: number) {
@@ -290,7 +336,6 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       return updatedItems;
     });
   }
-  console.log("listProducts.length", listProducts.length);
   return (
     <ShoppingCartContext.Provider
       value={{
@@ -315,6 +360,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         removeFromCartUser,
         getProductQuantityById,
         removeAllCart,
+        infoUser,
+        getItemQuantityUser,
       }}
     >
       {children}

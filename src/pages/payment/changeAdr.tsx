@@ -8,10 +8,14 @@ const ChangeAdr = ({
   item,
   indexArr,
   setIndexArr,
+  chooseRadio,
+  setChooseRadio,
 }: {
   item: IAddress;
   indexArr: any;
   setIndexArr: any;
+  chooseRadio: any;
+  setChooseRadio: any;
 }) => {
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -24,8 +28,8 @@ const ChangeAdr = ({
   const handleRadioChange = () => {
     setIsChecked(!isChecked);
     setIndexArr(indexArr);
+    setChooseRadio(indexArr);
   };
-
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
@@ -72,6 +76,7 @@ const ChangeAdr = ({
   useEffect(() => {
     if (!!item) {
       fetchProvinces();
+      setIndexArr(0);
       setIsChecked(item.defaultAddress);
     }
   }, [item]);
@@ -100,15 +105,15 @@ const ChangeAdr = ({
 
   return (
     <label
-      className={`flex items-center  py-5 px-5
-      border-b-[1px] border-dashed border-gray-500`}
+      className={`flex items-center  py-5 px-5 
+      min-h-[100px]
+      border-b-[1px] border-solid border-gray-400 `}
     >
       <input
         onChange={handleRadioChange}
-        checked={isChecked}
+        checked={chooseRadio === indexArr ? true : false}
         id={`default-radio-${item?.id}`}
         type="radio"
-        aria-describedby="helper-radio-text"
         name="default-radio"
         className="w-4 h-4 text-blue-600 bg-white border-gray-300 checked:bg-gray-600  focus:ring-0"
       />

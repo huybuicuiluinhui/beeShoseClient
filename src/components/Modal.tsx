@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 interface ModalComponentType {
   isVisible: boolean;
   onClose: () => void;
@@ -11,18 +11,31 @@ const ModalComponent = ({
   children,
   check,
 }: ModalComponentType) => {
+  useEffect(() => {
+    if (isVisible) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isVisible]);
   if (!isVisible) return null;
   const handleClose = (e: any) => {
     if (e.target.id === "wrapper") onClose();
   };
+
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center z-50"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[100]"
       id="wrapper"
       onClick={handleClose}
     >
       <div
-        className={`${check ? "w-[25%]" : "w-[600px]"} flex flex-col relative`}
+        className={`${
+          check ? "w-[25%]" : "w-[600px]"
+        } relative top-20 mx-auto p-5 border w-[50%] shadow-lg rounded-md bg-white`}
       >
         <button
           onClick={onClose}
@@ -42,13 +55,10 @@ const ModalComponent = ({
             />
           </svg>
         </button>
-        {/* <button
-          className="text-white text-xl place-self-end"
-          onClick={() => onClose()}
-        >
-          X
-        </button> */}
-        <div className="bg-white p-2 rounded-xl">{children}</div>
+
+        <div className="bg-white p-2 rounded-xl overflow-y-hidden">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -7,19 +7,20 @@ import { CustomError, IAddress, Iinfo } from "../../../types/product.type";
 import { useShoppingCart } from "../../../context/shoppingCart.context";
 
 const InforMe = () => {
-  const { userPrf } = useShoppingCart();
+  const { userPrf, infoUser } = useShoppingCart();
 
   const [user, setUser] = useState<Iinfo>();
   const [birthday, setBirthday] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [gender, setGender] = useState("Nam");
-  const [name, setName] = useState<string>("");
+  // const [name, setName] = useState<string>("");
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
-    userPrf?.avata ? userPrf?.avata : null
+    infoUser?.avatar ? infoUser?.avatar : null
   );
+  console.log("userPrf,userPrf", infoUser);
   const loadInfoUser = async () => {
     try {
       const res = await axios({
@@ -28,6 +29,7 @@ const InforMe = () => {
       });
 
       if (res.data) {
+        console.log("res?.data", res?.data);
         setUser(res?.data);
       }
     } catch (error) {
@@ -40,15 +42,15 @@ const InforMe = () => {
     }
   }, [userPrf]);
   useEffect(() => {
-    if (!!user) {
-      setBirthday(user.birthday);
-      setPhoneNumber(user.phoneNumber);
-      setGender(user.gender);
-      setEmail(user.email);
-      setUserName(user.username);
-      setImagePreview(user.avatar);
+    if (!!infoUser) {
+      setBirthday(infoUser?.birthday);
+      setPhoneNumber(infoUser?.phoneNumber);
+      setGender(infoUser.gender);
+      setEmail(infoUser?.email);
+      setUserName(infoUser?.username);
+      setImagePreview(infoUser?.avatar);
     }
-  }, [user]);
+  }, [infoUser]);
   useEffect(() => {
     if (selectedFile) {
       const reader = new FileReader();
@@ -85,6 +87,7 @@ const InforMe = () => {
         if (response.status) {
           toast.success("Cập nhật thông tin thành công");
           loadInfoUser();
+          window.location.reload();
         }
       } catch (error) {
         if (typeof error === "string") {
@@ -128,26 +131,82 @@ const InforMe = () => {
         <div className="w-[70%]  mx-auto">
           <div>
             {" "}
-            <div className="flex items-center justify-around  ">
-              <img
-                src={imagePreview ? imagePreview : Images.imgNotFound}
-                alt="Ảnh đại diện"
-                className="mt-2 w-[120px] h-[120px] rounded-[100%]"
-              />
-              <div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="file-input"
+            <div className="flex justify-between  ">
+              <div className="flex flex-col  items-center">
+                <img
+                  src={imagePreview ? imagePreview : Images.iconAccout3}
+                  alt="Ảnh đại diện"
+                  className=" w-[120px] h-[120px] rounded-[100%]"
                 />
-                <label
-                  htmlFor="file-input"
-                  className="cursor-pointer  text-gray-500 py-2 px-4 rounded-md hover:bg-[#dbdada] transition duration-300  border-[2px] border-[#f5f5f5]"
-                >
-                  Chọn ảnh
-                </label>
+                <div className="mt-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="file-input"
+                  />
+                  <label
+                    htmlFor="file-input"
+                    className="cursor-pointer   text-gray-500 py-2 px-4 rounded-md hover:bg-[#dbdada] transition duration-300  border-[2px] border-[#f5f5f5]"
+                  >
+                    Chọn ảnh
+                  </label>
+                </div>
+              </div>
+              <div className="flex-col w-[70%] justify-items-center">
+                <div className="relative z-0 w-full mb-6 group">
+                  <div className="">
+                    Họ và tên:
+                    <input
+                      type="text"
+                      name="text"
+                      id="text"
+                      value={username}
+                      onChange={(e) => setUserName(e.target.value)}
+                      className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
+                      placeholder=" "
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="relative z-0 w-full mb-6 group">
+                  <div>
+                    Giới tính
+                    <div className="flex items-center ps-4   rounded ">
+                      <input
+                        id="bordered-radio-1"
+                        type="radio"
+                        name="bordered-radio"
+                        value="Nam"
+                        checked={gender === "Nam"}
+                        onChange={(e) => setGender(e.target.value)}
+                        className="w-4 h-4 text-gray-600 bg-gray-100"
+                      />
+                      <label
+                        htmlFor="bordered-radio-1"
+                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
+                      >
+                        Nam
+                      </label>
+                      <input
+                        id="bordered-radio-2"
+                        type="radio"
+                        value="Nữ"
+                        checked={gender === "Nữ"}
+                        onChange={(e) => setGender(e.target.value)}
+                        name="bordered-radio"
+                        className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300"
+                      />
+                      <label
+                        htmlFor="bordered-radio-2"
+                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
+                      >
+                        Nữ
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             {selectedFile && (
@@ -159,59 +218,7 @@ const InforMe = () => {
               </div>
             )}
           </div>
-          <div className="relative z-0 w-full mb-6 group">
-            <div className="">
-              Họ và tên:
-              <input
-                type="text"
-                name="text"
-                id="text"
-                value={username}
-                onChange={(e) => setUserName(e.target.value)}
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
-                placeholder=" "
-                required
-              />
-            </div>
-          </div>
-          <div className="relative z-0 w-full mb-6 group">
-            <div>
-              Giới tính
-              <div className="flex items-center ps-4   rounded ">
-                <input
-                  id="bordered-radio-1"
-                  type="radio"
-                  name="bordered-radio"
-                  value="Nam"
-                  checked={gender === "Nam"}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="w-4 h-4 text-gray-600 bg-gray-100"
-                />
-                <label
-                  htmlFor="bordered-radio-1"
-                  className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
-                >
-                  Nam
-                </label>
-                <input
-                  id="bordered-radio-2"
-                  type="radio"
-                  value="Nữ"
-                  checked={gender === "Nữ"}
-                  onChange={(e) => setGender(e.target.value)}
-                  name="bordered-radio"
-                  className="w-4 h-4 text-gray-600 bg-gray-100 border-gray-300"
-                />
-                <label
-                  htmlFor="bordered-radio-2"
-                  className="w-full py-4 ms-2 text-sm font-medium text-gray-900 "
-                >
-                  Nữ
-                </label>
-                <div className="flex items-center ps-4 border border-gray-200 rounded "></div>
-              </div>
-            </div>
-          </div>
+
           <div className="relative z-0 w-full mb-6 group">
             <div>
               Địa chỉ email
@@ -233,6 +240,7 @@ const InforMe = () => {
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               type="tel"
+              disabled={phoneNumber?.length >= 10 ? true : false}
               pattern="^0[0-9]{9}"
               name="floating_phone"
               id="floating_phone"

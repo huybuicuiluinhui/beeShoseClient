@@ -65,7 +65,7 @@ const Information = () => {
     },
     {
       id: 6,
-      name: "Thoát",
+      name: "Đăng xuất",
       img: Images.iconLogout,
     },
   ];
@@ -84,100 +84,86 @@ const Information = () => {
   const [selectedCategory, setSelectedCategory] = useState("Tài khoản của tôi");
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    if (category === "Thoát") {
+    if (category === "Đăng xuất") {
       setShowMoal(true);
     }
   };
   return (
-    <div className="w-full h-full  flex relative  min-h-screen ">
-      <aside
-        id="logo-sidebar"
-        className="sticky   left-0  w-64 transition-transform -translate-x-full sm:translate-x-0  bg-[#f5f5f5] pt-14"
-        aria-label="Sidebar"
-      >
-        <div className="flex items-start">
-          <img
-            src={!!userPrf?.avata ? userPrf?.avata : Images.testAvatar}
-            alt=""
-            className="rounded-[100%] w-10 h-10 "
-          />
-          <div className="ml-2">
-            <p className="text-sm font-bold text-gray-800 ">
-              {userPrf?.fullName}
-              <div className=" flex   items-end ">
-                <img
-                  src={Images.iconPen}
-                  className="w-auto h-[20px] object-contain"
-                />
-                <span className="font-normal  text-xs text-gray-800">
-                  sửa hồ sơ
-                </span>
-              </div>
-            </p>
-          </div>
-        </div>
-        <div className="h-full py-4  ">
-          <div className="flex flex-col items-start justify-center  w-full  rounded">
-            {dataAside.map((item, index) => {
-              return (
-                <div
-                  className={`relative tracking-wider  leading-none overflow-hidden mt-2 pb-2 w-[100%] cursor-pointer mb-2 px-2 pt-2
+    <div className="w-full h-full   relative  min-h-screen ">
+      <div className="my-5">
+        <p className="uppercase font-semibold text-gray-600 text-xs">
+          Trang chủ / Tài khoản của tôi
+        </p>
+      </div>
+      <div className="flex w-full h-full ">
+        <aside
+          id="logo-sidebar"
+          className="sticky h-fit  left-0  w-64 transition-transform -translate-x-full sm:translate-x-0  bg-[#f5f5f5] pt-3 rounded"
+          aria-label="Sidebar"
+        >
+          <div className="h-full py-4  ">
+            <div className="flex flex-col items-start justify-center  w-full  rounded">
+              {dataAside.map((item, index) => {
+                return (
+                  <div
+                    className={`relative tracking-wider  leading-none overflow-hidden mt-2 pb-2 w-[100%] cursor-pointer mb-2 px-2 pt-2
                   ${
                     selectedCategory === item.name
                       ? "border-r-2 border-[#000]"
                       : ""
                   }
                   `}
-                  onClick={() => {
-                    handleCategoryClick(item.name);
-                  }}
-                  key={index}
-                >
-                  <div className=" flex items-end">
-                    <img
-                      src={item.img}
-                      className="w-[18px] h-auto object-contain"
-                    />{" "}
-                    <span
-                      className={`text-xs ml-2   ${
-                        selectedCategory === item.name
-                          ? "font-semibold text-black "
-                          : "text-gray-500 font-normal"
-                      }`}
-                    >
-                      {item.name}
-                    </span>
+                    onClick={() => {
+                      handleCategoryClick(item.name);
+                    }}
+                    key={index}
+                  >
+                    <div className=" flex items-end">
+                      <img
+                        src={item.img}
+                        className="w-[18px] h-auto object-contain"
+                      />{" "}
+                      <span
+                        className={`text-xs ml-2   ${
+                          selectedCategory === item.name
+                            ? "font-semibold text-black "
+                            : "text-gray-500 font-normal"
+                        }`}
+                      >
+                        {item.name}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </aside>
-      <div className="w-full pl-5 mt-2 bg-white">
-        {selectedCategory === dataAside[0].name ? (
-          <InforMe />
-        ) : selectedCategory === dataAside[1].name ? (
-          <Invoice />
-        ) : selectedCategory === dataAside[2].name ? (
-          <ReturnProduct />
-        ) : selectedCategory === dataAside[3].name ? (
-          <Address />
-        ) : selectedCategory === dataAside[4].name ? (
-          <ChangePassword />
-        ) : (
-          <div className="w-full h-full  ">
-            <div className="p-2 px-3 bg-slate-500 w-fit  text-white mx-auto mt-20">
-              <button
-                onClick={() => {
-                  setShowMoal(true);
-                }}
-              >
-                Xác nhận thoát ngay
-              </button>
+                );
+              })}
             </div>
           </div>
-        )}
+        </aside>
+        <div className="w-full pl-5 mt-2 bg-white">
+          {selectedCategory === dataAside[0].name ? (
+            <InforMe />
+          ) : selectedCategory === dataAside[1].name ? (
+            <Invoice />
+          ) : selectedCategory === dataAside[2].name ? (
+            <ReturnProduct />
+          ) : selectedCategory === dataAside[3].name ? (
+            <Address />
+          ) : selectedCategory === dataAside[4].name ? (
+            <ChangePassword />
+          ) : (
+            <div className="w-full h-full  ">
+              <div className="p-2 px-3 bg-slate-500 w-fit  text-white mx-auto mt-20">
+                <button
+                  onClick={() => {
+                    setShowMoal(true);
+                  }}
+                >
+                  Xác nhận đăng xuất ngay
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <ModalComponent
         check={true}
@@ -203,7 +189,7 @@ const Information = () => {
             />
           </svg>
           <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
-            Xác nhận thoát ?
+            Xác nhận đăng xuất ?
           </h3>
 
           <div className="w-full flex justify-around items-center mb-2">
@@ -226,7 +212,7 @@ const Information = () => {
               type="button"
               className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
             >
-              Thoát
+              Đăng xuất
             </button>
           </div>
         </div>
