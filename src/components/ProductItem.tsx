@@ -46,29 +46,6 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
 
-  // const addToCart = async () => {
-  //   try {
-  //     const res = await axios({
-  //       method: "post",
-  //       url: API.addToCart(),
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       data: {
-  //         id: userPrf?.id,
-  //         quantity: amount,
-  //         shoeDetail: idAddToCart,
-  //       },
-  //     });
-  //     if (res.status === 200) {
-  //       toast.success("Thêm vào giỏ hàng thành công");
-  //     } else {
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const getDataSize = async () => {
     let combinedData: Product[] = [];
     let currentPage = 1;
@@ -358,9 +335,8 @@ const ProductItem = ({
                   if (!!userPrf) {
                     addToCartUser(idAddToCart, amount);
                     setAmount(1);
-                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
                     openCart();
-                  } else {
+                  } else if (!userPrf) {
                     if (
                       !!idAddToCart &&
                       !!price &&

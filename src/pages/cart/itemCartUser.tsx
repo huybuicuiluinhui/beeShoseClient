@@ -5,9 +5,9 @@ import { convertToCurrencyString } from "../../utils/format";
 import axios from "axios";
 import API from "../../api";
 import { toast } from "react-toastify";
-import { useShoppingCart } from "../../context/shoppingCart.context";
+// import { useShoppingCart } from "../../context/shoppingCart.context";
 import { getTokenCustomer } from "../../helper/useCookie";
-
+import { useNavigate } from "react-router-dom";
 const ItemCartUser = ({
   item,
   idUser,
@@ -20,6 +20,7 @@ const ItemCartUser = ({
   setLoading: any;
 }) => {
   const token = getTokenCustomer();
+  const navigate = useNavigate();
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(item?.quantity);
   const reduceShoe = async (idShoeDetail: number) => {
@@ -161,7 +162,7 @@ const ItemCartUser = ({
             setShowMoal(false);
           }}
         >
-          <div className="w-full flex flex-col justify-center">
+          <div className="w-full flex flex-col justify-center ">
             <svg
               className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
               aria-hidden="true"

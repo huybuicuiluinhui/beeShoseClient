@@ -22,6 +22,7 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import { toast } from "react-toastify";
 import ModalComponent from "../../components/Modal";
 import ItemCartUser from "./itemCartUser";
+import { getCookie } from "../../helper/CookiesRequest";
 type CartItemProps = {
   id: number;
   quantity: number;
@@ -95,12 +96,6 @@ const Item = ({
             {" "}
             {infoShoe?.shoe.brand.name}
           </span>
-          {/* <a
-            href="#"
-            className="font-semibold hover:text-red-500 text-gray-500 text-xs"
-          >
-            Xóa
-          </a> */}
         </div>
       </div>
       <div className=" flex items-center justify-center w-1/5">
@@ -196,13 +191,15 @@ const Item = ({
 };
 const CartPage = () => {
   const navigate = useNavigate();
-  const { cartItems, userPrf } = useShoppingCart();
+  const { cartItems, userPrf, removeAllCart } = useShoppingCart();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
   const [showModal, setShowMoal] = useState<boolean>(false);
+  const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
   const [itemCheckRender, setItemCheckRender] = useState<boolean>(false);
+  const token = getCookie("customerToken");
   const getDetailShoe = async () => {
     try {
       const res = await axios({
@@ -216,6 +213,7 @@ const CartPage = () => {
       console.log(error);
     }
   };
+
   const getListDetailCart = async () => {
     try {
       const res = await axios({
@@ -233,7 +231,6 @@ const CartPage = () => {
     getListDetailCart();
   }, [userPrf, itemCheckRender]);
   useEffect(() => {
-    // setUserNameCookie();
     getDetailShoe();
   }, []);
   useEffect(() => {
@@ -255,7 +252,7 @@ const CartPage = () => {
           </h1>
           {/* </div> */}
           <span className="font-medium text-sm  text-gray-500">
-            ({cartItems.length} sản phẩm)
+            ({!!userPrf ? listProducts?.length : cartItems.length} sản phẩm)
           </span>
           {!!cartItems && cartItems.length > 0 && (
             <div className="flex mt-10 mb-5">
@@ -317,18 +314,28 @@ const CartPage = () => {
             </div>
           )}
 
-          <a
-            href={path.home}
-            className="flex font-semibold text-[#BFAEE3] text-sm mt-10"
-          >
-            <svg
-              className="fill-current mr-2 text-[#BFAEE3] w-4"
-              viewBox="0 0 448 512"
+          <div className="flex items-center justify-between  mt-10">
+            <a
+              href={path.home}
+              className="flex font-semibold text-[#BFAEE3] text-sm "
             >
-              <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
-            </svg>
-            Tiếp tục mua sắm
-          </a>
+              <svg
+                className="fill-current mr-2 text-[#BFAEE3] w-4"
+                viewBox="0 0 448 512"
+              >
+                <path d="M134.059 296H436c6.627 0 12-5.373 12-12v-56c0-6.627-5.373-12-12-12H134.059v-46.059c0-21.382-25.851-32.09-40.971-16.971L7.029 239.029c-9.373 9.373-9.373 24.569 0 33.941l86.059 86.059c15.119 15.119 40.971 4.411 40.971-16.971V296z" />
+              </svg>
+              Tiếp tục mua sắm
+            </a>
+            <button
+              className="border-[1px] border-gray-400 px-2 py-1 text-sm rounded"
+              onClick={() => {
+                setShowModalDelete(true);
+              }}
+            >
+              Xóa giỏ hàng
+            </button>
+          </div>
         </div>
         <div id="summary" className="w-1/4 px-4 py-10">
           <img
@@ -435,6 +442,60 @@ const CartPage = () => {
           </div>
         </div>
       </div>
+      {showModalDelete && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalDelete}
+          onClose={() => {
+            setShowModalDelete(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận xóa toàn bộ sản phẩm khỏi giỏ hàng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  removeAllCart();
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };

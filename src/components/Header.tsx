@@ -10,6 +10,7 @@ import { useShoppingCart } from "../context/shoppingCart.context";
 import API from "../api";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getCookie } from "../helper/CookiesRequest";
+import Fade from "react-reveal/Fade";
 const Header = () => {
   const navigate = useNavigate();
 
@@ -100,7 +101,7 @@ const Header = () => {
     return (
       <div className="w-screen flex justify-center">
         <div
-          className=" max-w-screen-xl mx-auto w-full bg-[#f2f2f2] absolute  z-40 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-h-64"
+          className=" max-w-screen-xl mx-auto w-full bg-[#fff] absolute  z-40 max-h-64  mt-[1px] shadow-sm"
           onMouseEnter={() => {
             handleHover(true);
           }}
@@ -110,7 +111,7 @@ const Header = () => {
         >
           <div className="w-full flex  mx-10">
             <div className="w-[20%]">
-              <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+              <span className="text-sm  font-medium whitespace-nowrap text-black uppercase border-b-[1px] border-b-gray-400 ">
                 Thương hiệu
               </span>
               <ul className="mx-auto   flex flex-col   py-2 ">
@@ -129,7 +130,7 @@ const Header = () => {
                         className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
                       />
                       <span
-                        className={`cursor-pointer  text-[12px] hover:text-[#6756ca] ${"text-gray-900"}`}
+                        className={`cursor-pointer  text-xs hover:text-[#6756ca] ${"text-gray-900"}`}
                       >
                         {item.name}
                       </span>
@@ -147,7 +148,7 @@ const Header = () => {
                 handleHover(false);
               }}
             >
-              <span className="text-xs font-medium whitespace-nowrap text-black uppercase ">
+              <span className="text-sm font-medium whitespace-nowrap text-black uppercase border-b-gray-400  border-b-[1px]">
                 Danh mục
               </span>
               <div className="grid grid-rows-4 grid-flow-col ">
@@ -461,7 +462,11 @@ const Header = () => {
         )}
       </header>
 
-      {showTable && <CategoryTable />}
+      {showTable && (
+        <Fade top distance="10%" duration={800}>
+          <CategoryTable />
+        </Fade>
+      )}
       <FormLogin
         showModal={showModal}
         setShowModal={setShowModal}

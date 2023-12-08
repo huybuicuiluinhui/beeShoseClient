@@ -5,42 +5,44 @@ import { toast } from "react-toastify";
 import Images from "../../../static";
 import { CustomError, IAddress, Iinfo } from "../../../types/product.type";
 import { useShoppingCart } from "../../../context/shoppingCart.context";
+import ModalComponent from "../../../components/Modal";
 
 const InforMe = () => {
   const { userPrf, infoUser } = useShoppingCart();
 
-  const [user, setUser] = useState<Iinfo>();
+  // const [user, setUser] = useState<Iinfo>();
   const [birthday, setBirthday] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [gender, setGender] = useState("Nam");
   // const [name, setName] = useState<string>("");
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState<string>("");
+  const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     infoUser?.avatar ? infoUser?.avatar : null
   );
   console.log("userPrf,userPrf", infoUser);
-  const loadInfoUser = async () => {
-    try {
-      const res = await axios({
-        method: "get",
-        url: API.getInfoUser(Number(userPrf?.id)),
-      });
+  // const loadInfoUser = async () => {
+  //   try {
+  //     const res = await axios({
+  //       method: "get",
+  //       url: API.getInfoUser(Number(userPrf?.id)),
+  //     });
 
-      if (res.data) {
-        console.log("res?.data", res?.data);
-        setUser(res?.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    if (userPrf) {
-      loadInfoUser();
-    }
-  }, [userPrf]);
+  //     if (res.data) {
+  //       console.log("res?.data", res?.data);
+  //       setUser(res?.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (userPrf) {
+  //     loadInfoUser();
+  //   }
+  // }, [userPrf]);
   useEffect(() => {
     if (!!infoUser) {
       setBirthday(infoUser?.birthday);
@@ -86,7 +88,6 @@ const InforMe = () => {
         console.log(response);
         if (response.status) {
           toast.success("Cập nhật thông tin thành công");
-          loadInfoUser();
           window.location.reload();
         }
       } catch (error) {
@@ -269,7 +270,7 @@ const InforMe = () => {
         <div className="w-full flex justify-center">
           <button
             onClick={() => {
-              updateInfoUser();
+              setShowModalUpdate(true);
             }}
             type="button"
             className="text-white bg-gray-400 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-9 py-2.5 text-center my-5 "
@@ -278,6 +279,60 @@ const InforMe = () => {
           </button>
         </div>
       </div>
+      {showModalUpdate && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalUpdate}
+          onClose={() => {
+            setShowModalUpdate(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận cập nhật thông tin người dùng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModalUpdate(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  updateInfoUser();
+                  setShowModalUpdate(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };

@@ -145,7 +145,7 @@ const Address = () => {
           </button>
         </div>
 
-        {!!dataAddress && dataAddress.length > 0 ? (
+        {!!dataAddress ? (
           dataAddress.map((item, index) => {
             return (
               <ItemAdr

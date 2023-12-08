@@ -11,6 +11,7 @@ import { configApi } from "../../../utils/config";
 import API from "../../../api";
 import { toast } from "react-toastify";
 import { getTokenCustomer } from "../../../helper/useCookie";
+import ModalComponent from "../../../components/Modal";
 
 const ItemAdr = ({
   item,
@@ -32,6 +33,7 @@ const ItemAdr = ({
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<boolean>(false);
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
+  const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const itemRef = useRef<IAddress | null>(null);
 
   const fetchProvinces = async () => {
@@ -189,7 +191,7 @@ const ItemAdr = ({
             <button
               className="text-xs text-blue-400"
               onClick={() => {
-                deleteAdrID(item?.id);
+                setShowModalDelete(true);
               }}
             >
               Xóa
@@ -218,6 +220,60 @@ const ItemAdr = ({
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}
       />
+      {showModalDelete && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalDelete}
+          onClose={() => {
+            setShowModalDelete(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận xóa địa chỉ mà bạn đã lựa chọn ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  deleteAdrID(item?.id);
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };

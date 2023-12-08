@@ -170,7 +170,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
           },
         });
         if (res.status) {
-          toast("đã thêm thành công");
+          toast.success("đã thêm thành công");
         }
       } catch (error) {
         if (typeof error === "string") {

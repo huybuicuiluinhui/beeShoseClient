@@ -34,7 +34,7 @@ const ModalComponent = ({
     >
       <div
         className={`${
-          check ? "w-[25%]" : "w-[600px]"
+          check ? "w-fit" : "w-[600px]"
         } relative top-20 mx-auto p-5 border w-[50%] shadow-lg rounded-md bg-white`}
       >
         <button

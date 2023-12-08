@@ -14,7 +14,6 @@ import { IProduct, Product } from "../../types/product.type";
 import ProductStanding from "../../components/ProductStanding";
 import NavPage from "../../components/NavPage";
 import SekeletonItemShoe from "../../components/SekeletonItemShoe";
-import Fade from "react-reveal/Fade";
 interface ShoeSize {
   id: number;
   size: string;
@@ -45,14 +44,9 @@ interface PriceRange {
 
 const ListProductsByBrand = () => {
   const params = useParams();
-  console.log("params,params", params);
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(1);
-  const [pageColor, setPageColor] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(1);
-  const [totalPageSize, setTotalPageSize] = useState<number>(1);
-  const [totalPageColor, setTotalPageColor] = useState<number>(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
@@ -101,7 +95,6 @@ const ListProductsByBrand = () => {
   const [selectedMaterials, setSelectedMaterials] = useState<ShoeMaterial[]>(
     []
   );
-
   const [selectedPriceRange, setSelectedPriceRange] = useState<PriceRange>({
     id: 0,
     minPrice: 0,
@@ -118,11 +111,23 @@ const ListProductsByBrand = () => {
   const [idCategories, setIDCategories] = useState<any>("");
   const [idBrands, setIdBrands] = useState<any>();
   const [name, setName] = useState<String>("Tất cả sản phẩm");
-  const [selectedOption, setSelectedOption] = useState(""); // Trạng thái để lưu giá trị được chọn
-  const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
-  };
-
+  // const [selectedOption, setSelectedOption] = useState("");
+  // const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
+  // };
+  // const handleBrandsSelect = (brand: Product) => {
+  //   setSelectedBrands((prevBrands) => {
+  //     const existingSize = prevBrands.find((s) => s.brand === brand.name);
+  //     if (existingSize) {
+  //       return prevBrands.filter((s) => s.brand !== brand.name);
+  //     } else {
+  //       return [
+  //         ...prevBrands,
+  //         { id: brand.id, brand: brand.name, selected: true },
+  //       ];
+  //     }
+  //   });
+  // };
   const handleSizeSelect = (size: Product) => {
     setSelectedSizes((prevSizes) => {
       const existingSize = prevSizes.find((s) => s.size === size.name);
@@ -162,19 +167,7 @@ const ListProductsByBrand = () => {
       }
     });
   };
-  const handleBrandsSelect = (brand: Product) => {
-    setSelectedBrands((prevBrands) => {
-      const existingSize = prevBrands.find((s) => s.brand === brand.name);
-      if (existingSize) {
-        return prevBrands.filter((s) => s.brand !== brand.name);
-      } else {
-        return [
-          ...prevBrands,
-          { id: brand.id, brand: brand.name, selected: true },
-        ];
-      }
-    });
-  };
+
   const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedId = parseInt(event.target.value);
     const selectedRange = priceRange2.find((item) => item.id === selectedId);
@@ -195,9 +188,7 @@ const ListProductsByBrand = () => {
   const handleDropdownToggleMaterial = () => {
     setIsDropdownOpen3(!isDropdownOpen3);
   };
-  const handleDropdownToggleBrand = () => {
-    setIsDropdownOpen4(!isDropdownOpen4);
-  };
+
   const handleDropdownToggleColor = () => {
     setIsDropdownOpen5(!isDropdownOpen5);
   };
@@ -224,10 +215,9 @@ const ListProductsByBrand = () => {
   const getDataSize = async () => {
     const res = await axios({
       method: "get",
-      url: API.getSize(pageSize),
+      url: API.getSizeAll(),
     });
     if (res.status) {
-      setTotalPageSize(res.data.totalPage);
       setShoesSize(res?.data?.data);
     }
   };

@@ -21,6 +21,7 @@ import { configApi } from "../../utils/config";
 import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
 import AddAddressModal from "../information/address/modalAddAdr";
+import { getCookie } from "../../helper/CookiesRequest";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf, removeAllCart } = useShoppingCart();
@@ -40,12 +41,15 @@ const PayMentWithUser = () => {
   const [indexArr, setIndexArr] = useState<number>(0);
   const [carts, setCarts] = useState({ quantity: null, id: null });
   const [isModalOpen, setModalOpen] = useState(false);
+  const [showModalBill, setShowModalBill] = useState(false);
   const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
   const [chooseRadio, setChooseRadio] = useState<number>();
   const [selectedName, setSelectedName] = useState<string>("");
   const toggleModal = () => {
     setModalOpenVoucher(!isModalOpenVoucher);
   };
+  const token = getCookie("customerToken");
+
   const getListDetailCart = async () => {
     try {
       const res = await axios({
@@ -163,6 +167,7 @@ const PayMentWithUser = () => {
       return;
     }
   };
+
   const postBill = async () => {
     if (!!dataAddress && dataAddress.length > 0 && !!listProducts) {
       try {
@@ -211,6 +216,8 @@ const PayMentWithUser = () => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        removeAllCart();
       }
     }
   };
@@ -521,7 +528,7 @@ const PayMentWithUser = () => {
             <button
               className="bg-red-600 text-white text-base font-medium px-5 py-2"
               onClick={() => {
-                postBill();
+                setShowModalBill(true);
               }}
             >
               Đặt hàng
@@ -605,6 +612,60 @@ const PayMentWithUser = () => {
         onClose={() => setModalOpen(false)}
       />
       <ShowVoucher isOpen={isModalOpenVoucher} onClose={toggleModal} />
+      {showModalBill && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalBill}
+          onClose={() => {
+            setShowModalBill(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center mx-10">
+              Xác nhận đặt hàng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center  gap-5  ">
+              <button
+                onClick={() => {
+                  setShowModalBill(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  postBill();
+                  setShowModalBill(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };
