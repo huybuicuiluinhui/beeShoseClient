@@ -126,9 +126,9 @@ const Address = () => {
   }, [selectedDistrict]);
 
   return (
-    <div className="w-full h-full pt-4">
-      <div className="w-[80%] mx-auto">
-        <div className="flex justify-between items-center p-4  border-[1px] border-gray-200">
+    <div className="w-full h-full  ">
+      <div className="w-[80%] mx-auto min-h-screen shadow-lg mb-10">
+        <div className="flex justify-between items-center p-4  border-b-[1px] border-gray-200">
           <p className="font-semibold text-gray-800  ">Địa chỉ của tôi</p>
           <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
             <img

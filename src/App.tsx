@@ -27,6 +27,7 @@ import LoginScreen from "./pages/loginAndRegister/login";
 import ChangePassword from "./pages/information/changePassword";
 import withAuth from "./pages/auth";
 import PayMentWithUser from "./pages/payment/payMentWithUser";
+import TimeLineOrder from "./pages/invoice/timeLineOrder";
 
 function App() {
   const location = useLocation();
@@ -69,6 +70,7 @@ function App() {
         { path: path.loginScreen, element: <LoginScreen /> },
         { path: path.changePassword, element: <ChangePassword /> },
         { path: path.vnpayment, element: <VnPayPayment /> },
+        { path: path.timeLineOrder, element: <TimeLineOrder /> },
         { path: "*", element: <PageNotFound /> },
       ],
     },

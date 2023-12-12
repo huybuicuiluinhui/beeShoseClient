@@ -37,6 +37,7 @@ import iconLogo from "./icons/iconLogo.png";
 import iconLogout from "./icons/iconLogout.png";
 import iconCart from "./icons/iconCart.png";
 import iconDeliveryFash from "./icons/iconDeliveryFash.png";
+import iconDeliveryFashRed from "./icons/iconDeliveryFashRed.png";
 import iconShoppingSuccess from "./icons/iconShoppingSuccess.png";
 import iconAvatar from "./icons/iconAvatar.png";
 import iconAdidas from "./icons/iconAdidas.png";
@@ -69,6 +70,13 @@ import iconShipping from "./icons/iconShipping.svg";
 import iconAccout3 from "./icons/iconAccout3.svg";
 import iconChangeAvatar from "./icons/iconChangeAvatar.png";
 import logo from "./icons/logo.png";
+import iconWaitComfirm from "./icons/iconWaitComfirm.png";
+import iconWaitDelivery from "./icons/iconWaitDelivery.png";
+import iconWaitDeliveryGray from "./icons/iconWaitDeliveryGray.png";
+import iconUnbox from "./icons/iconUnbox.png";
+import iconUnboxGray from "./icons/iconUnboxGray.png";
+import iconBack from "./icons/iconBack.png";
+import iconNoOrder from "./icons/iconNoOrder.png";
 
 const Images = {
   banner01,
@@ -112,6 +120,7 @@ const Images = {
   iconLogout,
   iconCart,
   iconDeliveryFash,
+  iconDeliveryFashRed,
   iconShoppingSuccess,
   iconAvatar,
   bannerHotDeal,
@@ -142,5 +151,12 @@ const Images = {
   iconChangeAvatar,
   iconAccout3,
   logo,
+  iconWaitComfirm,
+  iconWaitDelivery,
+  iconWaitDeliveryGray,
+  iconUnbox,
+  iconUnboxGray,
+  iconBack,
+  iconNoOrder,
 };
 export default Images;

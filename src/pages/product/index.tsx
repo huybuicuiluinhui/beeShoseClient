@@ -193,10 +193,10 @@ const ProductPage = () => {
         {!!dataProductSole && !!dataProductSole.length && (
           <>
             <div className="flex items-center   ">
-              <span className="text-base font-medium  uppercase my-5 text-[#000] ">
+              <span className="text-base font-medium  uppercase  text-[#000] ">
                 Các sản phẩm tương tự
               </span>
-              <div className="w-10 h-[1px] bg-[#000]  ml-2" />
+              <div className="w-10 h-[1px] bg-[#000]  ml-2 self-end " />
             </div>
 
             <SliderListProduct products={dataProductSole} />

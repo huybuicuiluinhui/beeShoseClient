@@ -22,7 +22,6 @@ const InforMe = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     infoUser?.avatar ? infoUser?.avatar : null
   );
-  console.log("userPrf,userPrf", infoUser);
   // const loadInfoUser = async () => {
   //   try {
   //     const res = await axios({
@@ -122,14 +121,14 @@ const InforMe = () => {
   };
   return (
     <div className="w-full h-full ">
-      <div className=" w-[80%] mx-auto">
+      <div className=" w-[80%] mx-auto shadow-lg px-4 min-h-screen mb-10">
         <div className="mb-2">
-          <p className="font-semibold text-gray-800 mt-8 ">Hồ sơ của tôi</p>
+          <p className="font-semibold text-gray-800  ">Hồ sơ của tôi</p>
           <p className="text-sm text-gray-500">
             Quản lý thông tin hồ sơ để bảo mật tài khoản
           </p>
         </div>
-        <div className="w-[70%]  mx-auto">
+        <div className="w-[80%]  mx-auto">
           <div>
             {" "}
             <div className="flex justify-between  ">
@@ -137,7 +136,7 @@ const InforMe = () => {
                 <img
                   src={imagePreview ? imagePreview : Images.iconAccout3}
                   alt="Ảnh đại diện"
-                  className=" w-[120px] h-[120px] rounded-[100%]"
+                  className=" w-[120px] h-[120px] rounded-[100%] object-cover"
                 />
                 <div className="mt-4">
                   <input

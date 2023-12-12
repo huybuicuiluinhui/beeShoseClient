@@ -259,22 +259,7 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                {/* <li className="flex-1 cursor-pointer">
-                  <div className=" flex justify-center items-center my-auto ">
-                    <div className="">
-                      <LazyLoadImage
-                        width="20"
-                        height="20"
-                        src="https://img.icons8.com/ios/50/phone--v2.png"
-                        alt="phone--v2"
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <p className=" text-xs ">Liên hệ</p>
-                      <p className="text-sm font-medium"> 0376426057</p>
-                    </div>
-                  </div>
-                </li> */}
+
                 <li
                   className="flex-[1.3] px-0 cursor-pointer"
                   onClick={() => {
@@ -310,7 +295,7 @@ const Header = () => {
                             {cartItems.length}
                           </p>
                         </div>
-                      ) : !!userPrf ? (
+                      ) : !!userPrf && listProducts.length > 0 ? (
                         <div className=" absolute left-3 -top-[30%]">
                           <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-2 text-xs text-white">
                             {listProducts.length}
@@ -334,16 +319,10 @@ const Header = () => {
                     </div>
                   </div>
                 </li>
-                <li
-                  className="flex-[1.4] px-0 cursor-pointer"
-                  // onClick={() => {
-                  //
-                  // }}
-                >
+                <li className="flex-[1.4] px-0 cursor-pointer">
                   <div
                     className=" flex justify-center items-center my-auto "
                     onClick={() => {
-                      // setShowModal(true);
                       if (token) {
                         navigate(path.information);
                       } else {
@@ -358,7 +337,7 @@ const Header = () => {
                             ? infoUser?.avatar
                             : Images.iconAccout2
                         }
-                        className={"w-8 h-8 rounded-full"}
+                        className={"w-8 h-8 rounded-full object-cover"}
                       />
                     ) : (
                       <LazyLoadImage src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAsTAAALEwEAmpwYAAABYklEQVR4nOXVMUtdQRAF4E+jkkIiWgQRbIQkZbA1EItYmSbYiggaor0EK0WsJIXxF2htMI3w0ijxD1jYiNFCwRQhTSSkMaI+WRhBhIv3el8hvAPLMDNn7tndO7tLvaENs9jGz7AzEa8JnuMIVfzAetjkH+JZWYEW7OEv3t3KDUV8F81lREZixuMZ+feRHy4jsoIzPM7IN+EflsuIfMXvOzjHWCsj8im2ozsj34ULLJQR6cUlvqDhVq4hVpBEXiqJpVjNBvrwFK+wGfFFNUAj5nEaH70eyZ+LfM3QiVFMh03+w8cLjOFDgTEWV1AuvI0DWL3H+I/BPCJbcdOm9u0pMHqj7nsekZ28xIwJpvo7kQ7eHzxRDG04wWoecn+c8gpacwq04lvUvc47q49RkB6rCbRn8DowGbzEn1IQqcv2o2vO43GqxHZWwj+/8WIm/r3wCAP4HD/1AL/CpuZI8TfBqwNcAfyqZT4CcuOBAAAAAElFTkSuQmCC" />

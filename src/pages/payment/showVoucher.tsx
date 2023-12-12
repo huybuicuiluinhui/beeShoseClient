@@ -1,4 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import API from "../../api";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { convertToCurrencyString } from "../../utils/format";
+import { IVoucher } from "../../types/product.type";
 
 const ShowVoucher = ({
   isOpen,
@@ -7,6 +12,30 @@ const ShowVoucher = ({
   isOpen: boolean;
   onClose: any;
 }) => {
+  const [selected, setSelected] = useState("");
+  const [percent, setPrecent] = useState<number>(0);
+  const [inputValue, setInputValue] = useState("");
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>();
+  const [voucher, setVoucher] = useState<IVoucher[]>();
+  const [code, setCode] = useState<string>();
+  const getVoucher = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getVoucherActive(),
+      });
+      if (res.status) {
+        setVoucher(res?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getVoucher();
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -57,11 +86,62 @@ const ShowVoucher = ({
               Áp dụng
             </button>
           </div>
-          <div className="mt-2 px-7 py-3">
+          <div className="mt-2 py-3">
+            {!!voucher &&
+              voucher.map((voucher, index) => (
+                <div
+                  key={index}
+                  className={`w-full flex justify-around   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}
+                  onClick={() => {
+                    if (
+                      voucher?.name?.toLowerCase() !== selected.toLowerCase()
+                      // voucher?.minBillValue < location?.state?.total
+                    ) {
+                      setSelected(voucher?.name);
+                      setPrecent(voucher?.percentReduce);
+                      setInputValue(voucher?.name);
+                      setMinPrice(voucher?.minBillValue);
+                      setQuantity(voucher?.quantity);
+                      setCode(voucher?.code);
+                      toast.success("Áp dụng voucher thành công");
+                    } else {
+                      toast.warning("Bạn cần chọn voucher khác");
+                    }
+                  }}
+                >
+                  <div className={`w-[50%] `}>
+                    <div
+                      key={voucher?.name}
+                      className={`w-full  text-sm  text-[#BFAEE3] `}
+                    >
+                      {voucher?.name}
+                    </div>
+
+                    <p className="text-xs mt-2">
+                      Phần trăm giảm: {voucher.percentReduce}%
+                    </p>
+                    <p className="text-xs mt-2">
+                      Số lượng còn: {voucher.quantity}
+                    </p>
+                  </div>
+                  <div className={`w-[50%] flex flex-col justify-start gap-2 `}>
+                    <div
+                      key={voucher?.name}
+                      className={`w-full  text-[12px]   `}
+                    >
+                      Mã voucher: {voucher?.code}
+                    </div>
+
+                    <p className="text-[12px]">
+                      Đơn tối thiểu:{" "}
+                      <span className="text-red-400">
+                        {convertToCurrencyString(voucher.minBillValue)}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))}
             {/* Content based on the provided image */}
-            <p className="text-sm text-gray-500">
-              Vui lòng mua hàng trên ứng dụng Shopee để sử dụng ưu đãi.
-            </p>
           </div>
           <div className="items-center px-4 py-3">
             <button

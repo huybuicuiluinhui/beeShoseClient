@@ -215,3 +215,38 @@ export interface IInfoAccount {
   };
   username: string;
 }
+export interface IOrder {
+  id: number;
+  type: number;
+  address: string;
+  index: number;
+  status: number;
+  phoneNumber: null;
+  voucher: null;
+  customer: string;
+  code: string;
+  note: string | null;
+  totalMoney: number;
+  moneyShip: number;
+  moneyReduce: number;
+  employee: any;
+  createAt: string;
+  desiredDate: any;
+  payDate: any;
+  receiveDate: any;
+  shipDate: any;
+}
+export interface IDetailOrder {
+  name: string;
+  id: number;
+  size: string;
+  index: number;
+  images: string;
+  quantity: number;
+  price: number;
+  sole: string;
+  color: string;
+  discountValue: number;
+  shoeCode: string;
+  discountPercent: number;
+}

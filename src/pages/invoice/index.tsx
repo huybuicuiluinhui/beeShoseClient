@@ -6,101 +6,90 @@ import Delivering from "./delivering";
 import Complete from "./complete";
 import Cancelled from "./cancelled";
 import Return from "./return";
+import TimeLineOrder from "./timeLineOrder";
 const Invoice = () => {
   const [activeTab, setActiveTab] = React.useState(0);
-  const _invoiceAll = React.useMemo(() => <InvoiceAll />, []);
-  const _waitForPay = React.useMemo(() => <WaitForPay />, []);
-  const _transport = React.useMemo(() => <Transport />, []);
-  const _delivering = React.useMemo(() => <Delivering />, []);
-  const _complete = React.useMemo(() => <Complete />, []);
-  const _cancelled = React.useMemo(() => <Cancelled />, []);
-  const _return = React.useMemo(() => <Return />, []);
+  const _invoiceAll = React.useMemo(() => <InvoiceAll status={null} />, []);
+  const _waitForPay = React.useMemo(() => <InvoiceAll status={2} />, []);
+  const _transport = React.useMemo(() => <InvoiceAll status={4} />, []);
+  const _delivering = React.useMemo(() => <InvoiceAll status={5} />, []);
+  const _complete = React.useMemo(() => <InvoiceAll status={6} />, []);
+  const _cancelled = React.useMemo(() => <InvoiceAll status={7} />, []);
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
   return (
     <div className="w-full h-full ">
-      <div className="grid grid-cols-7">
+      <div className="flex items-center justify-between shadow-lg w-[80%] mx-auto">
         {/* Tab buttons */}
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 0
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm  "
           }`}
           onClick={() => handleTabClick(0)}
         >
           Tất cả
         </button>
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 1
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(1)}
         >
-          Đang xử lý
+          Chờ xác nhận
         </button>
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 2
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(2)}
         >
-          Vận chuyển
+          Chờ giao
         </button>
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 3
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(3)}
         >
           Đang giao
         </button>
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 4
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(4)}
         >
           Hoàn thành
         </button>
         <button
-          className={`px-4 py-2 h-fit  ${
+          className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 5
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
+              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(5)}
         >
           Đã hủy
         </button>
-        <button
-          className={`px-4 py-2 h-fit  ${
-            activeTab === 6
-              ? "text-[#ffba00]  font-bold text-base border-b-2  border-[#ffba00] border-solid"
-              : "text-[#333]  font-bold text-base  "
-          }`}
-          onClick={() => handleTabClick(6)}
-        >
-          Trả hàng/Hoàn tiền
-        </button>
       </div>
-      <div className="w-full">
+      <div className="w-full mt-2">
         {activeTab === 0 && _invoiceAll}
         {activeTab === 1 && _waitForPay}
         {activeTab === 2 && _transport}
         {activeTab === 3 && _delivering}
         {activeTab === 4 && _complete}
         {activeTab === 5 && _cancelled}
-        {activeTab === 6 && _return}
       </div>
     </div>
   );

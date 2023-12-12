@@ -191,13 +191,13 @@ const Item = ({
 };
 const CartPage = () => {
   const navigate = useNavigate();
-  const { cartItems, userPrf, removeAllCart } = useShoppingCart();
+  const { cartItems, userPrf, removeAllCart, listProducts } = useShoppingCart();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
   const [total, setTotal] = useState<number>();
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
+  // const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
   const [itemCheckRender, setItemCheckRender] = useState<boolean>(false);
   const token = getCookie("customerToken");
   const getDetailShoe = async () => {
@@ -214,22 +214,22 @@ const CartPage = () => {
     }
   };
 
-  const getListDetailCart = async () => {
-    try {
-      const res = await axios({
-        method: "get",
-        url: API.getListDetailCart(Number(userPrf?.id)),
-      });
-      if (res.status) {
-        setListProducts(res?.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getListDetailCart();
-  }, [userPrf, itemCheckRender]);
+  // const getListDetailCart = async () => {
+  //   try {
+  //     const res = await axios({
+  //       method: "get",
+  //       url: API.getListDetailCart(Number(userPrf?.id)),
+  //     });
+  //     if (res.status) {
+  //       setListProducts(res?.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getListDetailCart();
+  // }, [userPrf, itemCheckRender]);
   useEffect(() => {
     getDetailShoe();
   }, []);
@@ -484,6 +484,7 @@ const CartPage = () => {
               <button
                 onClick={() => {
                   removeAllCart();
+
                   setShowModalDelete(false);
                 }}
                 data-modal-hide="popup-modal"

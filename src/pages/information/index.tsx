@@ -48,11 +48,11 @@ const Information = () => {
       name: "Đơn mua",
       img: Images.iconOrder,
     },
-    {
-      id: 3,
-      name: "Yêu cầu trả hàng",
-      img: Images.iconOrderReturn,
-    },
+    // {
+    //   id: 3,
+    //   name: "Yêu cầu trả hàng",
+    //   img: Images.iconOrderReturn,
+    // },
     {
       id: 4,
       name: "Địa chỉ",
@@ -90,15 +90,15 @@ const Information = () => {
   };
   return (
     <div className="w-full h-full   relative  min-h-screen ">
-      <div className="my-5">
-        <p className="uppercase font-semibold text-gray-600 text-xs">
+      <div className="my-3">
+        <p className="uppercase font-semibold text-gray-600 text-xs ">
           Trang chủ / Tài khoản của tôi
         </p>
       </div>
       <div className="flex w-full h-full ">
         <aside
           id="logo-sidebar"
-          className="sticky h-fit  left-0  w-64 transition-transform -translate-x-full sm:translate-x-0  bg-[#f5f5f5] pt-3 rounded"
+          className="sticky h-screen  left-0  w-64 transition-transform -translate-x-full sm:translate-x-0  bg-[#f5f5f5] pt-3 rounded"
           aria-label="Sidebar"
         >
           <div className="h-full py-4  ">
@@ -139,7 +139,7 @@ const Information = () => {
             </div>
           </div>
         </aside>
-        <div className="w-full pl-5 mt-2 bg-white">
+        <div className="w-full pl-5  bg-white">
           {selectedCategory === dataAside[0].name ? (
             <InforMe />
           ) : selectedCategory === dataAside[1].name ? (

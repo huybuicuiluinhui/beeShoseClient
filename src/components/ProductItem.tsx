@@ -396,19 +396,17 @@ const ProductItem = ({
           <div className="flex justify-between">
             <span className="font-semibold text-sm">
               Mã <br />
-              <span className="font-normal text-[11px]">
-                {!!price ? code : ""}
-              </span>
+              <span className="font-normal text-sm">{!!price ? code : ""}</span>
             </span>
             <span className="font-semibold text-sm">
               Danh mục <br />
-              <span className="font-normal text-[11px]">
+              <span className="font-normal ">
                 {!!price ? inforShoe?.category?.name : ""}
               </span>{" "}
             </span>
             <span className="font-semibold text-sm">
               Thương hiệu <br />
-              <span className="font-normal text-[11px]">
+              <span className="font-normal ">
                 {!!price ? inforShoe?.brand?.name : ""}
               </span>{" "}
             </span>
@@ -417,7 +415,7 @@ const ProductItem = ({
             {!!amountShoe && amountShoe > 0 && !!price && (
               <span className="font-semibold text-sm">
                 Số lượng hàng có sẵn :{" "}
-                <span className="font-normal text-[11px]">{amountShoe}</span>{" "}
+                <span className="font-normal ">{amountShoe}</span>{" "}
               </span>
             )}
           </div>

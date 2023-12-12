@@ -219,13 +219,13 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("trước khi xóa ", res);
       if (res.status) {
-        console.log("Đã xóa hết rồi", res);
+        // toast.success("Xóa sản phẩm trong giỏ hàng thành công");
       }
     } catch (error) {
       console.log(error);
     } finally {
+      getListDetailCart();
     }
   };
   const getProductQuantityById = (productId: number) => {
