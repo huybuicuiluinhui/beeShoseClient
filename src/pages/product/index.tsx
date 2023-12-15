@@ -30,7 +30,6 @@ const ProductPage = () => {
       }
     }
   };
-  console.log("dataDetailProduct", dataDetailProduct);
   const getShoeSole = async () => {
     if (!!inforShoe) {
       const res = await axios({
@@ -56,7 +55,6 @@ const ProductPage = () => {
   useEffect(() => {
     getProductWithId();
     getInfoDetailProduct();
-    // getShoeSole();
   }, [id]);
   useEffect(() => {
     getShoeSole();
@@ -190,7 +188,7 @@ const ProductPage = () => {
         </div>
         {!!dataProductSole && !!dataProductSole.length && (
           <>
-            <div className="flex items-center   ">
+            <div className="flex items-center mt-2  ">
               <span className="text-base font-medium  uppercase  text-[#000] ">
                 Các sản phẩm tương tự
               </span>

@@ -301,7 +301,7 @@ const Header = () => {
                   </li>
 
                   <li
-                    className="flex-[1.3] px-0 cursor-pointer"
+                    className=" px-0 cursor-pointer"
                     onClick={() => {
                       navigate(path.lookUpOrders);
                     }}
@@ -360,7 +360,7 @@ const Header = () => {
                   </li>
 
                   <li
-                    className="flex-[1.3] px-0 "
+                    className=" px-0 "
                     onMouseEnter={() => setShowModalNoti(true)}
                     onMouseLeave={() => setShowModalNoti(false)}
                   >
@@ -520,7 +520,7 @@ const Header = () => {
                       </Fade>
                     )}
                   </li>
-                  <li className="flex-[1.4] px-0 cursor-pointer">
+                  <li className=" px-0 cursor-pointer">
                     <div
                       className=" flex justify-center items-center my-auto "
                       onClick={() => {

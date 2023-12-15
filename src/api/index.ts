@@ -48,7 +48,7 @@ const API = {
   // lấy giá theo chi tiết sản phẩm
   getPriceDetailShoe: (name: string, size: number, color: number) =>
     baseUrl +
-    `api/shoe-detail?name=${name}&size=${size}&color=${color}&sizePage=100000`,
+    `api/shoe-detail?name=${name}&size=${size}&color=${color}&page=1&sizePage=100000`,
   // Lấy danh sách voucher
   getVoucherPublic: () => baseUrl + `api/voucher/public`,
   getVoucherWithUser: (id: number) => baseUrl + `api/voucher/private/${id}`,

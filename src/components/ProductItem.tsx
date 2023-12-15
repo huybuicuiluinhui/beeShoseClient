@@ -71,7 +71,7 @@ const ProductItem = ({
   const getPriceDetailShoe = async () => {
     const res = await axios({
       method: "get",
-      url: API.getPriceDetailShoe(inforShoe.name, chooseSize, chooseColor),
+      url: API.getPriceDetailShoe(inforShoe?.name, chooseSize, chooseColor),
     });
     if (res.status) {
       if (res?.data?.totalPages === 0) {
@@ -172,7 +172,10 @@ const ProductItem = ({
                 </span>
               </>
             ) : !!price && !priceSale && amountShoe > 0 ? (
-              `${convertToCurrencyString(Number(price))}`
+              <span className="text-red-500 font-semibold text-lg  ">
+                {/* {convertToCurrencyString(Number(priceSale))} */}
+                {convertToCurrencyString(Number(price))}
+              </span>
             ) : (
               <span className="font-semibold"> Sản phẩm hiện hết hàng</span>
             )}
