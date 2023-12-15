@@ -34,7 +34,7 @@ const API = {
   getTopSale: (top: number) => baseUrl + `api/shoe/top-sell?top=${top}`,
   getShoesImg: () => baseUrl + "api/images",
   getShoeDetail: (shoe: number) =>
-    baseUrl + `api/shoe-detail?shoe=${shoe}$sizePage=${100}`,
+    baseUrl + `api/shoe-detail?shoe=${shoe}&page=${1}&sizePage=10000`,
   getAllShoeDetail: () => baseUrl + `api/shoe-detail?sizePage=100000`,
   getShoeWithId: (shoe: number) => baseUrl + `api/shoe/${shoe}`,
   getShoeDetailWithId: (id: number) =>

@@ -30,7 +30,6 @@ const ProductItem = ({
     addToCartUser,
     getItemQuantityUser,
   } = useShoppingCart();
-  const token = getTokenCustomer();
   const [chooseSize, setChooseSize] = useState<any>();
   const [chooseColor, setChooseColor] = useState<any>();
   const [chooseSizeName, setChooseSizeName] = useState<string | number>();
@@ -47,58 +46,26 @@ const ProductItem = ({
   const [code, setCode] = useState<string>();
 
   const getDataSize = async () => {
-    let combinedData: Product[] = [];
-    let currentPage = 1;
-    while (true) {
-      try {
-        const response = await axios.get(API.getSizePage(currentPage));
-        const data = response.data.data;
-
-        if (data.length === 0) {
-          break;
-        }
-
-        combinedData = [...combinedData, ...data];
-        currentPage++;
-
-        if (currentPage >= response.data.totalPages) {
-          break;
-        }
-      } catch (error) {
-        console.error(error);
-        break;
+    try {
+      const response = await axios.get(API.getSizeAll());
+      if (response.status) {
+        setAllSizeData(response.data.data);
+        setChooseSize(findProductIdByName(product[0]?.size, allSizeData));
       }
+    } catch (error) {
+      console.error(error);
     }
-
-    setAllSizeData(combinedData);
-    setChooseSize(findProductIdByName(product[0]?.size, allSizeData));
   };
   const getDataColor = async () => {
-    let combinedData: Product[] = [];
     let currentPage = 1;
-
-    while (true) {
-      try {
-        const response = await axios.get(API.getColorPage(currentPage));
-        const data = response.data.data;
-
-        if (data.length === 0) {
-          break;
-        }
-
-        combinedData = [...combinedData, ...data];
-        currentPage++;
-
-        if (currentPage >= response.data.totalPages) {
-          break;
-        }
-      } catch (error) {
-        console.error(error);
-        break;
+    try {
+      const response = await axios.get(API.getAllColors());
+      if (response.status) {
+        setAllColorData(response?.data?.data);
       }
+    } catch (error) {
+      console.error(error);
     }
-
-    setAllColorData(combinedData);
     setChooseColor(findProductIdByName(product[0]?.color, allColorData));
   };
   const getPriceDetailShoe = async () => {
@@ -120,7 +87,6 @@ const ProductItem = ({
       }
     }
   };
-  // sử dụng useMemo tránh render
   const imgArr = useMemo(() => {
     const arr = [];
     for (let i = 0; i < product.length; i++) {
@@ -141,6 +107,7 @@ const ProductItem = ({
   }, [product]);
   const uniqueSizes = useMemo(() => {
     const sizes: any[] = [];
+    console.log("product", product);
     for (let i = 0; i < product.length; i++) {
       const size = product[i].size;
       if (!sizes.includes(size)) {
@@ -160,7 +127,6 @@ const ProductItem = ({
     setChooseColorName(product[0]?.color);
   }, [product, allSizeData, allColorData]);
   useEffect(() => {
-    // setAmountShoe(0);
     if (chooseColor && chooseSize) {
       getPriceDetailShoe();
     }

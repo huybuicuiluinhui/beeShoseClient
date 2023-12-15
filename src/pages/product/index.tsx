@@ -25,10 +25,12 @@ const ProductPage = () => {
         url: API.getShoeDetail(Number(id)),
       });
       if (res.status) {
+        console.log("res?.data?.data", res?.data?.data);
         setDataDetailProduct(res?.data?.data);
       }
     }
   };
+  console.log("dataDetailProduct", dataDetailProduct);
   const getShoeSole = async () => {
     if (!!inforShoe) {
       const res = await axios({
@@ -153,10 +155,8 @@ const ProductPage = () => {
         />
       )}
       <div className="w-full h-[1px] bg-gray-400" />
-      {/* Mô tả và đánh giá */}
       <div className="w-full  mb-32 ">
         <div className="flex space-x-10 w-full justify-around mb-10">
-          {/* Tab buttons */}
           <button
             onClick={() => handleTabClick(0)}
             className={`px-4 ${
@@ -201,7 +201,6 @@ const ProductPage = () => {
           </>
         )}
       </div>
-      {/* các sản phẩm tương tự */}
     </div>
   );
 };
