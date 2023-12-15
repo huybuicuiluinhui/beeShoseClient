@@ -1,36 +1,110 @@
 import React, { useState, useEffect } from "react";
 import ShippingProcess from "../../components/shippingProcess";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { IListDeatilShoe, IVoucher } from "../../types/product.type";
-import { convertToCurrencyString, toSlug } from "../../utils/format";
+import { IDetailProductCart2, IVoucher } from "../../types/product.type";
+import { convertToCurrencyString, validateEmail } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
 import API, { baseUrl } from "../../api";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { toast } from "react-toastify";
-import path from "../../constants/path";
 import ModalComponent from "../../components/Modal";
 import { configApi } from "../../utils/config";
+import { toast } from "react-toastify";
+import path from "../../constants/path";
+import Images from "../../static";
+import ShowVoucher from "./showVoucher";
+import ShowVoucherList from "./showVoucherList";
 interface Province {
   ProvinceID: number;
   ProvinceName: string;
 }
-
 interface District {
   DistrictID: number;
   DistrictName: string;
 }
-
 interface Ward {
   WardCode: number;
   WardName: string;
 }
 
+const ItemPayMent = ({ item }: { item: any }) => {
+  const [inforShoe, setInforShoe] = useState<IDetailProductCart2>();
+  const getDetailShoeWithId = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getShoeDetailWithId(item?.id),
+    });
+    if (res.status) {
+      setInforShoe(res?.data?.data);
+    }
+  };
+  useEffect(() => {
+    getDetailShoeWithId();
+  }, [item?.id]);
+  return (
+    <div
+      className={`flex px-6 py-2 w-full border-b-[1px] border-gray-500 border-dashed `}
+    >
+      {
+        <img
+          className="h-[90px] w-[80px] object-contain "
+          src={inforShoe?.images}
+        />
+      }
+      <div className="flex-1">
+        <div className="flex flex-col justify-between ml-4 flex-grow w-full h-full ">
+          <span className="font-bold text-sm  ">{inforShoe?.name}</span>
+          <span className="text-red-500 text-xs font-medium">
+            <span className="text-xs font-medium  text-[#333333]">
+              Chất liệu:
+            </span>{" "}
+            {inforShoe?.sole}
+          </span>
+          <p className="  text-xs font-medium  text-[#333333]  ">
+            Số lượng: {item?.quantity}
+          </p>
+          <div className="flex justify-between  ">
+            <div className="flex  ">
+              <span className="text-xs font-medium  text-[#333333]  ">
+                Giá:
+              </span>
+              {inforShoe?.discountValue ? (
+                <div className="flex items-center gap-1 ml-1 ">
+                  <span className="text-xs font-medium line-through text-gray-400">
+                    {convertToCurrencyString(inforShoe?.price)}
+                  </span>
+                  <span className="text-xs font-medium text-red-500">
+                    {" "}
+                    {convertToCurrencyString(inforShoe?.discountValue)}
+                  </span>
+                </div>
+              ) : (
+                inforShoe?.price && (
+                  <span className="text-xs font-medium text-red-500 ml-1 ">
+                    {convertToCurrencyString(inforShoe?.price)}
+                  </span>
+                )
+              )}
+            </div>
+            <span className="text-center  font-medium text-xs w-[45%] text-red-700">
+              <span className="text-[#666666]">Thành tiền: </span>
+              {!!inforShoe?.discountValue
+                ? formatCurrency(item.quantity * inforShoe?.discountValue)
+                : inforShoe?.price &&
+                  formatCurrency(inforShoe?.price * item.quantity)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const PaymentPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { cartItems, clearCart } = useShoppingCart();
+  console.log("cartItems", cartItems);
+
   const [selected, setSelected] = useState("");
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
@@ -49,15 +123,16 @@ const PaymentPage = () => {
   const [specificAddress, setSpecificAddress] = useState<string>(" ");
   const [quantity, setQuantity] = useState<number>();
   const [code, setCode] = useState<string>();
-  const [arrShoes, setArrShoes] = useState<any[]>(
-    location?.state?.infoShoeList
-  );
   const [feeShip, setFeeShip] = useState();
-  const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
+  const [listDetailShoe, setListDetailShoe] = useState<IDetailProductCart2[]>();
   const [textHVT, setTextHVT] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [note, setNote] = useState<string>("");
-  const [paymentMethod, setPaymentMethod] = useState<number>(1);
+  const [paymentMethod, setPaymentMethod] = useState<number>(0);
+  // const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
+  // const toggleModal = () => {
+  //   setModalOpenVoucher(!isModalOpenVoucher);
+  // };
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -76,16 +151,12 @@ const PaymentPage = () => {
       setVoucher(res?.data?.data);
     }
   };
-  function isValidEmail(email: string) {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return emailRegex.test(email);
-  }
   const postBill = async () => {
     if (textHVT === "" || textHVT === null || textHVT === undefined) {
       toast.warning("Không được để trống họ và tên");
     } else if (email === "" || email === null || email === undefined) {
       toast.warning("Không được để email");
-    } else if (!isValidEmail(email)) {
+    } else if (!validateEmail(email)) {
       toast.warning("Email không hợp lệ");
     } else if (
       selectedDistrict === null ||
@@ -102,74 +173,91 @@ const PaymentPage = () => {
     } else if (paymentMethod === null || paymentMethod === undefined) {
       toast.warning("Hãy chọn phương thức thanh toán");
     } else {
-      try {
-        const newBill = {
-          customerName: textHVT,
-          email: email,
-          district: selectedDistrict,
-          province: selectedProvince,
-          ward: selectedWard,
-          specificAddress: specificAddress,
-          moneyShip: feeShip,
-          moneyReduce: (percent / 100) * location?.state?.total,
-          totalMoney:
-            Number(location?.state?.total) +
-            Number(feeShip ? feeShip : 0) -
-            (percent / 100) * location?.state?.total,
-          note: note,
-          paymentMethod: paymentMethod,
-          carts: cartItems,
-        };
-        if (radioChoose === 0) {
-          const response = await axios.post(
-            baseUrl + "api/bill/create-bill-client",
-            newBill
-          );
-          if (response.status) {
-            toast.success("Đặt hàng thành công");
-            navigate(path.home);
-            clearCart();
-          }
-        }
-        if (radioChoose === 1) {
-          const tempNewBill = { ...newBill, id: generateUUID() };
-          localStorage.setItem("checkout", JSON.stringify(tempNewBill));
-          try {
-            const response = await axios.get(
-              baseUrl +
-                `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+      if (listDetailShoe) {
+        try {
+          const newBill = {
+            customerName: textHVT,
+            email: email,
+            district: selectedDistrict,
+            province: selectedProvince,
+            ward: selectedWard,
+            specificAddress: specificAddress,
+            moneyShip: Number(feeShip),
+            moneyReduce:
+              (percent / 100) *
+              cartItems.reduce((total, cartItem) => {
+                const item = listDetailShoe.find((i) => i.id === cartItem.id);
+                return (
+                  total +
+                  (item?.discountValue
+                    ? item?.discountValue
+                    : item?.price || 0) *
+                    cartItem.quantity
+                );
+              }, 0),
+            totalMoney: cartItems.reduce((total, cartItem) => {
+              const item = listDetailShoe.find((i) => i.id === cartItem.id);
+              return (
+                total +
+                (item?.discountValue ? item?.discountValue : item?.price || 0) *
+                  cartItem.quantity
+              );
+            }, 0),
+            note: note,
+            paymentMethod: paymentMethod,
+            carts: cartItems,
+          };
+
+          if (radioChoose === 0) {
+            const response = await axios.post(
+              baseUrl + "api/bill/create-bill-client",
+              newBill
             );
             if (response.status) {
-              window.location.href = response.data.data;
+              console.log(response?.data?.data);
+              toast.success("Đặt hàng thành công");
+              navigate(
+                `/showBillCheck/${response?.data?.data?.data?.id}/${response?.data?.data?.data?.code}`
+              );
+              clearCart();
             }
-          } catch (error) {
-            console.error("Error making axios request:", error);
           }
+          if (radioChoose === 1) {
+            const tempNewBill = { ...newBill, id: generateUUID() };
+            localStorage.setItem("checkout", JSON.stringify(tempNewBill));
+            try {
+              const response = await axios.get(
+                baseUrl +
+                  `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+              );
+              if (response.status) {
+                window.location.href = response.data.data;
+              }
+            } catch (error) {
+              console.error("Error making axios request:", error);
+            }
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
       }
     }
   };
-
   function generateUUID() {
-    // Public Domain/MIT
     var d = new Date().getTime(); //Timestamp
     var d2 =
       (typeof performance !== "undefined" &&
         performance.now &&
         performance.now() * 1000) ||
-      0; //Time in microseconds since page-load or 0 if unsupported
+      0;
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
       /[xy]/g,
       function (c) {
-        var r = Math.random() * 16; //random number between 0 and 16
+        var r = Math.random() * 16;
         if (d > 0) {
-          //Use timestamp until depleted
           r = (d + r) % 16 | 0;
           d = Math.floor(d / 16);
         } else {
-          //Use microseconds since page-load if supported
           r = (d2 + r) % 16 | 0;
           d2 = Math.floor(d2 / 16);
         }
@@ -177,7 +265,6 @@ const PaymentPage = () => {
       }
     );
   }
-
   const caculateFee = async () => {
     try {
       const response = await axios.post(
@@ -220,8 +307,6 @@ const PaymentPage = () => {
       console.error("Lỗi:", error);
     }
   };
-
-  // Hàm lấy danh sách các quận huyện theo tỉnh
   const fetchDistrictsByProvince = async (provinceId: number) => {
     try {
       const response = await axios.get(
@@ -272,192 +357,50 @@ const PaymentPage = () => {
     }
   }, [selectedWard]);
 
-  const handleChange = (event: any) => {
-    setPaymentMethod(event.target.value);
-    setRadioChoose(event?.target?.value);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPaymentMethod(parseInt(event.target.value, 10));
+    setRadioChoose(parseInt(event.target.value, 10));
   };
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
-      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32 shadow-md my-10">
+      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-16 shadow-md my-10 bg-[#f9fafb]">
         <div className="px-4 ">
-          <p className="text-xl font-medium text-gray-600">Thông báo</p>
-          <p className="text-gray-400">
+          <p className="text-base font-medium text-gray-600 mt-3">
+            Trang Thanh Toán
+          </p>
+          <p className="text-gray-400 text-sm">
             Kiểm tra các mặt hàng của bạn. Và chọn một phương thức vận chuyển
             phù hợp.
           </p>
 
-          {!!arrShoes && !!arrShoes.length ? (
-            <div className="mt-8 space-y-3 rounded-lg border bg-white  ">
-              {arrShoes.map((item, index) => {
-                return (
-                  <div
-                    key={index}
-                    className={`flex px-6 py-2 w-full  ${
-                      index === arrShoes.length - 1
-                    } ? "": " border-b-[1px] border-dotted  border-gray-200`}
-                  >
-                    {
-                      <LazyLoadImage
-                        className="h-auto w-[20%] object-cpnatin"
-                        src={item?.infoShoe?.images[0]?.name}
-                      />
-                    }
-                    <div className="w-full">
-                      <div className="flex flex-col justify-between ml-4 flex-grow w-full h-full cursor-pointer">
-                        <span className="font-bold text-sm  ">
-                          {item?.infoShoe?.shoe?.name}-
-                          {item?.infoShoe?.color?.name}-
-                          {item?.infoShoe?.size?.name}
-                        </span>
-                        <span className="text-red-500 text-xs font-medium">
-                          Thương hiệu: {item?.infoShoe?.shoe?.brand?.name}
-                        </span>
-                        <div className="w-full flex">
-                          <span className=" w-[50%] text-xs font-medium  text-[#333333]  ">
-                            <span className="text-[#666666] text-xs font-medium">
-                              {" "}
-                              Số lượng:
-                            </span>{" "}
-                            {item?.quantity}
-                          </span>
-                          <span className="text-center  font-medium text-xs w-[50%] text-[#333333]">
-                            <span className="text-[#666666]">Thành tiền: </span>
-                            {convertToCurrencyString(
-                              item?.infoShoe?.price * item?.quantity
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
+          {!!cartItems && cartItems.length ? (
+            <div className="mt-4 space-y-3  bg-white overflow-y-scroll h-80 ">
+              {cartItems.map((item, index) => {
+                return <ItemPayMent item={item} key={index} />;
               })}
             </div>
           ) : (
-            <div className="flex items-center justify-center w-56 h-56 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-              <div className="px-3 py-1 text-xs font-medium leading-none text-center text-gray-800 bg-gray-200 rounded-full animate-pulse dark:bg-gray-900 dark:text-gray-200">
-                loading...
-              </div>
-            </div>
+            <img src={Images.isEmtyCart} className="h-72  mx-auto" />
           )}
 
-          <div className=" w-full font-medium ">
-            <div
-              className={`bg-white w-full  flex items-center justify-between rounded my-3 `}
-            >
-              MÃ GIẢM GIÁ
-            </div>
-            <div className="w-full bg-white ">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => {
-                  setInputValue(e?.target?.value.toLowerCase());
-                }}
-                onClick={() => setOpenList(true)}
-                placeholder="Hãy nhập mã voucher của bạn vào đây..."
-                className="placeholder:text-gray-700 p-2 w-full rounded-t-[4px] border-gray-200 "
+          <div className=" w-full   mt-2">
+            <span className=" text-sm font-medium"> ÁP DỤNG MÃ GIẢM GIÁ</span>
+            {!!listDetailShoe && (
+              <ShowVoucherList
+                setPrecent={setPrecent}
+                valueCheck={cartItems.reduce((total, cartItem) => {
+                  const item = listDetailShoe.find((i) => i.id === cartItem.id);
+                  return (
+                    total +
+                    (item?.discountValue
+                      ? item?.discountValue
+                      : item?.price || 0) *
+                      cartItem.quantity
+                  );
+                }, 0)}
               />
-              .
-            </div>
-            <div
-              className={`w-full  mt-2  ${
-                open ? "max-h-60" : "max-h-0"
-              } overflow-y-auto`}
-            >
-              {!!openList &&
-                voucher?.map((voucher, index) => (
-                  <div
-                    key={index}
-                    className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2  ${
-                      voucher?.name?.toLowerCase() ===
-                        selected?.toLowerCase() && "bg-[#f5f5f5] text-black"
-                    }
-        ${
-          voucher?.name?.toLowerCase().startsWith(inputValue)
-            ? "block"
-            : "hidden"
-        }`}
-                    onClick={() => {
-                      if (
-                        voucher?.name?.toLowerCase() !==
-                          selected.toLowerCase() &&
-                        voucher?.minBillValue < location?.state?.total
-                      ) {
-                        setSelected(voucher?.name);
-                        setPrecent(voucher?.percentReduce);
-                        setInputValue(voucher?.name);
-                        setMinPrice(voucher?.minBillValue);
-                        setQuantity(voucher?.quantity);
-                        setCode(voucher?.code);
-                        toast.success("Áp dụng voucher thành công");
-                      } else {
-                        toast.warning("Bạn cần chọn voucher khác");
-                      }
-                    }}
-                  >
-                    <div className={`w-[50%] `}>
-                      <div
-                        key={voucher?.name}
-                        className={`w-full  text-xs  text-[#BFAEE3] `}
-                      >
-                        {voucher?.name}
-                      </div>
-
-                      <p className="text-[10px] mt-2">
-                        Phần trăm giảm: {voucher.percentReduce}%
-                      </p>
-                      <p className="text-[10px] mt-2">
-                        Số lượng còn: {voucher.quantity}
-                      </p>
-                    </div>
-                    <div className={`w-[50%] flex flex-col justify-between `}>
-                      <div
-                        key={voucher?.name}
-                        className={`w-full  text-[8px]   `}
-                      >
-                        Mã voucher: {voucher?.code}
-                      </div>
-
-                      <p className="text-[10px]">
-                        Đơn tối thiểu:{" "}
-                        <span className="text-red-400">
-                          {convertToCurrencyString(voucher.minBillValue)}
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              {selected && percent && minPrice && quantity && (
-                <div
-                  className={`w-full flex justify-between   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}
-                >
-                  <div className={`w-[50%] `}>
-                    <div className={`w-full  text-xs  text-[#BFAEE3] `}>
-                      {inputValue}
-                    </div>
-
-                    <p className="text-[10px] mt-2">
-                      Phần trăm giảm: {percent}%
-                    </p>
-                    <p className="text-[10px] mt-2">Số lượng còn: {quantity}</p>
-                  </div>
-                  <div className={`w-[50%] flex flex-col justify-between `}>
-                    <div className={`w-full  text-[8px]   `}>
-                      Mã voucher: {code}
-                    </div>
-
-                    <p className="text-[10px]">
-                      Đơn tối thiểu:{" "}
-                      <span className="text-red-400">
-                        {convertToCurrencyString(minPrice)}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
         {/* Thanh toán */}
@@ -614,125 +557,53 @@ const PaymentPage = () => {
               Chọn phương thức thanh toán
             </label>
 
-            <div className="flex">
-              <div className="flex items-center h-5">
-                <input
-                  value={0}
-                  checked={radioChoose === 0}
-                  name="payment"
-                  onChange={handleChange}
-                  id="option2"
-                  aria-describedby="helper-radio-text"
-                  type="radio"
-                  className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
-                />
-              </div>
-              <div className="ml-2 text-sm">
-                <label
-                  htmlFor="option2"
-                  className="font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Thanh toán khi nhận hàng
-                </label>
-              </div>
-            </div>
-            <div className="flex">
-              <div className="flex items-center h-5">
-                <input
-                  value={1}
-                  checked={radioChoose === 1}
-                  name="payment"
-                  onChange={handleChange}
-                  id="option3"
-                  aria-describedby="helper-radio-text"
-                  type="radio"
-                  className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
-                />
-              </div>
-              <div className="ml-2 text-sm">
-                <label
-                  htmlFor="option3"
-                  className="font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Thanh toán vnpay
-                </label>
-              </div>
-            </div>
-            {/* {radioChoose === "option1" && (
-              <div>
-                <label
-                  htmlFor="card-holder"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
-                  Tên tài khoản
-                </label>
-                <div className="relative">
+            <div className="flex items-center justify-around">
+              <div className="flex">
+                <div className="flex items-center h-5">
                   <input
-                    type="text"
-                    id="card-holder"
-                    name="card-holder"
-                    className="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
-                    placeholder="Hãy nhập tên tài khoản của bạn"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      className="h-4 w-4 text-gray-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <label
-                  htmlFor="card-no"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
-                  Số tài khoản
-                </label>
-                <div className="flex">
-                  <div className="relative w-7/12 flex-shrink-0">
-                    <input
-                      type="text"
-                      id="card-no"
-                      name="card-no"
-                      className="w-full rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
-                      placeholder="xxxx-xxxx-xxxx-xxxx"
-                    />
-                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                      <svg
-                        className="h-4 w-4 text-gray-400"
-                        width={16}
-                        height={16}
-                        fill="currentColor"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
-                        <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="credit-expiry"
-                    className="w-full rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
-                    placeholder="MM/YY"
-                  />
-                  <input
-                    type="text"
-                    name="credit-cvc"
-                    className="w-1/6 flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-gray-500 focus:ring-gray-500"
-                    placeholder="CVC"
+                    value={0}
+                    checked={radioChoose === 0}
+                    name="payment"
+                    onChange={handleChange}
+                    id="option2"
+                    aria-describedby="helper-radio-text"
+                    type="radio"
+                    className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
                   />
                 </div>
+                <div className="ml-2 text-sm">
+                  <label
+                    htmlFor="option2"
+                    className="font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Thanh toán khi nhận hàng
+                  </label>
+                </div>
               </div>
-            )} */}
+              <div className="flex">
+                <div className="flex items-center h-5">
+                  <input
+                    value={1}
+                    checked={radioChoose === 1}
+                    name="payment"
+                    onChange={handleChange}
+                    id="option3"
+                    aria-describedby="helper-radio-text"
+                    type="radio"
+                    className=" peer-checked:border-gray-500  peer-checked: peer-checked:ring-gray-500 w-4 h-4 text-gray-500 bg-gray-100 border-gray-300 focus:ring-gray-500  "
+                  />
+                </div>
+                <div className="ml-2 text-sm">
+                  <label
+                    htmlFor="option3"
+                    className="font-medium text-gray-900 dark:text-gray-300"
+                  >
+                    Thanh toán vnpay
+                  </label>
+                </div>
+              </div>
+            </div>
+
             {/* Total */}
             <div className="mt-6 border-t border-b py-2">
               <div className="flex items-center justify-between">
@@ -746,7 +617,14 @@ const PaymentPage = () => {
                         const item = listDetailShoe.find(
                           (i) => i.id === cartItem.id
                         );
-                        return total + (item?.price || 0) * cartItem.quantity;
+                        console.log("cartItem", item);
+                        return (
+                          total +
+                          (item?.discountValue
+                            ? item?.discountValue
+                            : item?.price || 0) *
+                            cartItem?.quantity
+                        );
                       }, 0)
                     )}
                   </p>
@@ -754,7 +632,7 @@ const PaymentPage = () => {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm font-medium text-gray-900">
-                  Tổng phí vận chuyển
+                  Phí vận chuyển
                 </p>
                 <p className="font-normal text-gray-900">
                   {formatCurrency(feeShip ? feeShip : 0)}
@@ -766,7 +644,22 @@ const PaymentPage = () => {
                     Giảm giá voucher
                   </p>
                   <p className="font-normal text-gray-900">
-                    - {formatCurrency((percent / 100) * location?.state?.total)}
+                    -{" "}
+                    {formatCurrency(
+                      (percent / 100) *
+                        cartItems.reduce((total, cartItem) => {
+                          const item = listDetailShoe.find(
+                            (i) => i.id === cartItem.id
+                          );
+                          return (
+                            total +
+                            (item?.discountValue
+                              ? item?.discountValue
+                              : item?.price || 0) *
+                              cartItem.quantity
+                          );
+                        }, 0)
+                    )}
                   </p>
                 </div>
               ) : (
@@ -784,17 +677,36 @@ const PaymentPage = () => {
               <p className="text-sm font-medium text-gray-900">
                 Tổng thanh toán
               </p>
-              {!!location?.state?.total || !!feeShip || !!percent ? (
+              {!!listDetailShoe && feeShip && (
                 <p className="text-2xl font-semibold text-red-500">
                   {formatCurrency(
-                    Number(location?.state?.total) +
-                      Number(feeShip ? feeShip : 0) -
-                      (percent / 100) * location?.state?.total
+                    cartItems.reduce((total, cartItem) => {
+                      const item = listDetailShoe.find(
+                        (i) => i.id === cartItem.id
+                      );
+                      return (
+                        total +
+                        (item?.discountValue
+                          ? item?.discountValue
+                          : item?.price || 0) *
+                          cartItem.quantity
+                      );
+                    }, 0) +
+                      feeShip -
+                      (percent / 100) *
+                        cartItems.reduce((total, cartItem) => {
+                          const item = listDetailShoe.find(
+                            (i) => i.id === cartItem.id
+                          );
+                          return (
+                            total +
+                            (item?.discountValue
+                              ? item?.discountValue
+                              : item?.price || 0) *
+                              cartItem.quantity
+                          );
+                        }, 0)
                   )}
-                </p>
-              ) : (
-                <p className="text-2xl font-semibold text-red-500">
-                  {formatCurrency(location?.state?.total)}
                 </p>
               )}
             </div>
@@ -802,7 +714,12 @@ const PaymentPage = () => {
           <button
             className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white"
             onClick={() => {
-              setShowMoal(true);
+              if (cartItems.length === 0) {
+                toast.warning("Cần có sản phẩm");
+                return;
+              } else {
+                setShowMoal(true);
+              }
             }}
           >
             Đặt hàng
@@ -833,18 +750,18 @@ const PaymentPage = () => {
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center   ">
               Xác nhận đặt đơn hàng ?
             </h3>
 
-            <div className="w-full flex justify-around items-center mb-2">
+            <div className="w-full flex justify-around items-center mb-2 gap-16">
               <button
                 onClick={() => {
                   setShowMoal(false);
                 }}
                 data-modal-hide="popup-modal"
                 type="button"
-                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5"
               >
                 Hủy
               </button>
@@ -863,6 +780,7 @@ const PaymentPage = () => {
           </div>
         </ModalComponent>
       )}
+      {/* <ShowVoucher isOpen={isModalOpenVoucher} onClose={toggleModal} />  */}
     </div>
   );
 };

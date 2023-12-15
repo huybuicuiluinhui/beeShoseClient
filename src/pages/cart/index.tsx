@@ -7,6 +7,7 @@ import { useShoppingCart } from "../../context/shoppingCart.context";
 import axios from "axios";
 import {
   IDetailProductCart,
+  IDetailProductCart2,
   IIForDetailShoe,
   IListDeatilShoe,
   IVoucher,
@@ -38,14 +39,18 @@ const Item = ({
   showModal,
   setShowModal,
 }: CartItemProps) => {
-  const [infoShoe, setInfoShoe] = useState<IIForDetailShoe>();
-  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
-    useShoppingCart();
+  const [infoShoe, setInfoShoe] = useState<IDetailProductCart2>();
+  const {
+    removeFromCart,
+    increaseCartQuantity,
+    decreaseCartQuantity,
+    getItemQuantity,
+  } = useShoppingCart();
   const getDetailShoeWithId = async () => {
     try {
       const res = await axios.get(API.getShoeDetailWithId(id));
       if (res.status === 200) {
-        const newInfoShoe = res.data;
+        const newInfoShoe = res?.data?.data;
         setInfoShoeList((prevInfoShoeList: any) => {
           const updatedInfoShoeList = [...prevInfoShoeList];
           const existingInfoShoe = updatedInfoShoeList.find(
@@ -66,6 +71,7 @@ const Item = ({
       console.error("Error fetching shoe details: ", error);
     }
   };
+  console.log("quantity: ", quantity);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
@@ -84,18 +90,12 @@ const Item = ({
         <div className="w-20">
           <img
             className="h-auto w-[80%] object-contain"
-            src={infoShoe?.images[0]?.name}
+            src={infoShoe?.images}
           />
         </div>
-        <div className="flex flex-col justify-between ml-4 flex-grow">
-          <span className="font-semibold text-sm ">
-            {" "}
-            {infoShoe?.shoe.name}-{infoShoe?.color?.name}-{infoShoe?.size?.name}
-          </span>
-          <span className="text-red-500 text-xs">
-            {" "}
-            {infoShoe?.shoe.brand.name}
-          </span>
+        <div className="flex flex-col justify-start ml-4 flex-grow">
+          <span className="font-semibold text-sm "> {infoShoe?.name}</span>
+          <span className="text-red-500 text-xs"> {infoShoe?.sole}</span>
         </div>
       </div>
       <div className=" flex items-center justify-center w-1/5">
@@ -103,7 +103,11 @@ const Item = ({
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
           onClick={() => {
-            decreaseCartQuantity(infoShoe?.id);
+            if (quantity === 1) {
+              setShowModal(true);
+            } else {
+              decreaseCartQuantity(infoShoe?.id);
+            }
           }}
         >
           <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
@@ -113,8 +117,8 @@ const Item = ({
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
           onClick={() => {
-            if (quantity >= infoShoe.quantity) {
-              toast("Sản phẩm đạt số lượng tối đa");
+            if (quantity >= infoShoe?.quantity || quantity >= 10) {
+              toast.warning("Sản phẩm đạt số lượng tối đa");
               return;
             } else {
               increaseCartQuantity(infoShoe.id);
@@ -124,12 +128,29 @@ const Item = ({
           <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
         </svg>
       </div>
-      <span className="text-center w-1/5 font-semibold text-sm">
-        {convertToCurrencyString(infoShoe.price)}
-      </span>
-      <span className="text-center w-1/5 font-semibold text-sm">
-        {convertToCurrencyString(infoShoe.price * quantity)}
-      </span>
+      {!!infoShoe.discountPercent && infoShoe.discountValue ? (
+        <div className=" gap-2 w-1/5 ">
+          <p className="text-center  font-semibold text-sm text-red-500">
+            {convertToCurrencyString(infoShoe?.discountValue)}
+          </p>
+          <p className="text-center  font-semibold text-sm  line-through">
+            {convertToCurrencyString(infoShoe.price)}
+          </p>
+        </div>
+      ) : (
+        <p className="text-center  font-semibold text-sm w-1/5 text-red-500 ">
+          {convertToCurrencyString(infoShoe.price)}
+        </p>
+      )}
+      {!!infoShoe?.discountPercent && !!infoShoe.discountValue ? (
+        <span className="text-center w-1/5 font-semibold text-sm text-red-500 ">
+          {convertToCurrencyString(infoShoe.discountValue * quantity)}
+        </span>
+      ) : (
+        <span className="text-center w-1/5 font-semibold text-sm text-red-500 ">
+          {convertToCurrencyString(infoShoe.price * quantity)}
+        </span>
+      )}
       {showModal && (
         <ModalComponent
           check={true}
@@ -192,14 +213,10 @@ const Item = ({
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, userPrf, removeAllCart, listProducts } = useShoppingCart();
-  const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
+  const [listDetailShoe, setListDetailShoe] = useState<IDetailProductCart2[]>();
   const [infoShoeList, setInfoShoeList] = useState<IIForDetailShoe[]>([]);
-  const [total, setTotal] = useState<number>();
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
-  // const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
-  const [itemCheckRender, setItemCheckRender] = useState<boolean>(false);
-  const token = getCookie("customerToken");
   const getDetailShoe = async () => {
     try {
       const res = await axios({
@@ -213,35 +230,9 @@ const CartPage = () => {
       console.log(error);
     }
   };
-
-  // const getListDetailCart = async () => {
-  //   try {
-  //     const res = await axios({
-  //       method: "get",
-  //       url: API.getListDetailCart(Number(userPrf?.id)),
-  //     });
-  //     if (res.status) {
-  //       setListProducts(res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getListDetailCart();
-  // }, [userPrf, itemCheckRender]);
   useEffect(() => {
     getDetailShoe();
   }, []);
-  useEffect(() => {
-    if (!!listDetailShoe) {
-      cartItems.reduce((total, cartItem) => {
-        const item = listDetailShoe.find((i) => i.id === cartItem.id);
-        setTotal(total + (item?.price || 0) * cartItem.quantity);
-        return total + (item?.price || 0) * cartItem.quantity;
-      }, 0);
-    }
-  }, [listDetailShoe, cartItems]);
   return (
     <div className="container mx-auto ">
       <ShippingProcess type={1} />
@@ -256,38 +247,36 @@ const CartPage = () => {
           </span>
           {!!cartItems && cartItems.length > 0 && (
             <div className="flex mt-10 mb-5">
-              <h3 className="font-semibold text-gray-600 text-xs  w-[5%]"></h3>
-              <h3 className="font-semibold text-gray-600 text-xs  w-2/5">
+              <h3 className="font-semibold text-gray-600 text-sm  w-[5%]"></h3>
+              <h3 className="font-semibold text-gray-600 text-sm  w-2/5">
                 Thông tin chi tiết sản phẩm
               </h3>
-              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+              <h3 className="font-semibold  text-gray-600 text-sm  w-1/5 text-center">
                 Số lượng
               </h3>
-              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+              <h3 className="font-semibold  text-gray-600 text-sm  w-1/5 text-center">
                 Giá
               </h3>
-              <h3 className="font-semibold  text-gray-600 text-xs  w-1/5 text-center">
+              <h3 className="font-semibold  text-gray-600 text-sm  w-1/5 text-center">
                 Thành tiền
               </h3>
             </div>
           )}
 
           {!!userPrf ? (
-            <div>
-              {!!listProducts &&
-                listProducts.length > 0 &&
-                listProducts.map((item, index) => {
-                  return (
-                    <ItemCartUser
-                      item={item}
-                      key={index}
-                      idUser={userPrf?.id}
-                      loading={itemCheckRender}
-                      setLoading={setItemCheckRender}
-                    />
-                  );
-                })}
-            </div>
+            !!listProducts && listProducts.length > 0 ? (
+              listProducts.map((item, index) => {
+                return <ItemCartUser item={item} key={index} />;
+              })
+            ) : (
+              <div className="w-full">
+                <img
+                  src={Images.isEmtyCart}
+                  className="w-[45%] h-auto mx-auto"
+                  alt="Tiếp tục mua sắm"
+                />
+              </div>
+            )
           ) : (
             <div>
               {!!cartItems && cartItems.length > 0 ? (
@@ -306,7 +295,7 @@ const CartPage = () => {
                 <div className="w-full">
                   <img
                     src={Images.isEmtyCart}
-                    className="w-[60%] h-auto mx-auto"
+                    className="w-[45%] h-auto mx-auto"
                     alt="Tiếp tục mua sắm"
                   />
                 </div>
@@ -327,14 +316,18 @@ const CartPage = () => {
               </svg>
               Tiếp tục mua sắm
             </a>
-            <button
-              className="border-[1px] border-gray-400 px-2 py-1 text-sm rounded"
-              onClick={() => {
-                setShowModalDelete(true);
-              }}
-            >
-              Xóa giỏ hàng
-            </button>
+            {listProducts.length === 0 || cartItems.length === 0 ? (
+              <></>
+            ) : (
+              <button
+                className="border-[1px] border-gray-400 px-2 py-1 text-sm rounded"
+                onClick={() => {
+                  setShowModalDelete(true);
+                }}
+              >
+                Xóa giỏ hàng
+              </button>
+            )}
           </div>
         </div>
         <div id="summary" className="w-1/4 px-4 py-10">
@@ -376,14 +369,20 @@ const CartPage = () => {
               <span className="font-semibold text-sm uppercase text-red-400">
                 {formatCurrency(calculateSale(listProducts))}
               </span>
-            ) : !!listDetailShoe ? (
+            ) : !userPrf && !!listDetailShoe ? (
               <span className="font-semibold text-sm uppercase text-red-400">
                 {formatCurrency(
                   cartItems.reduce((total, cartItem) => {
                     const item = listDetailShoe.find(
                       (i) => i.id === cartItem.id
                     );
-                    return total + (item?.price || 0) * cartItem.quantity;
+                    return (
+                      total +
+                      (item?.discountValue
+                        ? item?.price - item?.discountValue
+                        : 0 || 0) *
+                        cartItem.quantity
+                    );
                   }, 0)
                 )}
               </span>
@@ -393,17 +392,24 @@ const CartPage = () => {
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Tổng tiền</span>
               {!!userPrf && !!listProducts && listProducts.length > 0 ? (
-                <span className="text-red-800">
+                <span className="text-red-700">
                   {formatCurrency(calculateTotalDone(listProducts))}
                 </span>
-              ) : !!listDetailShoe && !!total ? (
-                <span className="text-red-800">
+              ) : !!listDetailShoe ? (
+                <span className="font-semibold text-sm uppercase text-red-700">
+                  {" "}
                   {formatCurrency(
                     cartItems.reduce((total, cartItem) => {
                       const item = listDetailShoe.find(
                         (i) => i.id === cartItem.id
                       );
-                      return total + (item?.price || 0) * cartItem.quantity;
+                      return (
+                        total +
+                        (item?.discountValue
+                          ? item?.discountValue
+                          : item?.price || 0) *
+                          cartItem.quantity
+                      );
                     }, 0)
                   )}
                 </span>
@@ -411,9 +417,7 @@ const CartPage = () => {
                 0
               )}
             </div>
-            {total === 0 &&
-            cartItems.length === 0 &&
-            listProducts?.length === 0 ? (
+            {cartItems.length === 0 && listProducts?.length === 0 ? (
               <button
                 className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"
                 onClick={() => {
@@ -428,12 +432,7 @@ const CartPage = () => {
                 onClick={() => {
                   !!userPrf
                     ? navigate(path.payMentWithUser)
-                    : navigate(path.payment, {
-                        state: {
-                          infoShoeList,
-                          total,
-                        },
-                      });
+                    : navigate(path.payment);
                 }}
               >
                 Mua hàng

@@ -63,23 +63,21 @@ const ProductPage = () => {
   const Tab01 = () => {
     return !!inforShoe ? (
       <div className="w-[70%] mx-auto ">
-        <p className="font-semibold my-4 cursor-pointer text-xs">
+        <p className="font-semibold my-4 cursor-pointer ">
           Mô tả sản phẩm:{" "}
           <span className="underline font-normal ">{inforShoe?.name}</span>{" "}
         </p>
         <span className="font-bold my-4">Thông tin sản phẩm: </span>
-        <span className=" my-4 font-normal text-xs">
-          {inforShoe?.description}
-        </span>
-        <p className="font-semibold my-4 text-xs">
+        <span className=" my-4 font-normal">{inforShoe?.description}</span>
+        <p className="font-semibold my-4">
           Thương hiệu:{" "}
-          <span className="font-normal text-xs">{inforShoe?.brand.name}</span>
+          <span className="font-normal">{inforShoe?.brand.name}</span>
         </p>
-        <p className="font-medium my-4 text-xs">
+        <p className="font-medium my-4">
           Danh mục:{" "}
           <span className="font-normal  ">{inforShoe?.category.name}</span>
         </p>
-        <p className="font-medium my-4 text-xs">
+        <p className="font-medium my-4">
           Size:{" "}
           {!!dataDetailProduct &&
             !!dataDetailProduct.length &&

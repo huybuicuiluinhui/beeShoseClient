@@ -21,7 +21,7 @@ const ProductStandingTop = ({
     <div>
       <Fade top distance="10%" duration={2000}>
         <div
-          className="border-[0.2px] py-4   h-[300px]  leading-none overflow-hidden  border-gray-100"
+          className="border-[0.2px] py-4    h-[300px]  leading-none overflow-hidden  border-gray-100"
           onClick={() => {
             if (!!product.minPrice && !!product.maxPrice && product.images) {
               navigate(`/product/${product.id}`);

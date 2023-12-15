@@ -28,6 +28,8 @@ import ChangePassword from "./pages/information/changePassword";
 import withAuth from "./pages/auth";
 import PayMentWithUser from "./pages/payment/payMentWithUser";
 import TimeLineOrder from "./pages/invoice/timeLineOrder";
+import ShowBillCheck from "./pages/showBillCheck";
+import Notification from "./pages/notification";
 
 function App() {
   const location = useLocation();
@@ -59,18 +61,20 @@ function App() {
         { path: path.product, element: <ProductPage /> },
         { path: path.cart, element: <CartPage /> },
         { path: path.payment, element: <PaymentPage /> },
-        { path: path.payMentWithUser, element: <PayMentWithUser /> },
-        { path: path.invoice, element: <Invoice /> },
+        { path: path.payMentWithUser, element: withAuth(PayMentWithUser)() },
+        { path: path.invoice, element: withAuth(Invoice)() },
         { path: path.information, element: withAuth(Information)() },
         { path: path.detailOrder, element: <DetailOrder /> },
-        { path: path.addAddress, element: <AddAddress /> },
+        // { path: path.addAddress, element: withAuth(AddAddress)() },
         // { path: path.addAddress, element: <ReturnProduct /> },
         { path: path.detailReturn, element: <DetailReturn /> },
         { path: path.lookUpOrders, element: <LookUpOrders /> },
         { path: path.loginScreen, element: <LoginScreen /> },
         { path: path.changePassword, element: <ChangePassword /> },
-        { path: path.vnpayment, element: <VnPayPayment /> },
+        { path: path.vnpayment, element: withAuth(VnPayPayment)() },
         { path: path.timeLineOrder, element: <TimeLineOrder /> },
+        { path: path.showBillCheck, element: <ShowBillCheck /> },
+        { path: path.notification, element: <Notification /> },
         { path: "*", element: <PageNotFound /> },
       ],
     },

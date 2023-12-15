@@ -105,11 +105,9 @@ const Address = () => {
     }
   }, [dataAddress]);
   useEffect(() => {
-    // if (userPrf) {
     loadAddress();
-    // }
   }, [userPrf?.id, isModalOpen, check, checkUp]);
-
+  console.log("check", check);
   useEffect(() => {
     fetchProvinces();
   }, []);

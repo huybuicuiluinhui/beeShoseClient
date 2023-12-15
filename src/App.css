@@ -55,3 +55,6 @@
 input[type="radio"]:focus {
   outline: none !important;
 }
+.slick-slide > div {
+  margin: 0 10px;
+}

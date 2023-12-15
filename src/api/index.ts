@@ -37,7 +37,8 @@ const API = {
     baseUrl + `api/shoe-detail?shoe=${shoe}$sizePage=${100}`,
   getAllShoeDetail: () => baseUrl + `api/shoe-detail?sizePage=100000`,
   getShoeWithId: (shoe: number) => baseUrl + `api/shoe/${shoe}`,
-  getShoeDetailWithId: (id: number) => baseUrl + `api/shoe-detail/${id}`,
+  getShoeDetailWithId: (id: number) =>
+    baseUrl + `api/shoe-detail/get-one/${id}`,
   getCategory: () => baseUrl + "api/category?sizePage=100",
   getCategoryWithId: (id: number) => baseUrl + `api/category/${id}`,
   getAllShoe: (page: number, sizePage: number) =>
@@ -49,6 +50,8 @@ const API = {
     baseUrl +
     `api/shoe-detail?name=${name}&size=${size}&color=${color}&sizePage=100000`,
   // Lấy danh sách voucher
+  getVoucherPublic: () => baseUrl + `api/voucher/public`,
+  getVoucherWithUser: (id: number) => baseUrl + `api/voucher/private/${id}`,
   getVoucher: () => baseUrl + `api/voucher?sizePage=100000`,
   getVoucherActive: () => baseUrl + `api/voucher?status=1&sizePage=100000`,
   getVoucherSearch: (name: string) =>
@@ -104,8 +107,10 @@ const API = {
     baseUrl + `api/bill?idCustomer=${id}&page=1&sizePage=1000`,
   getOrderWithStatus: (id: number, status: number) =>
     baseUrl + `api/bill?idCustomer=${id}&status=${status}&page=1&sizePage=1000`,
-
+  getBill: (id: number) => baseUrl + `/api/bill/${id}`,
   getDetailBill: (id: number) => baseUrl + `api/bill-detail?bill=${id}`,
   getBillHistory: (idBill: number) => baseUrl + `api/bill-history/${idBill}`,
+  // noti
+  getNoti: (idAcconut: number) => baseUrl + `api/notification/${idAcconut}`,
 };
 export default API;

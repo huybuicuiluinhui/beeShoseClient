@@ -8,22 +8,45 @@ import { IVoucher } from "../../types/product.type";
 const ShowVoucher = ({
   isOpen,
   onClose,
+  valueCheck,
+  setPrecent,
 }: {
+  valueCheck: number;
   isOpen: boolean;
   onClose: any;
+  setPrecent: any;
 }) => {
-  const [selected, setSelected] = useState("");
-  const [percent, setPrecent] = useState<number>(0);
-  const [inputValue, setInputValue] = useState("");
-  const [minPrice, setMinPrice] = useState<number>(0);
-  const [quantity, setQuantity] = useState<number>();
+  const [selected, setSelected] = useState<number>();
+  const [inputVoucher, setInputVoucher] = useState<string>();
   const [voucher, setVoucher] = useState<IVoucher[]>();
-  const [code, setCode] = useState<string>();
+  const getVoucherSearch = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getVoucherSearch(inputVoucher ? inputVoucher : ""),
+    });
+    if (res.status) {
+      if (res?.data?.data.length === 1) {
+        if (valueCheck >= res?.data?.data[0].minBillValue) {
+          setPrecent(res?.data?.data[0]?.percentReduce);
+          toast.success("Áp dụng voucher thành công");
+          setInputVoucher("");
+          onClose();
+        } else {
+          toast.warning("Voucher không được áp dụng");
+        }
+      } else {
+        toast.warning("Không tìm thấy mã");
+      }
+    }
+  };
+  const handleChangeInput = (event: any) => {
+    setInputVoucher(event?.target?.value);
+  };
   const getVoucher = async () => {
     try {
       const res = await axios({
         method: "get",
-        url: API.getVoucherActive(),
+        url: API.getVoucherPublic(),
       });
       if (res.status) {
         setVoucher(res?.data?.data);
@@ -73,39 +96,43 @@ const ShowVoucher = ({
           </svg>
         </button>
         <div className="">
-          <span className="text-lg leading-6 font-medium text-gray-900">
+          <p className="text-lg leading-6 font-medium text-gray-900 text-center mb-3">
             Chọn BeeShoes Voucher
-          </span>
+          </p>
           <div className="bg-[#f8f8f8] px-3 py-2 flex items-center justify-between">
             <p className="text-[#0000008a] text-xs font-light">Mã voucher</p>
             <input
+              onChange={handleChangeInput}
+              value={inputVoucher}
               type="text"
               className="flex-1 mx-2 border-[#00000024] border-[1px] rounded-[2px] text-sm"
             />
-            <button className="bg-white text-[#0000008a] px-3 py-[5px]">
+            <button
+              className="bg-white text-[#0000008a] px-3 py-[5px]"
+              onClick={() => {
+                getVoucherSearch();
+              }}
+            >
               Áp dụng
             </button>
           </div>
-          <div className="mt-2 py-3">
+          <div className="mt-2 py-3 overflow-y-scroll max-h-72">
             {!!voucher &&
               voucher.map((voucher, index) => (
                 <div
                   key={index}
-                  className={`w-full flex justify-around   hover:bg-[#f5f5f5] cursor-pointer mt-2 py-2 `}
+                  className={`w-full flex justify-around   hover:bg-[#f5f5f5] cursor-pointer mt-2  px-2 py-2 ${
+                    selected === index ? "bg-[#f5f5f5]" : "null"
+                  }`}
                   onClick={() => {
-                    if (
-                      voucher?.name?.toLowerCase() !== selected.toLowerCase()
-                      // voucher?.minBillValue < location?.state?.total
-                    ) {
-                      setSelected(voucher?.name);
+                    if (valueCheck >= voucher?.minBillValue) {
                       setPrecent(voucher?.percentReduce);
-                      setInputValue(voucher?.name);
-                      setMinPrice(voucher?.minBillValue);
-                      setQuantity(voucher?.quantity);
-                      setCode(voucher?.code);
                       toast.success("Áp dụng voucher thành công");
+                      setSelected(index);
+                      onClose();
+                      setInputVoucher("");
                     } else {
-                      toast.warning("Bạn cần chọn voucher khác");
+                      toast.warning("Voucher không được áp dụng");
                     }
                   }}
                 >
@@ -143,7 +170,7 @@ const ShowVoucher = ({
               ))}
             {/* Content based on the provided image */}
           </div>
-          <div className="items-center px-4 py-3">
+          {/* <div className="items-center px-4 py-3">
             <button
               id="ok-btn"
               className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -151,7 +178,7 @@ const ShowVoucher = ({
             >
               OK
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -7,12 +7,15 @@ import React, {
 import API from "../../api";
 import axios from "axios";
 import Images from "../../static";
-import { IBill } from "../../types/product.type";
-import { formatCurrency } from "../../utils/formatCurrency";
+import { CustomError, IBill, IDetailOrder } from "../../types/product.type";
+import { formartDate, formatCurrency } from "../../utils/formatCurrency";
+import { toast } from "react-toastify";
+import { convertToCurrencyString } from "../../utils/format";
 
 const LookUpOrders = () => {
   const [inputHD, setInputHD] = useState<string>("");
   const [listDataBill, setListDataBill] = useState<IBill>();
+  const [detailBill, setDetailBill] = useState<IDetailOrder[]>();
   const getInfoDetailProduct = async () => {
     try {
       const res = await axios({
@@ -25,16 +28,38 @@ const LookUpOrders = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      if (listDataBill?.id) {
+        getBillDetail();
+      }
     }
   };
-  const timestampString = listDataBill?.createAt;
-  const timestamp = new Date(String(timestampString));
 
-  const day = timestamp.getDate();
-  const month = timestamp.getMonth() + 1; // Tháng bắt đầu từ 0, cần cộng thêm 1
-  const year = timestamp.getFullYear();
-  const formattedDate = `${day}-${month}-${year}`;
-
+  const getBillDetail = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getDetailBill(Number(listDataBill?.id)),
+      });
+      if (res.status) {
+        console.log("res?.data?.data", res?.data?.data);
+        setDetailBill(res?.data?.data);
+      }
+    } catch (error) {
+      if (typeof error === "string") {
+        toast.error(error);
+      } else if (error instanceof Error) {
+        const customError = error as CustomError;
+        if (customError.response && customError.response.data) {
+          toast.error(customError.response.data);
+        } else {
+          toast.error(customError.message);
+        }
+      } else {
+        toast.error("Hãy thử lại.");
+      }
+    }
+  };
   return (
     <div className="w-full h-full bg-white min-h-screen">
       <div className="relative w-fit h-fit">
@@ -63,7 +88,7 @@ const LookUpOrders = () => {
           </p>
           <input
             type="text"
-            placeholder="VD: 123567"
+            placeholder="VD:  "
             className="rounded border-[1px] mt-2 w-[60%] border-[#ccc]"
             value={inputHD}
             onChange={(e) => setInputHD(e.target.value)}
@@ -120,7 +145,9 @@ const LookUpOrders = () => {
                     {listDataBill?.code}
                   </th>
                   <td className="px-6 py-4">{listDataBill?.customer?.name}</td>
-                  <td className="px-6 py-4">{formattedDate}</td>
+                  <td className="px-6 py-4">
+                    {formartDate(listDataBill?.createAt)}
+                  </td>
                   <td className="px-6 py-4">
                     {listDataBill?.status === 2
                       ? "Chờ xác nhận"
@@ -208,6 +235,56 @@ const LookUpOrders = () => {
           </div>
         </div>
       )}
+      <div className="border-[1px] border-gray-300 mt-5 rounded mb-7">
+        <p className="font-semibold text-base m-4 ">Danh sách sản phẩm </p>
+        {detailBill?.map((item, index) => {
+          return (
+            <div
+              key={index}
+              className={`flex items-center gap-4 m-4 pb-4 ${
+                index === detailBill.length - 1
+                  ? ""
+                  : "border-b-[1px] border-gray-300"
+              }`}
+            >
+              <img
+                src={item?.images}
+                alt=""
+                className="w-20 h-20 object-contain"
+              />
+              <div className=" flex flex-col justify-between  h-20">
+                <p className="text-xs font-semibold uppercase">{item?.name}</p>
+                <div className="flex items-center  gap-8">
+                  <p className="text-xs font-normal">
+                    Màu sắc: <span className="font-medium">{item?.color}</span>
+                  </p>
+                  <p className="text-xs font-normal">
+                    Số lượng:{" "}
+                    <span className="font-medium">{item?.quantity}</span>
+                  </p>
+                  <p className="text-xs font-normal">
+                    Kích thước:{" "}
+                    <span className="font-medium">{item?.size}</span>
+                  </p>
+                  <p className="text-xs font-normal">
+                    Chất liệu: <span className="font-medium">{item?.sole}</span>
+                  </p>
+                </div>
+                <p className="text-xs font-normal">
+                  Thành tiền :{" "}
+                  <span className="font-medium">
+                    {!!item?.discountValue
+                      ? convertToCurrencyString(
+                          item?.discountValue * item?.quantity
+                        )
+                      : convertToCurrencyString(item?.price * item?.quantity)}
+                  </span>
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

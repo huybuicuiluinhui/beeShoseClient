@@ -129,9 +129,9 @@ const ChangeAdr = ({
             </div>
           </div>
           <span className="text-gray-500 text-sm ">
-            {item?.specificAddress},{nameWard ? nameWard.WardName : "ko được "},
-            {nameDistrict ? nameDistrict.DistrictName : "không được"},{" "}
-            {nameProvince ? nameProvince.ProvinceName : "không được"}
+            {item?.specificAddress},{nameWard ? nameWard.WardName : ""},
+            {nameDistrict ? nameDistrict.DistrictName : ""},{" "}
+            {nameProvince ? nameProvince.ProvinceName : ""}
           </span>
           {!!item.defaultAddress && (
             <button className="border-red-500 px-1 text-xs  border-[1px] text-red-500 w-fit">

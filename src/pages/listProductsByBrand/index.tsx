@@ -576,31 +576,15 @@ const ListProductsByBrand = () => {
             <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer font-medium text-sm text-[#909097] "
+                  className="cursor-pointer font-medium text-base text-[#909097] "
                   onClick={() => {
                     navigate(path.home);
                   }}
                 >
                   Trang chủ
                 </span>
-                /<span className=" text-sm font-medium ">{name}</span>
+                /<span className=" text-base font-medium "> {name}</span>
               </div>
-              {/* Lọc sản phẩm */}
-              {/* <div>
-                <select
-                  value={selectedOption}
-                  onChange={handleChangeSelect}
-                  id="underline_select"
-                  className="block py-1 px-2 w-full text-sm text-gray-500 bg-transparent border-solid border-1 border-gray-200  "
-                >
-                  <option selected value="US">
-                    Sản phẩm mới
-                  </option>
-                  <option value="CA">Giá tăng dần</option>
-                  <option value="FR">Giá giảm dần</option>
-                  <option value="DE">Bán chạy</option>
-                </select>
-              </div> */}
             </div>
             <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {/* <Fade top distance="10%" duration={1500}> */}

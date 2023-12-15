@@ -9,12 +9,9 @@ import ModalComponent from "../../../components/Modal";
 
 const InforMe = () => {
   const { userPrf, infoUser } = useShoppingCart();
-
-  // const [user, setUser] = useState<Iinfo>();
   const [birthday, setBirthday] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [gender, setGender] = useState("Nam");
-  // const [name, setName] = useState<string>("");
   const [email, setEmail] = useState("");
   const [username, setUserName] = useState<string>("");
   const [showModalUpdate, setShowModalUpdate] = useState<boolean>(false);
@@ -22,26 +19,7 @@ const InforMe = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     infoUser?.avatar ? infoUser?.avatar : null
   );
-  // const loadInfoUser = async () => {
-  //   try {
-  //     const res = await axios({
-  //       method: "get",
-  //       url: API.getInfoUser(Number(userPrf?.id)),
-  //     });
-
-  //     if (res.data) {
-  //       console.log("res?.data", res?.data);
-  //       setUser(res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (userPrf) {
-  //     loadInfoUser();
-  //   }
-  // }, [userPrf]);
+  console.log("infoUser", infoUser);
   useEffect(() => {
     if (!!infoUser) {
       setBirthday(infoUser?.birthday);

@@ -192,7 +192,7 @@ const ProductItem = ({
           <span className="text-3xl font-medium text-black  ">
             {inforShoe?.name}
           </span>
-          <div className="flex items-end">
+          <div className="flex items-center">
             {!!price && !!priceSale && amountShoe > 0 ? (
               <>
                 <span className="text-red-500 font-semibold text-lg  ">

@@ -36,6 +36,7 @@ import iconDivery from "./icons/iconDivery.png";
 import iconLogo from "./icons/iconLogo.png";
 import iconLogout from "./icons/iconLogout.png";
 import iconCart from "./icons/iconCart.png";
+import iconCart2 from "./icons/iconCart2.png";
 import iconDeliveryFash from "./icons/iconDeliveryFash.png";
 import iconDeliveryFashRed from "./icons/iconDeliveryFashRed.png";
 import iconShoppingSuccess from "./icons/iconShoppingSuccess.png";
@@ -68,6 +69,7 @@ import iconEye from "./icons/iconEye.png";
 import iconAccout2 from "./icons/iconAccout2.png";
 import iconShipping from "./icons/iconShipping.svg";
 import iconAccout3 from "./icons/iconAccout3.svg";
+import iconAccount3 from "./icons/iconAccount3.png";
 import iconChangeAvatar from "./icons/iconChangeAvatar.png";
 import logo from "./icons/logo.png";
 import iconWaitComfirm from "./icons/iconWaitComfirm.png";
@@ -77,6 +79,15 @@ import iconUnbox from "./icons/iconUnbox.png";
 import iconUnboxGray from "./icons/iconUnboxGray.png";
 import iconBack from "./icons/iconBack.png";
 import iconNoOrder from "./icons/iconNoOrder.png";
+import logVNPay from "./icons/logVNPay.png";
+import iconReceive from "./icons/iconReceive.png";
+import iconSuccesss from "./icons/iconSuccesss.png";
+import bgItemVoucher from "./icons/bgItemVoucher.png";
+import iconGift from "./icons/iconGift.png";
+import iconLookUpOrders from "./icons/iconLookUpOrders.png";
+import iconInti from "./icons/iconInti.png";
+import iconClose from "./icons/iconClose.png";
+import iconNoti from "./icons/iconNoti.png";
 
 const Images = {
   banner01,
@@ -119,6 +130,7 @@ const Images = {
   iconX2Money,
   iconLogout,
   iconCart,
+  iconCart2,
   iconDeliveryFash,
   iconDeliveryFashRed,
   iconShoppingSuccess,
@@ -158,5 +170,15 @@ const Images = {
   iconUnboxGray,
   iconBack,
   iconNoOrder,
+  logVNPay,
+  iconReceive,
+  iconSuccesss,
+  bgItemVoucher,
+  iconGift,
+  iconLookUpOrders,
+  iconAccount3,
+  iconInti,
+  iconClose,
+  iconNoti,
 };
 export default Images;

@@ -110,6 +110,10 @@ export interface IVoucher {
   percentReduce: number;
   quantity: number;
   status: number;
+  type: boolean;
+  startDate: string;
+  endDate: string;
+  customer: null | string;
 }
 export interface Token {
   id: string;
@@ -176,6 +180,18 @@ export interface IDetailProductCart {
   sole: string;
   idProductDetail: number;
 }
+export interface IDetailProductCart2 {
+  discountPercent: number;
+  discountValue: number;
+  id: number;
+  images: string;
+  index: number;
+  name: string;
+  price: number;
+  quantity: number;
+  sole: string;
+  idProductDetail: number;
+}
 export interface IBill {
   id: number;
   type: number;
@@ -195,7 +211,7 @@ export interface IBill {
   shipDate: any;
   desiredDate: any;
   receiveDate: any;
-  createAt: Date;
+  createAt: string;
 }
 export interface IInfoAccount {
   addresses: any;
@@ -249,4 +265,17 @@ export interface IDetailOrder {
   discountValue: number;
   shoeCode: string;
   discountPercent: number;
+}
+export interface IDataNoti {
+  action: any;
+  content: string;
+  createAt: string;
+  id: number;
+  index: number;
+  title: string;
+  type: 0 | 1;
+  updateAt: string;
+  createBy: string;
+  updateBy: string;
+  deleted: boolean;
 }

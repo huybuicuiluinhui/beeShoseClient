@@ -50,9 +50,9 @@ const HomePage = () => {
     arrows: false,
     className: "center",
     infinite: true,
-    centerPadding: "60px",
     slidesToShow: 5,
     swipeToSlide: true,
+    slidesToScroll: 1,
   };
   const sliderRef = React.useRef<Slider>(null);
 
@@ -186,9 +186,7 @@ const HomePage = () => {
         </button>
         <div className="w-[95%] mx-auto ">
           <Slider {...settings} ref={sliderRef}>
-            {!!productsTop &&
-            !!productsTop.length &&
-            sekeletonItemShoeTop === false
+            {!!productsTop && !!productsTop.length
               ? productsTop.map((item, index) => {
                   return (
                     <div key={index}>

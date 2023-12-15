@@ -123,11 +123,20 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         },
       });
       if (res.status) {
-        // setQuantity((prevQuantity) => prevQuantity - 1);
-        toast("giảm");
       }
     } catch (error) {
-      console.log(error);
+      if (typeof error === "string") {
+        toast.error(error);
+      } else if (error instanceof Error) {
+        const customError = error as CustomError;
+        if (customError.response && customError.response.data) {
+          toast.error(customError.response.data);
+        } else {
+          toast.error(customError.message);
+        }
+      } else {
+        toast.error("Hãy thử lại.");
+      }
     } finally {
       getListDetailCart();
     }
@@ -146,10 +155,21 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         },
       });
       if (res.status) {
-        toast("tăng");
+        console.log(res);
       }
     } catch (error) {
-      console.log(error);
+      if (typeof error === "string") {
+        toast.error(error);
+      } else if (error instanceof Error) {
+        const customError = error as CustomError;
+        if (customError.response && customError.response.data) {
+          toast.error(customError.response.data);
+        } else {
+          toast.error(customError.message);
+        }
+      } else {
+        toast.error("Hãy thử lại.");
+      }
     } finally {
       getListDetailCart();
     }
@@ -203,6 +223,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         },
       });
       if (res.status) {
+        toast.success("Đã xóa sản phẩm khỏi giỏ hàng thành công");
       }
     } catch (error) {
     } finally {

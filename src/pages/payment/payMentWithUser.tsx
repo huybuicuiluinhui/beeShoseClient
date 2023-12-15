@@ -22,6 +22,7 @@ import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
 import AddAddressModal from "../information/address/modalAddAdr";
 import { getCookie } from "../../helper/CookiesRequest";
+import ShowVoucherWithMe from "./ShowVoucherWithMe";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf, removeAllCart } = useShoppingCart();
@@ -43,12 +44,17 @@ const PayMentWithUser = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [showModalBill, setShowModalBill] = useState(false);
   const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
+  const [isModalOpenVoucher2, setModalOpenVoucher2] = useState(false);
   const [chooseRadio, setChooseRadio] = useState<number>();
   const [selectedName, setSelectedName] = useState<string>("");
+  const [percent, setPrecent] = useState<number>(0);
+  const [percent2, setPrecent2] = useState<number>(0);
   const toggleModal = () => {
     setModalOpenVoucher(!isModalOpenVoucher);
   };
-  const token = getCookie("customerToken");
+  const toggleModal2 = () => {
+    setModalOpenVoucher2(!isModalOpenVoucher2);
+  };
 
   const getListDetailCart = async () => {
     try {
@@ -167,7 +173,6 @@ const PayMentWithUser = () => {
       return;
     }
   };
-
   const postBill = async () => {
     if (!!dataAddress && dataAddress.length > 0 && !!listProducts) {
       try {
@@ -175,14 +180,13 @@ const PayMentWithUser = () => {
           account: userPrf?.id,
           customerName: dataAddress[0].name,
           email: userPrf?.email,
-          district: dataAddress[0].district,
-          province: dataAddress[0].province,
-          ward: dataAddress[0].ward,
-          specificAddress: dataAddress[0].specificAddress,
+          district: dataAddress[0]?.district,
+          province: dataAddress[0]?.province,
+          ward: dataAddress[0]?.ward,
+          specificAddress: dataAddress[0]?.specificAddress,
           moneyShip: feeShip,
           moneyReduce: (10 / 100) * calculateTotalDone(listProducts),
-          totalMoney:
-            calculateTotalDone(listProducts) + Number(feeShip ? feeShip : 0),
+          totalMoney: calculateTotalDone(listProducts),
 
           note: "",
           paymentMethod: method,
@@ -296,7 +300,7 @@ const PayMentWithUser = () => {
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
-      <div className="w-full h-full min-h-screen mt-5">
+      <div className="w-[80%] h-full min-h-screen my-5 mx-auto">
         <div className="w-full mx-auto pb-4 bg-white shadow-md rounded-sm">
           <div className="flex items-center w-full justify-between flex-nowrap">
             {Array(15)
@@ -372,16 +376,16 @@ const PayMentWithUser = () => {
             <table className="w-full text-sm text-left rtl:text-right text-gray-400 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 text-left">
                     Sản phẩm
                   </th>
                   {/* <th scope="col" className="px-6 py-3">
                     Size
                   </th> */}
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 text-center ">
                     Số lượng
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" className="px-6 py-3 text-center">
                     Đơn giá
                   </th>
                   <th scope="col" className="px-6 py-3 text-right">
@@ -419,8 +423,10 @@ const PayMentWithUser = () => {
                           </div>
                         </th>
                         {/* <td className="px-6 py-4">đây là size</td> */}
-                        <td className="px-6 py-4">{item.quantity}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 text-center ">
+                          {item.quantity}
+                        </td>
+                        <td className="px-6 py-4 text-center">
                           {!!item.discountValue
                             ? formatCurrency(item.discountValue)
                             : formatCurrency(item.price)}
@@ -444,50 +450,97 @@ const PayMentWithUser = () => {
             </table>
           </div>
         </div>
-        <div className="w-full bg-white  mt-5 shadow-md p-4 rounded-sm flex justify-between">
-          <div className="flex items-center gap-2">
-            <img
-              src={Images.iconVoucher}
-              alt=""
-              className="w-10 object-contain h-auto "
-            />
-            <span className="text-base font-normal text-red-500">
-              Kho voucher
-            </span>
+        <div className="w-full bg-white  mt-5 shadow-md p-4 rounded-sm ">
+          <div className=" flex justify-between mb-4 items-center ">
+            <div className="flex items-center gap-2 flex-1">
+              <img
+                src={Images.iconVoucher}
+                alt=""
+                className="w-10 object-contain h-auto "
+              />
+              <span className="text-base font-normal text-red-500">
+                Kho voucher
+              </span>
+            </div>
+            <button
+              className="text-sm font-medium text-red-500 flex-1 border-[1px] border-red-500  mx-40 py-2 "
+              onClick={toggleModal}
+            >
+              Chọn voucher
+            </button>
+            <p className="flex-1 text-end font-semibold text-sm py-2 ">
+              {!!listProducts &&
+                !!percent &&
+                percent > 0 &&
+                `- ${formatCurrency(
+                  (percent / 100) * calculateTotalDone(listProducts)
+                )}`}
+            </p>
           </div>
-          <button
-            className="text-sm font-medium text-red-500"
-            onClick={toggleModal}
-          >
-            Chọn voucher
-          </button>
+          <div className=" flex justify-between items-center">
+            <div className="flex items-center gap-2 flex-1">
+              <img
+                src={Images.iconVoucher}
+                alt=""
+                className="w-10 object-contain h-auto "
+              />
+              <span className="text-base font-normal text-red-500 ">
+                Voucher của bạn
+              </span>
+            </div>
+            <button
+              className="text-sm font-medium text-red-500 flex-1 border-[1px] border-red-500 mx-40 py-2"
+              onClick={toggleModal2}
+            >
+              Chọn voucher dành riêng
+            </button>
+            <p className="flex-1 text-end font-semibold text-sm ">
+              {!!listProducts &&
+                !!percent2 &&
+                percent2 > 0 &&
+                `- ${formatCurrency(
+                  (percent2 / 100) * calculateTotalDone(listProducts)
+                )}`}
+            </p>
+          </div>
         </div>
+
         <div className="w-full bg-white  mt-5 shadow-md  rounded-sm relative ">
           <div className=" flex justify-between p-4">
             <span>Phương thức thanh toán</span>
             <div className="flex items-center gap-6">
               <button
-                className={`border-[1px]  text-sm px-2 py-1 rounded ${
+                className={`border-[1px] text-sm px-2 py-1 rounded flex items-center ${
                   method === 0 ? "border-red-500" : ""
                 } `}
                 onClick={() => setMethod(0)}
               >
+                <img
+                  src={Images.iconReceive}
+                  alt=""
+                  className="w-auto h-5 object-contain "
+                />
                 Thanh toán khi nhận hàng{" "}
               </button>
               <button
-                className={`border-[1px]  text-sm px-2 py-1 rounded ${
+                className={`border-[1px]  text-sm px-2 py-1 rounded flex items-center ${
                   method === 1 ? "border-red-500" : ""
                 } `}
                 onClick={() => setMethod(1)}
               >
-                Thay toán ngay bằng vnpay{" "}
+                <img
+                  src={Images.logVNPay}
+                  alt=""
+                  className="w-10 h-auto object-contain "
+                />
+                Thay toán bằng vnpay{" "}
               </button>
             </div>
           </div>
           <div className="w-full h-[2px] border-b-[1px] border-dashed border-gray-400" />
           <div className="flex  justify-between  my-3">
             <div></div>
-            <div className="w-[20%] flex items-center justify-between mx-5">
+            <div className="w-[30%] flex items-center justify-between mx-5">
               <span className="text-gray-400  text-sm font-normal">
                 Tổng tiền hàng{" "}
               </span>
@@ -500,7 +553,7 @@ const PayMentWithUser = () => {
           </div>
           <div className="flex  justify-between my-3">
             <div></div>
-            <div className="w-[20%] flex items-center justify-between mx-5">
+            <div className="w-[30%] flex items-center justify-between mx-5">
               <span className="text-gray-400  text-sm font-normal">
                 Phí vận chuyển
               </span>
@@ -512,11 +565,39 @@ const PayMentWithUser = () => {
           </div>
           <div className="flex  justify-between my-3">
             <div></div>
-            <div className="w-[20%] flex items-center justify-between mx-5">
+
+            <div className="w-[30%] flex items-center justify-between mx-5">
+              <span className="text-gray-400  text-sm font-normal">
+                Tổng voucher giảm giá
+              </span>
+              <span className="text-red-400  text-sm font-medium">
+                {" "}
+                {(!!listProducts && percent > 0) ||
+                (!!listProducts && percent2 > 0)
+                  ? formatCurrency(
+                      (percent / 100) * calculateTotalDone(listProducts) +
+                        (percent2 / 100) * calculateTotalDone(listProducts)
+                    )
+                  : formatCurrency(0)}
+              </span>
+            </div>
+          </div>
+          <div className="flex  justify-between my-3">
+            <div></div>
+            <div className="w-[30%] flex items-center justify-between mx-5">
               <span className="text-gray-400  text-sm font-normal">
                 Tổng thanh toán
               </span>
-              <span className="text-red-400  text-sm font-medium">1000000</span>
+              {!!feeShip && !!listProducts && (
+                <span className="text-red-600  text-lg font-medium">
+                  {formatCurrency(
+                    calculateTotalDone(listProducts) +
+                      Number(feeShip ? feeShip : 0) -
+                      ((percent / 100) * calculateTotalDone(listProducts) +
+                        (percent2 / 100) * calculateTotalDone(listProducts))
+                  )}
+                </span>
+              )}
             </div>
           </div>
           <div className="w-full h-[2px] border-b-[1px] border-dashed border-gray-400" />
@@ -526,7 +607,7 @@ const PayMentWithUser = () => {
               của BeeShoe
             </span>
             <button
-              className="bg-red-600 text-white text-base font-medium px-5 py-2"
+              className="bg-red-600 text-white text-base font-medium px-10 py-2"
               onClick={() => {
                 setShowModalBill(true);
               }}
@@ -548,7 +629,7 @@ const PayMentWithUser = () => {
             <div className="border-b-[1px] border-b-gray-400 border-solid w-full p-2">
               <span>Địa Chỉ Của Tôi</span>
             </div>
-            <div className="h-80 overflow-y-auto">
+            <div className="max-h-80 overflow-y-auto">
               {!!dataAddress &&
                 dataAddress.length > 0 &&
                 dataAddress.map((item, index) => {
@@ -564,7 +645,7 @@ const PayMentWithUser = () => {
                   );
                 })}
             </div>
-            <div className="w-full flex items-center   justify-around ">
+            <div className="w-full flex items-center   justify-around mt-5">
               <button
                 className="border-red-500 border-[1px] py-[2px] px-4 text-red-500  text-sm"
                 onClick={() => {
@@ -611,7 +692,23 @@ const PayMentWithUser = () => {
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
       />
-      <ShowVoucher isOpen={isModalOpenVoucher} onClose={toggleModal} />
+      {!!listProducts && (
+        <ShowVoucher
+          isOpen={isModalOpenVoucher}
+          onClose={toggleModal}
+          valueCheck={calculateTotalDone(listProducts)}
+          setPrecent={setPrecent}
+        />
+      )}
+      {!!listProducts && (
+        <ShowVoucherWithMe
+          userId={Number(userPrf?.id)}
+          isOpen2={isModalOpenVoucher2}
+          onClose2={toggleModal2}
+          valueCheck={calculateTotalDone(listProducts)}
+          setPrecent2={setPrecent2}
+        />
+      )}
       {showModalBill && (
         <ModalComponent
           check={true}

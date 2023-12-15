@@ -68,7 +68,9 @@ export const calculateTotal = (items: IDetailProductCart[]): number => {
 export const calculateSale = (items: IDetailProductCart[]): number => {
   const total = items.reduce((accumulator, currentItem) => {
     const itemTotal =
-      (currentItem.price - currentItem.discountValue) * currentItem.quantity;
+      (currentItem?.discountValue
+        ? currentItem?.price - currentItem?.discountValue
+        : 0) * currentItem.quantity;
     return accumulator + itemTotal;
   }, 0);
 

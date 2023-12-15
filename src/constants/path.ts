@@ -23,5 +23,12 @@ const path = {
   changePassword: "/changePassword",
   vnpayment: "/vnpay-payment",
   timeLineOrder: "/timeLineOrder/:status/:idBill/:code",
+  infoMe: "/information/informe",
+  order: "/information/order",
+  address: "/information/address",
+  showBillCheck: "/showBillCheck/:idBill",
+  changePassWord: "/information/change-password",
+  logoutScreen: "/information/logout",
+  notification: "/notification/:id",
 } as const;
 export default path;

@@ -32,9 +32,7 @@ interface User {
   avata: string;
   expirationTime: Date;
 }
-
 const Information = () => {
-  const { userPrf } = useShoppingCart();
   const [showModal, setShowMoal] = useState<boolean>(false);
   const navigate = useNavigate();
   const dataAside: IDataAside[] = [
@@ -48,28 +46,22 @@ const Information = () => {
       name: "Đơn mua",
       img: Images.iconOrder,
     },
-    // {
-    //   id: 3,
-    //   name: "Yêu cầu trả hàng",
-    //   img: Images.iconOrderReturn,
-    // },
     {
-      id: 4,
+      id: 3,
       name: "Địa chỉ",
       img: Images.iconAddress,
     },
     {
-      id: 5,
+      id: 4,
       name: "Đổi mật khẩu",
       img: Images.iconChangePassword,
     },
     {
-      id: 6,
+      id: 5,
       name: "Đăng xuất",
       img: Images.iconLogout,
     },
   ];
-
   const handleLogout = () => {
     deleteToken();
     deleteUserToken();
@@ -90,11 +82,6 @@ const Information = () => {
   };
   return (
     <div className="w-full h-full   relative  min-h-screen ">
-      <div className="my-3">
-        <p className="uppercase font-semibold text-gray-600 text-xs ">
-          Trang chủ / Tài khoản của tôi
-        </p>
-      </div>
       <div className="flex w-full h-full ">
         <aside
           id="logo-sidebar"
@@ -102,7 +89,7 @@ const Information = () => {
           aria-label="Sidebar"
         >
           <div className="h-full py-4  ">
-            <div className="flex flex-col items-start justify-center  w-full  rounded">
+            <div className="flex flex-col items-start justify-center  w-full  ">
               {dataAside.map((item, index) => {
                 return (
                   <div
@@ -124,10 +111,10 @@ const Information = () => {
                         className="w-[18px] h-auto object-contain"
                       />{" "}
                       <span
-                        className={`text-xs ml-2   ${
+                        className={`text-sm ml-2   ${
                           selectedCategory === item.name
                             ? "font-semibold text-black "
-                            : "text-gray-500 font-normal"
+                            : "text-gray-600 font-normal"
                         }`}
                       >
                         {item.name}
@@ -139,16 +126,14 @@ const Information = () => {
             </div>
           </div>
         </aside>
-        <div className="w-full pl-5  bg-white">
+        <div className="w-full pl-5  bg-white mt-10">
           {selectedCategory === dataAside[0].name ? (
             <InforMe />
           ) : selectedCategory === dataAside[1].name ? (
             <Invoice />
           ) : selectedCategory === dataAside[2].name ? (
-            <ReturnProduct />
-          ) : selectedCategory === dataAside[3].name ? (
             <Address />
-          ) : selectedCategory === dataAside[4].name ? (
+          ) : selectedCategory === dataAside[3].name ? (
             <ChangePassword />
           ) : (
             <div className="w-full h-full  ">
@@ -172,7 +157,7 @@ const Information = () => {
           setShowMoal(false);
         }}
       >
-        <div className="w-full flex flex-col justify-center">
+        <div className="w-full flex flex-col justify-center  ">
           <svg
             className="mx-auto mb-4 text-gray-400 w-12 h-12 "
             aria-hidden="true"
@@ -188,11 +173,11 @@ const Information = () => {
               d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+          <h3 className="mb-3 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
             Xác nhận đăng xuất ?
           </h3>
 
-          <div className="w-full flex justify-around items-center mb-2">
+          <div className="w-full flex justify-around items-center  gap-12">
             <button
               onClick={() => {
                 setShowMoal(false);

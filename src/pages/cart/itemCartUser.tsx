@@ -8,86 +8,11 @@ import { toast } from "react-toastify";
 // import { useShoppingCart } from "../../context/shoppingCart.context";
 import { getTokenCustomer } from "../../helper/useCookie";
 import { useNavigate } from "react-router-dom";
-const ItemCartUser = ({
-  item,
-  idUser,
-  loading,
-  setLoading,
-}: {
-  item: IDetailProductCart;
-  idUser: string;
-  loading: any;
-  setLoading: any;
-}) => {
-  const token = getTokenCustomer();
-  const navigate = useNavigate();
+import { useShoppingCart } from "../../context/shoppingCart.context";
+const ItemCartUser = ({ item }: { item: IDetailProductCart }) => {
+  const { reduceShoe, getProductQuantityById, addShoe, removeFromCartUser } =
+    useShoppingCart();
   const [showModal, setShowMoal] = useState<boolean>(false);
-  const [quantity, setQuantity] = useState<number>(item?.quantity);
-  const reduceShoe = async (idShoeDetail: number) => {
-    try {
-      const res = await axios({
-        method: "put",
-        url: API.updateAmountShoe(),
-        data: {
-          id: Number(idUser),
-          quantity: quantity - 1,
-          shoeDetail: idShoeDetail,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status) {
-        setQuantity((prevQuantity) => prevQuantity - 1);
-        toast("giảm");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(!loading);
-    }
-  };
-  const addShoe = async (idShoeDetail: number) => {
-    try {
-      const res = await axios({
-        method: "put",
-        url: API.updateAmountShoe(),
-        data: {
-          id: Number(idUser),
-          quantity: quantity + 1,
-          shoeDetail: idShoeDetail,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status) {
-        toast("tăng");
-        setQuantity((prevQuantity) => prevQuantity + 1);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(!loading);
-    }
-  };
-  const removeFromCart = async (idShoeDetail: number) => {
-    try {
-      const res = await axios({
-        method: "delete",
-        url: API.removeFromCart(idShoeDetail),
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.status) {
-        toast("xóa " + idShoeDetail);
-      }
-    } catch (error) {
-    } finally {
-      setLoading(!loading);
-    }
-  };
   return (
     <div className="flex items-center hover:bg-gray-100  py-5 border-b-[1px] border-dashed w-full border-gray-500">
       <div
@@ -103,7 +28,7 @@ const ItemCartUser = ({
         <div className="w-20">
           <img className="h-auto w-[80%] object-contain" src={item?.image} />
         </div>
-        <div className="flex flex-col justify-between ml-4 flex-grow">
+        <div className="flex flex-col justify-start ml-4 flex-grow">
           <span className="font-semibold text-sm ">{item.name}</span>
           <span className="text-red-500 text-xs">{item.sole}</span>
         </div>
@@ -113,17 +38,23 @@ const ItemCartUser = ({
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
           onClick={() => {
-            reduceShoe(item?.id);
+            if (getProductQuantityById(item.idProductDetail) === 1) {
+              setShowMoal(true);
+            } else {
+              reduceShoe(item.id, getProductQuantityById(item.idProductDetail));
+            }
           }}
         >
           <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
         </svg>
-        <span className=" px-2">{quantity}</span>
+        <span className=" px-2">
+          {getProductQuantityById(item.idProductDetail)}
+        </span>
         <svg
           className="fill-current text-gray-600 w-3"
           viewBox="0 0 448 512"
           onClick={() => {
-            addShoe(item?.id);
+            addShoe(item.id, getProductQuantityById(item.idProductDetail));
           }}
         >
           <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
@@ -135,23 +66,27 @@ const ItemCartUser = ({
             <p className="text-center  font-semibold text-sm text-red-500">
               {convertToCurrencyString(item?.discountValue)}
             </p>
-            <p className="text-center  font-semibold text-xs  line-through">
+            <p className="text-center  font-semibold text-sm  line-through">
               {convertToCurrencyString(item.price)}
             </p>
           </>
         ) : (
-          <p className="text-center  font-semibold text-xs  line-through">
+          <p className="text-center  font-semibold text-sm text-red-500">
             {convertToCurrencyString(item.price)}
           </p>
         )}
       </div>
       {!!item?.discountPercent && !!item.discountValue ? (
-        <span className="text-center w-1/5 font-semibold text-sm ">
-          {convertToCurrencyString(item.discountValue * quantity)}
+        <span className="text-center w-1/5 font-semibold text-sm  text-red-500">
+          {convertToCurrencyString(
+            item.discountValue * getProductQuantityById(item.idProductDetail)
+          )}
         </span>
       ) : (
-        <span className="text-center w-1/5 font-semibold text-sm ">
-          {convertToCurrencyString(item.price * quantity)}
+        <span className="text-center w-1/5 font-semibold text-sm text-red-500 ">
+          {convertToCurrencyString(
+            item.price * getProductQuantityById(item.idProductDetail)
+          )}
         </span>
       )}
       {showModal && (
@@ -195,7 +130,7 @@ const ItemCartUser = ({
               </button>
               <button
                 onClick={() => {
-                  removeFromCart(item?.id);
+                  removeFromCartUser(item?.id);
                 }}
                 data-modal-hide="popup-modal"
                 type="button"

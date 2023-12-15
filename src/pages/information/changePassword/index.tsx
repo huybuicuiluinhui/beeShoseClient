@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { validateEmail, validatePassword } from "../../../utils/format";
 import { toast } from "react-toastify";
 import ModalComponent from "../../../components/Modal";
+import { useShoppingCart } from "../../../context/shoppingCart.context";
 
 interface CustomError {
   message: string;
@@ -15,8 +16,9 @@ interface CustomError {
 }
 
 const ChangePassword = () => {
+  const { infoUser } = useShoppingCart();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(infoUser?.email);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordComfirm, setNewPasswordComfirm] = useState("");
@@ -28,13 +30,6 @@ const ChangePassword = () => {
     newPasswordComfirm: "",
   });
   const handleRePassword = async () => {
-    if (!validateEmail(email)) {
-      setErrors((prev) => ({ ...prev, email: "Email không hợp lệ." }));
-      return;
-    } else {
-      setErrors((prev) => ({ ...prev, email: "" }));
-    }
-
     if (!validatePassword(newPassword)) {
       setErrors((prev) => ({
         ...prev,
@@ -89,7 +84,7 @@ const ChangePassword = () => {
   return (
     <div className="w-full h-full min-h-screen bg-white">
       <div className="w-[80%] mx-auto">
-        <p className="font-semibold text-gray-800 mt-8    ">Đổi mật khẩu</p>
+        <p className="font-semibold text-gray-800">Đổi mật khẩu</p>
       </div>
       <div className="mx-auto w-[50%] mt-5">
         <div className="mb-4">
@@ -101,6 +96,7 @@ const ChangePassword = () => {
           </label>
           <input
             value={email}
+            disabled
             onChange={(e) => setEmail(e?.target?.value)}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"

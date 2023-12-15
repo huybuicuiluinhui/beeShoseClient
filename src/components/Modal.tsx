@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
+
 interface ModalComponentType {
   isVisible: boolean;
   onClose: () => void;
-  children: any;
+  children: React.ReactNode;
   check: boolean;
 }
+
 const ModalComponent = ({
   isVisible,
   onClose,
@@ -21,15 +24,18 @@ const ModalComponent = ({
       document.body.classList.remove("overflow-hidden");
     };
   }, [isVisible]);
+
   if (!isVisible) return null;
-  const handleClose = (e: any) => {
-    if (e.target.id === "wrapper") onClose();
+
+  const handleClose = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div
       className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[100]"
-      id="wrapper"
       onClick={handleClose}
     >
       <div
@@ -60,7 +66,8 @@ const ModalComponent = ({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

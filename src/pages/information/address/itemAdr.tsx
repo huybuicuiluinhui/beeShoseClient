@@ -138,7 +138,6 @@ const ItemAdr = ({
         },
       });
       if (res.data) {
-        toast.success("Đã sửa thành công");
         setCheck(!check);
       }
     } catch (error) {
@@ -153,24 +152,24 @@ const ItemAdr = ({
     <div className="border-b-[1px] border-gray-200 flex p-2 ">
       <div className="w-[80%] flex flex-col justify-between">
         <div className="flex items-center">
-          <span className="text-[#000000de]  text-xs">
+          <span className="text-[#000000de]  text-sm">
             {item?.name ? item?.name : ""}
           </span>
           <div className="h-full w-[0.5px] ml-2 bg-[#0000008a]" />
-          <span className="text-[#0000008a] ml-2 text-xs">
+          <span className="text-[#0000008a] ml-2 text-sm">
             {item?.phoneNumber ? item?.phoneNumber : ""}
           </span>
         </div>
-        <p className="text-[#0000008a]  text-xs">
+        <p className="text-[#0000008a]  text-sm">
           {" "}
           {item?.specificAddress}, {nameWard ? nameWard?.WardName : " "}
         </p>
-        <p className="text-[#0000008a]  text-xs">
+        <p className="text-[#0000008a]  text-sm">
           {nameDistrict ? nameDistrict?.DistrictName : ""},{" "}
           {nameProvince ? nameProvince?.ProvinceName : ""}
         </p>
         {item?.defaultAddress && (
-          <button className="px-2  mt-2 border-red-400 border-[1px] w-fit text-red-500 text-xs">
+          <button className="px-2  mt-2 border-red-400 border-[1px] w-fit text-red-500 text-sm">
             Mặc định
           </button>
         )}
@@ -178,7 +177,7 @@ const ItemAdr = ({
       <div className="w-[20%] flex flex-col h-full justify-between items-center">
         <div className="flex items-center justify-around w-full">
           <button
-            className="text-xs text-blue-400"
+            className="text-sm text-blue-400"
             onClick={() => {
               updateItemProp(item);
             }}
@@ -189,7 +188,7 @@ const ItemAdr = ({
             <></>
           ) : (
             <button
-              className="text-xs text-blue-400"
+              className="text-sm text-blue-400"
               onClick={() => {
                 setShowModalDelete(true);
               }}
@@ -203,7 +202,7 @@ const ItemAdr = ({
         ) : (
           <button className="border-[#d8d8d8] border-[1px] h-fit px-2 rounded mt-2 ">
             <span
-              className="text-[#000000de] text-xs"
+              className="text-[#000000de] text-sm "
               onClick={() => {
                 updateStatus(item);
               }}

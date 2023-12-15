@@ -529,7 +529,7 @@ const ListProductsByBrandWithSearch = () => {
             <div className="w-full flex justify-between items-center ">
               <div className="px-2">
                 <span
-                  className="cursor-pointer  text-xs  text-[#909097]"
+                  className="cursor-pointer  text-sm  text-[#909097]"
                   onClick={() => {
                     navigate(path.home);
                   }}

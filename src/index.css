@@ -98,3 +98,11 @@ sss ::-webkit-scrollbar-thumb {
   height: 100% !important;
   width: 100% !important;
 }
+@keyframes moveRightToLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-20px);
+  }
+}

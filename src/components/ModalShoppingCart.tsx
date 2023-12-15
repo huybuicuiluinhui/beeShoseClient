@@ -8,10 +8,11 @@ import axios from "axios";
 import API from "../api";
 import {
   IDetailProductCart,
-  IIForDetailShoe,
+  IDetailProductCart2,
   IListDeatilShoe,
 } from "../types/product.type";
 import { calculateTotalDone, convertToCurrencyString } from "../utils/format";
+import ModalComponent from "./Modal";
 type ShoppingCartProps = {
   isOpen: boolean;
 };
@@ -20,8 +21,11 @@ type CartItemProps = {
   quantity: number;
 };
 const ItemInCart = ({ id, quantity }: CartItemProps) => {
-  const [infoShoe, setInfoShoe] = useState<IIForDetailShoe>();
+  console.log(id);
+  const [infoShoe, setInfoShoe] = useState<IDetailProductCart2>();
   const [showToast, setShowToast] = useState<boolean>();
+  const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
+
   const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
     useShoppingCart();
   const getDetailShoeWithId = async () => {
@@ -30,7 +34,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
       url: API.getShoeDetailWithId(id),
     });
     if (res.status) {
-      setInfoShoe(res?.data);
+      setInfoShoe(res?.data?.data);
     }
   };
   useEffect(() => {
@@ -39,14 +43,26 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
   return infoShoe ? (
     <div className="flex justify-between items-center p-3 border-b-[2px] border-dotted w-full border-gray-400  ">
       <img
-        src={infoShoe?.images[0]?.name}
-        className="w-[90px] h-[90px] object-contain"
+        src={infoShoe?.images}
+        className="w-[90px] h-[120px] object-contain"
       />
+
       <div className="w-[70%] flex flex-col gap-2">
-        <p className="text-xs font-medium line-clamp-2 ">
-          {infoShoe?.shoe.name}-{infoShoe?.color.name}-{infoShoe?.size.name}
-        </p>
-        <p className=" text-sm">{convertToCurrencyString(infoShoe?.price)}</p>
+        <p className="text-xs font-medium line-clamp-2 ">{infoShoe?.name}</p>
+        {!!infoShoe.discountPercent && infoShoe?.discountValue ? (
+          <div className="flex items-center gap-2">
+            <p className="  font-semibold text-sm text-red-500">
+              {convertToCurrencyString(infoShoe?.discountValue)}
+            </p>
+            <p className="  font-semibold text-xs  line-through">
+              {convertToCurrencyString(infoShoe?.price)}
+            </p>
+          </div>
+        ) : (
+          <p className="  font-semibold text-xs  text-red-500">
+            {convertToCurrencyString(infoShoe?.price)}
+          </p>
+        )}
         <div className="flex justify-between">
           <div className="flex ">
             <div
@@ -73,21 +89,70 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
             </div>
           </div>
           <div
-            className="border-[1px] bg-[#f2f2f2] flex items-center h-full px-2  "
+            className="border-[1px] bg-[#f2f2f2] flex items-center h-full px-2   cursor-pointer"
             onClick={() => {
-              removeFromCart(infoShoe?.id);
+              setShowModalDelete(true);
             }}
           >
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAhklEQVR4nO3SMQrCUBAE0HeFtJa5QirBc1jnEsE2VQ5jbSOexDQWHkRZ2OIjXyOS0oFh2Zk/DCyfldCgTXY44ZKzK7ymFh7x+ILju+Y7hqKl5JB+tTlwQ48tptSm3Pv0LYXLhzWtin/4x4NtsEstZuyL4RlHHCoM/fopvMc5//QrQw9/HTwB68BA1F7PyxoAAAAASUVORK5CYII=" />
-            <span
-              className="font-medium"
-              onClick={() => removeFromCart(infoShoe?.id)}
-            >
-              Xóa
-            </span>
+            <span className="font-medium">Xóa</span>
           </div>
         </div>
       </div>
+      {showModalDelete && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalDelete}
+          onClose={() => {
+            setShowModalDelete(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận xóa sản phẩm này khỏi giỏ hàng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  removeFromCart(infoShoe?.id);
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   ) : (
     <div></div>
@@ -95,78 +160,14 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
 };
 const ItemInCart2 = ({
   item,
-  loading,
-  setLoading,
 }: {
   item: IDetailProductCart;
   loading: any;
   setLoading: any;
 }) => {
-  const {
-    userPrf,
-    reduceShoe,
-    addShoe,
-    removeFromCartUser,
-    getProductQuantityById,
-  } = useShoppingCart();
-  const [quantity, setQuantity] = useState<number>(item?.quantity);
-
-  // const reduceShoe = async (idShoeDetail: number) => {
-  //   try {
-  //     const res = await axios({
-  //       method: "put",
-  //       url: API.updateAmountShoe(),
-  //       data: {
-  //         id: Number(userPrf?.id),
-  //         quantity: quantity - 1,
-  //         shoeDetail: idShoeDetail,
-  //       },
-  //     });
-  //     if (res.status) {
-  //       setQuantity((prevQuantity) => prevQuantity - 1);
-  //       toast("giảm");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(!loading);
-  //   }
-  // };
-  // const addShoe = async (idShoeDetail: number) => {
-  //   try {
-  //     const res = await axios({
-  //       method: "put",
-  //       url: API.updateAmountShoe(),
-  //       data: {
-  //         id: Number(userPrf?.id),
-  //         quantity: quantity + 1,
-  //         shoeDetail: idShoeDetail,
-  //       },
-  //     });
-  //     if (res.status) {
-  //       toast("tăng");
-  //       setQuantity((prevQuantity) => prevQuantity + 1);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setLoading(!loading);
-  //   }
-  // };
-  // const removeFromCart = async (idShoeDetail: number) => {
-  //   try {
-  //     const res = await axios({
-  //       method: "delete",
-  //       url: API.removeFromCart(idShoeDetail),
-  //     });
-  //     if (res.status) {
-  //       toast("xóa " + idShoeDetail);
-  //     }
-  //   } catch (error) {
-  //   } finally {
-  //     setLoading(!loading);
-  //   }
-  // };
+  const { reduceShoe, addShoe, removeFromCartUser, getProductQuantityById } =
+    useShoppingCart();
+  const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   return (
     <div className="flex justify-between items-center p-3 border-b-[2px] border-dotted w-full border-gray-400  ">
       <img src={item.image} className="w-[90px] h-[90px] object-contain" />
@@ -182,7 +183,7 @@ const ItemInCart2 = ({
             </p>
           </div>
         ) : (
-          <p className="  font-semibold text-xs  line-through">
+          <p className="  font-semibold text-xs  text-red-500">
             {convertToCurrencyString(item.price)}
           </p>
         )}
@@ -192,10 +193,14 @@ const ItemInCart2 = ({
             <div
               className=" border-[1px] border-gray-300 w-6 flex items-center justify-center"
               onClick={() => {
-                reduceShoe(
-                  item.id,
-                  getProductQuantityById(item.idProductDetail)
-                );
+                if (getProductQuantityById(item.idProductDetail) === 1) {
+                  setShowModalDelete(true);
+                } else {
+                  reduceShoe(
+                    item.id,
+                    getProductQuantityById(item.idProductDetail)
+                  );
+                }
               }}
             >
               -
@@ -213,14 +218,68 @@ const ItemInCart2 = ({
             </div>
           </div>
           <div
-            className="border-[1px] bg-[#f2f2f2] flex items-center h-full px-2  "
-            onClick={() => removeFromCartUser(item?.id)}
+            className="border-[1px] bg-[#f2f2f2] flex items-center h-full px-2 cursor-pointer "
+            onClick={() => setShowModalDelete(true)}
           >
             <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAhklEQVR4nO3SMQrCUBAE0HeFtJa5QirBc1jnEsE2VQ5jbSOexDQWHkRZ2OIjXyOS0oFh2Zk/DCyfldCgTXY44ZKzK7ymFh7x+ILju+Y7hqKl5JB+tTlwQ48tptSm3Pv0LYXLhzWtin/4x4NtsEstZuyL4RlHHCoM/fopvMc5//QrQw9/HTwB68BA1F7PyxoAAAAASUVORK5CYII=" />
             <span className="font-medium">Xóa</span>
           </div>
         </div>
       </div>
+      {showModalDelete && (
+        <ModalComponent
+          check={true}
+          isVisible={showModalDelete}
+          onClose={() => {
+            setShowModalDelete(false);
+          }}
+        >
+          <div className="w-full flex flex-col justify-center">
+            <svg
+              className="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400 text-center">
+              Xác nhận xóa sản phẩm này khỏi giỏ hàng ?
+            </h3>
+
+            <div className="w-full flex justify-around items-center mb-2">
+              <button
+                onClick={() => {
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-green-400  rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 "
+              >
+                Hủy
+              </button>
+              <button
+                onClick={() => {
+                  removeFromCartUser(item?.id);
+                  setShowModalDelete(false);
+                }}
+                data-modal-hide="popup-modal"
+                type="button"
+                className="text-white bg-red-600  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      )}
     </div>
   );
 };
@@ -229,7 +288,6 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
   const { closeCart, cartItems, cartQuantity, listProducts, cartQuantityUser } =
     useShoppingCart();
   const [listDetailShoe, setListDetailShoe] = useState<IListDeatilShoe[]>();
-  // const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
   const [itemCheckRender, setItemCheckRender] = useState<boolean>(false);
   const getDetailShoe = async () => {
     const res = await axios({
@@ -241,25 +299,21 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
     }
   };
   const { userPrf } = useShoppingCart();
-  // const getListDetailCart = async () => {
-  //   try {
-  //     const res = await axios({
-  //       method: "get",
-  //       url: API.getListDetailCart(Number(userPrf?.id)),
-  //     });
-  //     if (res.status) {
-  //       setListProducts(res?.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   useEffect(() => {
     getDetailShoe();
   }, [itemCheckRender]);
-  // useEffect(() => {
-  //   getListDetailCart();
-  // }, [userPrf?.id]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isOpen]);
+  if (!isOpen) return null;
   return (
     <div>
       {isOpen ? (
@@ -296,8 +350,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
             </div>
             <div className="mt-4 px-2">
               <p className="text-sm font-medium">
-                Tổng số lượng:{" "}
-                {!!listProducts ? cartQuantityUser : cartQuantity}
+                Tổng số lượng: {!!userPrf ? cartQuantityUser : cartQuantity}
               </p>
               <p className="text-sm font-medium">
                 Tổng giá:{" "}
@@ -325,7 +378,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
               >
                 Xem giỏ hàng
               </button>
-              {!!listProducts ? (
+              {!!userPrf ? (
                 <button
                   className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
                   onClick={() => [navigate(path.payMentWithUser), closeCart()]}

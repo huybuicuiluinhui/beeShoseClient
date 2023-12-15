@@ -80,7 +80,7 @@ const ItemOrder = ({ item }: { item: IOrder }) => {
         <p className=" text-gray-500 text-sm">Mã Hóa Đơn: {item?.code}</p>
         <div className="flex items-center gap-4">
           <button
-            className="text-gray-500 text-sm font-light"
+            className="text-gray-500 text-sm font-semibold"
             onClick={() => {
               navigate(
                 `/timeLineOrder/${item?.status}/${item?.id}/${item?.code}`

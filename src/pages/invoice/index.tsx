@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InvoiceAll from "./invoiceAll";
-import WaitForPay from "./waitForPay";
-import Transport from "./transport";
-import Delivering from "./delivering";
-import Complete from "./complete";
-import Cancelled from "./cancelled";
-import Return from "./return";
-import TimeLineOrder from "./timeLineOrder";
+// import WaitForPay from "./waitForPay";
+// import Transport from "./transport";
+// import Delivering from "./delivering";
+// import Complete from "./complete";
+// import Cancelled from "./cancelled";
+// import Return from "./return";
+// import TimeLineOrder from "./timeLineOrder";
+import axios from "axios";
+import API from "../../api";
+import { useShoppingCart } from "../../context/shoppingCart.context";
+import { IOrder } from "../../types/product.type";
+interface StatusCounts {
+  2: number;
+  3: number;
+  4: number;
+  5: number;
+  6: number;
+  7: number;
+}
 const Invoice = () => {
+  const { userPrf } = useShoppingCart();
   const [activeTab, setActiveTab] = React.useState(0);
   const _invoiceAll = React.useMemo(() => <InvoiceAll status={null} />, []);
   const _waitForPay = React.useMemo(() => <InvoiceAll status={2} />, []);
@@ -45,7 +58,7 @@ const Invoice = () => {
         <button
           className={`px-3 py-2 h-fit w-fit  ${
             activeTab === 2
-              ? "text-red-400  font-semibold text-sm   border-b-2  border-red-400 border-solid"
+              ? "text-red-400  relative font-semibold text-sm   border-b-2  border-red-400 border-solid"
               : "text-[#333]  font-semibold text-sm    "
           }`}
           onClick={() => handleTabClick(2)}
