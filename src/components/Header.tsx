@@ -122,6 +122,7 @@ const Header = () => {
     setSearchValue(value);
     fetchDataSearch(value);
   };
+  console.log("results", results);
   useEffect(() => {
     getDataBrand();
     getCategory();

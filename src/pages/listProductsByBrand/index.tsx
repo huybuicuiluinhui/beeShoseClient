@@ -111,6 +111,7 @@ const ListProductsByBrand = () => {
   const [idCategories, setIDCategories] = useState<any>("");
   const [idBrands, setIdBrands] = useState<any>();
   const [name, setName] = useState<String>("Tất cả sản phẩm");
+  console.log("listShoes", listShoes);
   // const [selectedOption, setSelectedOption] = useState("");
   // const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
   //   setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
@@ -239,15 +240,15 @@ const ListProductsByBrand = () => {
       setMaterials(res.data?.data);
     }
   };
-  const getBrand = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getBrandAllPage(1, 1000000),
-    });
-    if (res.status) {
-      setBrands(res?.data?.data);
-    }
-  };
+  // const getBrand = async () => {
+  //   const res = await axios({
+  //     method: "get",
+  //     url: API.getBrandAllPage(1, 1000000),
+  //   });
+  //   if (res.status) {
+  //     setBrands(res?.data?.data);
+  //   }
+  // };
   const getFilter = async () => {
     const myColor = selectedColors.map((i) => i.id);
     const idColors = myColor.join(",");
@@ -273,8 +274,8 @@ const ListProductsByBrand = () => {
           !!idBrands ? idBrands : "",
           idCategories,
           selectedPriceRange?.minPrice,
-          selectedPriceRange?.maxPrice
-          // page
+          selectedPriceRange?.maxPrice,
+          page
         ),
       });
 
@@ -290,7 +291,7 @@ const ListProductsByBrand = () => {
     window.scrollTo(0, 0);
     getDataSize();
     getDataSole();
-    getBrand();
+    // getBrand();
     getDataColor();
   }, []);
   useEffect(() => {
@@ -483,7 +484,6 @@ const ListProductsByBrand = () => {
                             onClick={() => handleMaterialsSelect(material)}
                           >
                             <input
-                              // onChange={handleChangeSole}
                               id={`material-${material.id}`}
                               type="checkbox"
                               checked={isSelected}
@@ -492,10 +492,7 @@ const ListProductsByBrand = () => {
                               }}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-600  focus:ring-0"
                             />
-                            <span
-                              // htmlFor={`material-${material.id}`}
-                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                            >
+                            <span className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                               {material.name}
                             </span>
                           </li>
