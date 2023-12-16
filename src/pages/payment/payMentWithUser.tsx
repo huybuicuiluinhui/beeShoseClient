@@ -379,9 +379,6 @@ const PayMentWithUser = () => {
                   <th scope="col" className="px-6 py-3 text-left">
                     Sản phẩm
                   </th>
-                  {/* <th scope="col" className="px-6 py-3">
-                    Size
-                  </th> */}
                   <th scope="col" className="px-6 py-3 text-center ">
                     Số lượng
                   </th>
@@ -422,11 +419,10 @@ const PayMentWithUser = () => {
                             </span>
                           </div>
                         </th>
-                        {/* <td className="px-6 py-4">đây là size</td> */}
-                        <td className="px-6 py-4 text-center ">
+                        <td className="px-6 py-4 text-center text-gray-600 font-medium ">
                           {item.quantity}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-6 py-4 text-center text-gray-600 font-medium">
                           {!!item.discountValue
                             ? formatCurrency(item.discountValue)
                             : formatCurrency(item.price)}
@@ -452,7 +448,7 @@ const PayMentWithUser = () => {
         </div>
         <div className="w-full bg-white  mt-5 shadow-md p-4 rounded-sm ">
           <div className=" flex justify-between mb-4 items-center ">
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center gap-2 ">
               <img
                 src={Images.iconVoucher}
                 alt=""
@@ -462,23 +458,38 @@ const PayMentWithUser = () => {
                 Kho voucher
               </span>
             </div>
-            <button
-              className="text-sm font-medium text-red-500 flex-1 border-[1px] border-red-500  mx-40 py-2 "
-              onClick={toggleModal}
-            >
-              Chọn voucher
-            </button>
-            <p className="flex-1 text-end font-semibold text-sm py-2 ">
-              {!!listProducts &&
-                !!percent &&
-                percent > 0 &&
-                `- ${formatCurrency(
-                  (percent / 100) * calculateTotalDone(listProducts)
-                )}`}
-            </p>
+            {!!listProducts && !!percent && percent > 0 ? (
+              <div className=" py-2 border border-solid px-2 border-red-500 rounded relative">
+                <p className="flex-1 text-end font-semibold text-sm  ">
+                  -
+                  {formatCurrency(
+                    (percent / 100) * calculateTotalDone(listProducts)
+                  )}
+                </p>
+                <div
+                  className="bg-red-600 rounded-full p-[1px] absolute -top-1 -right-1 cursor-pointer "
+                  onClick={() => {
+                    setPrecent(0);
+                  }}
+                >
+                  <img
+                    src={Images.iconClose2}
+                    alt=""
+                    className="  w-3 h-3 object-contain "
+                  />
+                </div>
+              </div>
+            ) : (
+              <button
+                className="text-sm font-medium text-red-500 px-4 border-[1px] border-red-500  mx-4 py-2 "
+                onClick={toggleModal}
+              >
+                Chọn voucher
+              </button>
+            )}
           </div>
           <div className=" flex justify-between items-center">
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex items-center gap-2 ">
               <img
                 src={Images.iconVoucher}
                 alt=""
@@ -488,20 +499,37 @@ const PayMentWithUser = () => {
                 Voucher của bạn
               </span>
             </div>
-            <button
-              className="text-sm font-medium text-red-500 flex-1 border-[1px] border-red-500 mx-40 py-2"
-              onClick={toggleModal2}
-            >
-              Chọn voucher dành riêng
-            </button>
-            <p className="flex-1 text-end font-semibold text-sm ">
-              {!!listProducts &&
-                !!percent2 &&
-                percent2 > 0 &&
-                `- ${formatCurrency(
-                  (percent2 / 100) * calculateTotalDone(listProducts)
-                )}`}
-            </p>
+
+            {!!listProducts && !!percent2 && percent2 > 0 ? (
+              <div className=" py-2 border border-solid px-2 border-red-500 rounded relative">
+                <p className="flex-1 text-end font-semibold text-sm  ">
+                  -
+                  {formatCurrency(
+                    (percent2 / 100) * calculateTotalDone(listProducts)
+                  )}
+                </p>
+                <div
+                  className="bg-red-600 rounded-full p-[1px] absolute -top-1 -right-1 cursor-pointer "
+                  onClick={() => {
+                    setPrecent2(0);
+                    // setCodeVoucher("");
+                  }}
+                >
+                  <img
+                    src={Images.iconClose2}
+                    alt=""
+                    className="  w-3 h-3 object-contain "
+                  />
+                </div>
+              </div>
+            ) : (
+              <button
+                className="text-sm font-medium text-red-500 border-[1px] border-red-500 mx-4 py-2 px-4"
+                onClick={toggleModal2}
+              >
+                Chọn voucher
+              </button>
+            )}
           </div>
         </div>
 
@@ -541,11 +569,11 @@ const PayMentWithUser = () => {
           <div className="flex  justify-between  my-3">
             <div></div>
             <div className="w-[30%] flex items-center justify-between mx-5">
-              <span className="text-gray-400  text-sm font-normal">
+              <span className="text-gray-600  text-sm font-normal">
                 Tổng tiền hàng{" "}
               </span>
               {!!listProducts && listProducts.length > 0 && (
-                <span className="text-red-400  text-sm font-medium">
+                <span className="text-red-500  text-sm font-medium">
                   {formatCurrency(calculateTotalDone(listProducts))}
                 </span>
               )}
@@ -554,10 +582,10 @@ const PayMentWithUser = () => {
           <div className="flex  justify-between my-3">
             <div></div>
             <div className="w-[30%] flex items-center justify-between mx-5">
-              <span className="text-gray-400  text-sm font-normal">
+              <span className="text-gray-600  text-sm font-normal">
                 Phí vận chuyển
               </span>
-              <span className="text-red-400  text-sm font-medium">
+              <span className="text-red-500  text-sm font-medium">
                 {" "}
                 {formatCurrency(feeShip ? feeShip : 0)}
               </span>
@@ -567,11 +595,12 @@ const PayMentWithUser = () => {
             <div></div>
 
             <div className="w-[30%] flex items-center justify-between mx-5">
-              <span className="text-gray-400  text-sm font-normal">
+              <span className="text-gray-600  text-sm font-normal">
                 Tổng voucher giảm giá
               </span>
-              <span className="text-red-400  text-sm font-medium">
+              <span className="text-red-500  text-sm font-medium">
                 {" "}
+                -
                 {(!!listProducts && percent > 0) ||
                 (!!listProducts && percent2 > 0)
                   ? formatCurrency(
@@ -585,7 +614,7 @@ const PayMentWithUser = () => {
           <div className="flex  justify-between my-3">
             <div></div>
             <div className="w-[30%] flex items-center justify-between mx-5">
-              <span className="text-gray-400  text-sm font-normal">
+              <span className="text-gray-600  text-base font-medium">
                 Tổng thanh toán
               </span>
               {!!feeShip && !!listProducts && (

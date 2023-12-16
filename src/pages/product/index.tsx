@@ -25,7 +25,6 @@ const ProductPage = () => {
         url: API.getShoeDetail(Number(id)),
       });
       if (res.status) {
-        console.log("res?.data?.data", res?.data?.data);
         setDataDetailProduct(res?.data?.data);
       }
     }

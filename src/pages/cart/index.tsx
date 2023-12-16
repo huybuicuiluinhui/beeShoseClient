@@ -272,7 +272,7 @@ const CartPage = () => {
               <div className="w-full">
                 <img
                   src={Images.isEmtyCart}
-                  className="w-[45%] h-auto mx-auto"
+                  className="w-[30%] h-auto mx-auto"
                   alt="Tiếp tục mua sắm"
                 />
               </div>

@@ -26,7 +26,7 @@ const path = {
   infoMe: "/information/informe",
   order: "/information/order",
   address: "/information/address",
-  showBillCheck: "/showBillCheck/:idBill",
+  showBillCheck: "/showBillCheck/:idBill/:code",
   changePassWord: "/information/change-password",
   logoutScreen: "/information/logout",
   notification: "/notification/:id",

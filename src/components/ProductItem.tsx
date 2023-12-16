@@ -44,6 +44,7 @@ const ProductItem = ({
   const [idAddToCart, setIdAddToCart] = useState<number>(0);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
+  const [status, setStatus] = useState<boolean>(false);
 
   const getDataSize = async () => {
     try {
@@ -74,6 +75,8 @@ const ProductItem = ({
       url: API.getPriceDetailShoe(inforShoe?.name, chooseSize, chooseColor),
     });
     if (res.status) {
+      console.log("res?.data?.data[0]", res?.data?.data[0]);
+
       if (res?.data?.totalPages === 0) {
         setPrice(0);
       }
@@ -84,6 +87,7 @@ const ProductItem = ({
         setCode(res?.data.data[0].code);
         setSale(res?.data?.data[0].discountPercent);
         setPriceSale(res?.data?.data[0].discountValue);
+        setStatus(res?.data?.data[0].status);
       }
     }
   };
@@ -107,7 +111,6 @@ const ProductItem = ({
   }, [product]);
   const uniqueSizes = useMemo(() => {
     const sizes: any[] = [];
-    console.log("product", product);
     for (let i = 0; i < product.length; i++) {
       const size = product[i].size;
       if (!sizes.includes(size)) {
@@ -159,7 +162,11 @@ const ProductItem = ({
             {inforShoe?.name}
           </span>
           <div className="flex items-center">
-            {!!price && !!priceSale && amountShoe > 0 ? (
+            {status === true ? (
+              <span className="text-red-500 font-semibold text-lg  ">
+                Sản phẩm ngừng kinh doanh
+              </span>
+            ) : !!price && !!priceSale && amountShoe > 0 ? (
               <>
                 <span className="text-red-500 font-semibold text-lg  ">
                   {convertToCurrencyString(Number(priceSale))}
@@ -261,7 +268,6 @@ const ProductItem = ({
                           setAmount((prev) => prev + 1);
                         }
                       } else if (!userPrf) {
-                        console.log("amountItemInCart", amountItemInCart);
                         if (
                           amount >= 10 ||
                           (amountShoe <= amountItemInCart + amount &&

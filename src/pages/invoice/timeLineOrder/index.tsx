@@ -13,6 +13,7 @@ interface IData {
 }
 const TimeLineOrder = () => {
   const param = useParams();
+  console.log("param", param);
   const navigate = useNavigate();
   const [data, setData] = useState<IData[]>();
   const getBillHistory = async () => {
@@ -73,10 +74,10 @@ const TimeLineOrder = () => {
                 Chờ xác nhận
               </span>
               <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {data[0].createAt}
+                {data[0]?.createAt}
               </time>
               <span className="text-sm font-medium">
-                Ghi chú: {data[0].note}
+                Ghi chú: {data[0]?.note}
               </span>
             </div>
           </li>
@@ -106,11 +107,13 @@ const TimeLineOrder = () => {
                 Chờ giao
               </span>
               <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {data[1].createAt}
+                {data[1]?.createAt ? data[1]?.createAt : ""}
               </time>
-              <span className="text-sm font-medium">
-                Ghi chú: {data[1].note}
-              </span>
+              {data[1]?.note && (
+                <span className="text-sm font-medium">
+                  Ghi chú: {data[1]?.note ? data[1]?.note : ""}
+                </span>
+              )}
             </div>
           </li>
           <li className="relative mb-6 sm:mb-0 w-[25%]">
@@ -140,7 +143,7 @@ const TimeLineOrder = () => {
               </span>
               <span className="text-sm font-semibold text-gray-900 dark:text-white"></span>
               <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {data[2]?.createAt}
+                {data[2]?.createAt ? data[2]?.createAt : ""}
               </time>
               {data[2]?.note && (
                 <span className="text-sm font-medium">
@@ -174,11 +177,11 @@ const TimeLineOrder = () => {
                 Hoàn thành
               </span>
               <time className="block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
-                {data[3]?.createAt}
+                {data[3]?.createAt ? data[3]?.createAt : ""}
               </time>
               {data[3]?.note && (
                 <span className="text-sm font-medium">
-                  Ghi chú: {data[3]?.note}
+                  Ghi chú: {data[3]?.note ? data[3]?.note : ""}
                 </span>
               )}
             </div>

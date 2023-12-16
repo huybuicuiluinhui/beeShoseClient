@@ -49,7 +49,7 @@ const ItemPayMent = ({ item }: { item: any }) => {
       {
         <img
           className="h-[90px] w-[80px] object-contain "
-          src={inforShoe?.images}
+          src={inforShoe?.images.split(",")[0]}
         />
       }
       <div className="flex-1">
@@ -103,15 +103,9 @@ const ItemPayMent = ({ item }: { item: any }) => {
 const PaymentPage = () => {
   const navigate = useNavigate();
   const { cartItems, clearCart } = useShoppingCart();
-  console.log("cartItems", cartItems);
-
-  const [selected, setSelected] = useState("");
   const [showModal, setShowMoal] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
-  const [open, setOpen] = useState<boolean>(true);
-  const [openList, setOpenList] = useState<boolean>(false);
   const [percent, setPrecent] = useState<number>(0);
-  const [minPrice, setMinPrice] = useState<number>(0);
   const [radioChoose, setRadioChoose] = React.useState<number>(0);
   const [voucher, setVoucher] = useState<IVoucher[]>();
   const [provinces, setProvinces] = useState<Province[]>([]);
@@ -121,18 +115,14 @@ const PaymentPage = () => {
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [specificAddress, setSpecificAddress] = useState<string>(" ");
-  const [quantity, setQuantity] = useState<number>();
-  const [code, setCode] = useState<string>();
+  // const [quantity, setQuantity] = useState<number>();
+  const [codeVoucher, setCodeVoucher] = useState<string>();
   const [feeShip, setFeeShip] = useState();
   const [listDetailShoe, setListDetailShoe] = useState<IDetailProductCart2[]>();
   const [textHVT, setTextHVT] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<number>(0);
-  // const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
-  // const toggleModal = () => {
-  //   setModalOpenVoucher(!isModalOpenVoucher);
-  // };
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -364,9 +354,9 @@ const PaymentPage = () => {
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
-      <div className="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-16 shadow-md my-10 bg-[#f9fafb]">
+      <div className="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-10 shadow-md my-10 bg-[#f9fafb]">
         <div className="px-4 ">
-          <p className="text-base font-medium text-gray-600 mt-3">
+          <p className="text-base font-medium text-black mt-3">
             Trang Thanh Toán
           </p>
           <p className="text-gray-400 text-sm">
@@ -375,7 +365,7 @@ const PaymentPage = () => {
           </p>
 
           {!!cartItems && cartItems.length ? (
-            <div className="mt-4 space-y-3  bg-white overflow-y-scroll h-80 ">
+            <div className="mt-4 space-y-3  bg-white overflow-y-scroll h-[360px] ">
               {cartItems.map((item, index) => {
                 return <ItemPayMent item={item} key={index} />;
               })}
@@ -385,9 +375,32 @@ const PaymentPage = () => {
           )}
 
           <div className=" w-full   mt-2">
-            <span className=" text-sm font-medium"> ÁP DỤNG MÃ GIẢM GIÁ</span>
+            <div className="flex gap-5 items-center mb-1">
+              <span className=" text-sm font-medium"> ÁP DỤNG MÃ GIẢM GIÁ</span>
+              {!!codeVoucher && (
+                <div className="relative">
+                  <p className="font-semibold bg-blue-600 px-2  rounded text-white">
+                    {codeVoucher}
+                  </p>
+                  <div
+                    className="bg-blue-600 rounded-full p-[1px] absolute -top-1 -right-1 cursor-pointer "
+                    onClick={() => {
+                      setPrecent(0);
+                      setCodeVoucher("");
+                    }}
+                  >
+                    <img
+                      src={Images.iconClose2}
+                      alt=""
+                      className="  w-3 h-3 object-contain "
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
             {!!listDetailShoe && (
               <ShowVoucherList
+                setCodeVoucher={setCodeVoucher}
                 setPrecent={setPrecent}
                 valueCheck={cartItems.reduce((total, cartItem) => {
                   const item = listDetailShoe.find((i) => i.id === cartItem.id);
@@ -404,8 +417,8 @@ const PaymentPage = () => {
           </div>
         </div>
         {/* Thanh toán */}
-        <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-          <p className="text-xl font-medium  ">Chi tiết thanh toán</p>
+        <div className="mt-10 bg-gray-50 px-4 pt-2 lg:mt-0">
+          <p className="text-base font-medium  ">Chi tiết thanh toán</p>
           <p className="text-gray-400">
             Hoàn thành đơn đặt hàng của bạn bằng cách cung cấp chi tiết thanh
             toán của bạn.
@@ -426,7 +439,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập họ và tên
                 </label>
@@ -445,7 +458,7 @@ const PaymentPage = () => {
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập email
                 </label>
@@ -458,7 +471,7 @@ const PaymentPage = () => {
                     value={selectedProvince}
                     onChange={(e: any) => setSelectedProvince(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     {provinces.map((province) => (
                       <option
@@ -473,7 +486,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Tỉnh/Thành Phố
                 </label>
@@ -484,7 +497,7 @@ const PaymentPage = () => {
                     value={selectedDistrict}
                     onChange={(e: any) => setSelectedDistrict(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 appearance-none  focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     {districts.map((district) => (
                       <option
@@ -499,7 +512,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Quận/Huyện
                 </label>
@@ -513,7 +526,7 @@ const PaymentPage = () => {
                     value={selectedWard}
                     onChange={(e: any) => setSelectedWard(e?.target?.value)}
                     id="underline_select"
-                    className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
+                    className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer"
                   >
                     {wards.map((ward) => (
                       <option
@@ -528,7 +541,7 @@ const PaymentPage = () => {
 
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập Phường/Xã
                 </label>
@@ -539,12 +552,12 @@ const PaymentPage = () => {
                   onChange={(e: any) => setSpecificAddress(e?.target?.value)}
                   type="text"
                   id="floating_standard"
-                  className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
                 <label
                   htmlFor="floating_standard"
-                  className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-600 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
                   Nhập địa chỉ cụ thể
                 </label>
@@ -552,7 +565,7 @@ const PaymentPage = () => {
             </div>
             <label
               htmlFor="card-holder"
-              className="mt-4 mb-2 block text-sm font-medium text-gray-500"
+              className="mt-4 mb-2 block text-sm font-medium text-gray-900"
             >
               Chọn phương thức thanh toán
             </label>

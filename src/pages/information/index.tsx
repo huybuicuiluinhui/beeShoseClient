@@ -93,7 +93,7 @@ const Information = () => {
               {dataAside.map((item, index) => {
                 return (
                   <div
-                    className={`relative tracking-wider  leading-none overflow-hidden mt-2 pb-2 w-[100%] cursor-pointer mb-2 px-2 pt-2
+                    className={`relative tracking-wider  leading-none overflow-hidden mt-2 pb-2 w-[100%] cursor-pointer mb-2 px-2 pt-2 
                   ${
                     selectedCategory === item.name
                       ? "border-r-2 border-[#000]"
@@ -111,7 +111,7 @@ const Information = () => {
                         className="w-[18px] h-auto object-contain"
                       />{" "}
                       <span
-                        className={`text-sm ml-2   ${
+                        className={`text-base ml-2   ${
                           selectedCategory === item.name
                             ? "font-semibold text-black "
                             : "text-gray-600 font-normal"

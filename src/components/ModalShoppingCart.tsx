@@ -37,16 +37,16 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
       setInfoShoe(res?.data?.data);
     }
   };
+  console.log("infoShoe", infoShoe);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
   return infoShoe ? (
     <div className="flex justify-between items-center p-3 border-b-[2px] border-dotted w-full border-gray-400  ">
       <img
-        src={infoShoe?.images}
+        src={infoShoe?.images.split(",")[0]}
         className="w-[90px] h-[120px] object-contain"
       />
-
       <div className="w-[70%] flex flex-col gap-2">
         <p className="text-xs font-medium line-clamp-2 ">{infoShoe?.name}</p>
         {!!infoShoe.discountPercent && infoShoe?.discountValue ? (

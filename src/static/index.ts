@@ -87,6 +87,7 @@ import iconGift from "./icons/iconGift.png";
 import iconLookUpOrders from "./icons/iconLookUpOrders.png";
 import iconInti from "./icons/iconInti.png";
 import iconClose from "./icons/iconClose.png";
+import iconClose2 from "./icons/iconClose2.png";
 import iconNoti from "./icons/iconNoti.png";
 
 const Images = {
@@ -178,6 +179,7 @@ const Images = {
   iconLookUpOrders,
   iconAccount3,
   iconInti,
+  iconClose2,
   iconClose,
   iconNoti,
 };

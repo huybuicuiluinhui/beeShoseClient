@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import API from "../../api";
 import { IDataNoti } from "../../types/product.type";
 import { formartDate } from "../../utils/formatCurrency";
 import Images from "../../static";
 
 const Notification = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const [data, setData] = useState<IDataNoti>();
   console.log("params", params);
@@ -29,7 +30,14 @@ const Notification = () => {
     <div className="w-full h-full ">
       <div className="w-[80%] h-screen mx-auto shadow-lg  my-5 drop-shadow-2xl p-4">
         <div className="flex items-center justify-start gap-4">
-          <img src={Images.iconBack} alt="" className="w-7" />
+          <img
+            src={Images.iconBack}
+            alt=""
+            className="w-7"
+            onClick={() => {
+              navigate(-1);
+            }}
+          />
           <p className="text-base font-normal"> Chi tiết thông báo</p>
         </div>
         <div>

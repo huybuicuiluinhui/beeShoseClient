@@ -74,6 +74,7 @@ const ItemOrder = ({ item }: { item: IOrder }) => {
       getDetailBill();
     }
   }, [item?.id]);
+  console.log("item", item);
   return (
     <div className="bg-white mb-3 shadow-lg flex flex-col">
       <div className="w-full px-2 py-2 border-b-[1px] flex items-center justify-between">

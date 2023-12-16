@@ -286,7 +286,7 @@ const Header = () => {
                                   key={index}
                                   className="text-sm font-medium mb-2  cursor-pointer "
                                   onClick={() => {
-                                    setSearchValue(result.name);
+                                    setSearchValue(result?.name);
                                     setResults([]);
                                     navigate(`/product/${result.id}`);
                                   }}
@@ -538,12 +538,12 @@ const Header = () => {
                               ? infoUser?.avatar
                               : Images.iconAccount3
                           }
-                          className={"w-8 h-8 rounded-full object-cover"}
+                          className={"w-7 h-7 rounded-full object-cover"}
                         />
                       ) : (
                         <img
                           src={Images.iconAccount3}
-                          className={"w-8 h-8 rounded-full object-cover"}
+                          className={"w-7 h-7 rounded-full object-cover"}
                         />
                       )}
                       <div className="ml-3">
