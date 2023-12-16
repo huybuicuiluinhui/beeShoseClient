@@ -41,9 +41,9 @@ export function findProductIdByName(
   nameToCheck: string | number,
   productList: Product[]
 ): number | null {
-  const product = productList.find((item) => item.name === nameToCheck);
+  const product = productList.find((item) => item?.name === nameToCheck);
   if (product) {
-    return product.id;
+    return product?.id;
   } else {
     return null;
   }

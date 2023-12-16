@@ -132,16 +132,6 @@ const PaymentPage = () => {
       setListDetailShoe(res?.data?.data);
     }
   };
-  // const getVoucher = async () => {
-  //   const res = await axios({
-  //     method: "get",
-  //     url: API.getVoucherSearch(inputValue),
-  //   });
-  //   if (res.status) {
-  //     setVoucher(res?.data?.data);
-  //   }
-  // };
-  console.log(voucher);
   const postBill = async () => {
     if (textHVT === "" || textHVT === null || textHVT === undefined) {
       toast.warning("Không được để trống họ và tên");
@@ -206,7 +196,6 @@ const PaymentPage = () => {
               newBill
             );
             if (response.status) {
-              console.log(response?.data?.data);
               toast.success("Đặt hàng thành công");
               navigate(
                 `/showBillCheck/${response?.data?.data?.data?.id}/${response?.data?.data?.data?.code}`
@@ -218,10 +207,12 @@ const PaymentPage = () => {
             const tempNewBill = { ...newBill, id: generateUUID() };
             localStorage.setItem("checkout", JSON.stringify(tempNewBill));
             try {
+              console.log("ahihihihi");
               const response = await axios.get(
                 baseUrl +
                   `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
               );
+              console.log("response", response);
               if (response.status) {
                 window.location.href = response.data.data;
               }
@@ -356,7 +347,7 @@ const PaymentPage = () => {
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />
-      <div className="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-10 shadow-md my-10 bg-[#f9fafb]">
+      <div className="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-10 shadow-md my-10 bg-[#f9fafb] py-4">
         <div className="px-4 ">
           <p className="text-base font-medium text-black mt-3">
             Trang Thanh Toán
@@ -633,7 +624,6 @@ const PaymentPage = () => {
                         const item = listDetailShoe.find(
                           (i) => i.id === cartItem.id
                         );
-                        console.log("cartItem", item);
                         return (
                           total +
                           (item?.discountValue

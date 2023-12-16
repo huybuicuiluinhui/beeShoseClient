@@ -122,7 +122,6 @@ const Header = () => {
     setSearchValue(value);
     fetchDataSearch(value);
   };
-  console.log("results", results);
   useEffect(() => {
     getDataBrand();
     getCategory();
@@ -272,13 +271,13 @@ const Header = () => {
                         required
                         onKeyDown={(e) => handleKeyPress(e)}
                       />
-                      <div className="w-full absolute bg-white z-[1000] mt-1 rounded px-3 max-h-[200px] overflow-y-scroll ">
+                      <div className="w-full absolute bg-white z-[1000] mt-1 rounded px-3 max-h-[200px] overflow-y-scroll shadow-lg drop-shadow-2xl ">
                         {!!results &&
                           !!results.length &&
                           results.map((result, index) => {
                             return (
                               <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
-                                <LazyLoadImage
+                                <img
                                   src={result.images}
                                   alt=""
                                   className="w-10 h-10 object-cover rounded mr-2  "

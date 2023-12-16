@@ -26,7 +26,6 @@ const ShowVoucherWithMe = ({
         url: API.getVoucherWithUser(userId),
       });
       if (res.status) {
-        console.log("res?.data?.data", res?.data?.data);
         setVoucher(res?.data?.data);
       }
     } catch (error) {

@@ -13,7 +13,6 @@ interface IData {
 }
 const TimeLineOrder = () => {
   const param = useParams();
-  console.log("param", param);
   const navigate = useNavigate();
   const [data, setData] = useState<IData[]>();
   const getBillHistory = async () => {

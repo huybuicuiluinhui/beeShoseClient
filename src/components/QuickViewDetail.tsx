@@ -17,11 +17,11 @@ const QuickViewDetail = ({
   setShowQuickView: any;
 }) => {
   const navigate = useNavigate();
+  console.log(product);
   const {
     getItemQuantity,
     openCart,
     addMultipleToCart,
-    closeCart,
     userPrf,
     addToCartUser,
   } = useShoppingCart();
@@ -40,6 +40,7 @@ const QuickViewDetail = ({
   const [chooseColorName, setChooseColorName] = useState<string>();
   const [allSizeData, setAllSizeData] = useState<Product[]>([]);
   const [allColorData, setAllColorData] = useState<Product[]>([]);
+  const [status, setStatus] = useState<boolean>(false);
   const imageArray = product.images ? product.images.split(",") : [];
   const settings = {
     arrows: false,
@@ -71,40 +72,40 @@ const QuickViewDetail = ({
     }
   };
   const getDataSize = async () => {
-    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
-      let combinedData: Product[] = [];
-      let currentPage = 1;
-      while (true) {
-        try {
-          const response = await axios.get(API.getSizePage(currentPage));
-          const data = response.data.data;
-
-          if (data.length === 0) {
-            break;
-          }
-
-          combinedData = [...combinedData, ...data];
-          currentPage++;
-
-          if (currentPage >= response.data.totalPages) {
-            break;
-          }
-        } catch (error) {
-          console.error(error);
-          break;
+    if (!!dataDetailProduct) {
+      try {
+        const response = await axios.get(API.getSizeAll());
+        if (response.status) {
+          setAllSizeData(response.data.data);
+          setChooseSize(
+            findProductIdByName(dataDetailProduct[0]?.size, allSizeData)
+          );
         }
+      } catch (error) {
+        console.error(error);
       }
-
-      setAllSizeData(combinedData);
-      setChooseSize(
-        findProductIdByName(dataDetailProduct[0]?.size, allSizeData)
-      );
     }
   };
+  const getDataColor = async () => {
+    if (!!dataDetailProduct) {
+      try {
+        const response = await axios.get(API.getAllColors());
+        if (response.status) {
+          setAllColorData(response?.data?.data);
+          setChooseColor(
+            findProductIdByName(dataDetailProduct[0]?.color, allColorData)
+          );
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   const getPriceDetailShoe = async () => {
     const res = await axios({
       method: "get",
-      url: API.getPriceDetailShoe(product.name, chooseSize, chooseColor),
+      url: API.getPriceDetailShoe(product?.name, chooseSize, chooseColor),
     });
     if (res.status) {
       if (res?.data?.totalPages === 0) {
@@ -117,44 +118,16 @@ const QuickViewDetail = ({
         setCode(res?.data.data[0].code);
         setSale(res?.data?.data[0].discountPercent);
         setPriceSale(res?.data?.data[0].discountValue);
+        setStatus(res?.data?.data[0].status);
       }
     }
   };
-  const getDataColor = async () => {
-    if (!!dataDetailProduct && dataDetailProduct.length > 0) {
-      let combinedData: Product[] = [];
-      let currentPage = 1;
 
-      while (true) {
-        try {
-          const response = await axios.get(API.getColorPage(currentPage));
-          const data = response.data.data;
-
-          if (data.length === 0) {
-            break;
-          }
-
-          combinedData = [...combinedData, ...data];
-          currentPage++;
-
-          if (currentPage >= response.data.totalPages) {
-            break;
-          }
-        } catch (error) {
-          console.error(error);
-          break;
-        }
-      }
-
-      setAllColorData(combinedData);
-      setChooseColor(
-        findProductIdByName(dataDetailProduct[0]?.color, allColorData)
-      );
-    }
-  };
   useEffect(() => {
-    getDataSize();
-    getDataColor();
+    if (dataDetailProduct) {
+      getDataSize();
+      getDataColor();
+    }
   }, [dataDetailProduct]);
   useEffect(() => {
     if (!!dataDetailProduct && dataDetailProduct.length > 0) {
@@ -169,7 +142,6 @@ const QuickViewDetail = ({
     }
   }, [product, allSizeData, allColorData]);
   useEffect(() => {
-    // setAmountShoe(0);
     if (chooseColor && chooseSize) {
       getPriceDetailShoe();
     }
@@ -224,7 +196,8 @@ const QuickViewDetail = ({
       }}
     >
       <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    ">
-        <div className="bg-white  shadow-lg h-screen w-[30%]  transform  transition-transform ease-in-out   ">
+        <div className="w-full h-full" onClick={handleCloseClick as any}></div>
+        <div className="bg-white  shadow-lg h-screen w-[25%]  transform  transition-transform ease-in-out   ">
           <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
             <h2 className="text-lg font-semibold  uppercase   ">XEM NHANH</h2>
             <div onClick={handleCloseClick as any} className="cursor-pointer">
@@ -262,7 +235,7 @@ const QuickViewDetail = ({
                 </div>
                 <div className="flex justify-between">
                   <p className="text-sm font-normal line-clamp-2">
-                    {product.brand}
+                    {product.brand}-{product.category}
                   </p>
                 </div>
                 {!!!!price && (
@@ -270,8 +243,11 @@ const QuickViewDetail = ({
                     Số lượng còn: {amountShoe}
                   </span>
                 )}
-
-                {!!price && !!priceSale && amountShoe > 0 ? (
+                {status === true ? (
+                  <span className="text-red-500 font-semibold text-lg  ">
+                    Sản phẩm ngừng kinh doanh
+                  </span>
+                ) : !!price && !!priceSale && amountShoe > 0 ? (
                   <>
                     <span className="text-red-500 font-semibold text-sm  ">
                       {convertToCurrencyString(Number(priceSale))}
@@ -281,7 +257,9 @@ const QuickViewDetail = ({
                     </span>
                   </>
                 ) : !!price && !priceSale && amountShoe > 0 ? (
-                  `${convertToCurrencyString(Number(price))}`
+                  <span className="text-red-500 font-semibold text-sm  ">
+                    {convertToCurrencyString(Number(price))}
+                  </span>
                 ) : (
                   "Sản phẩm hiện hết hàng"
                 )}
@@ -350,7 +328,7 @@ const QuickViewDetail = ({
                           amount <= 10) ||
                         amount > 10
                       ) {
-                        toast("Số lượng sản phẩm đã đạt tối đa");
+                        toast("Số lượng thêm đã đạt tối đa");
                         return;
                       } else if (!price) {
                         toast(

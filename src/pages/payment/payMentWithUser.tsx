@@ -166,6 +166,7 @@ const PayMentWithUser = () => {
       return;
     }
   };
+  console.log("method", method);
   const postBill = async () => {
     if (!!dataAddress && dataAddress.length > 0 && !!listProducts) {
       try {
@@ -179,7 +180,7 @@ const PayMentWithUser = () => {
           specificAddress: dataAddress[0]?.specificAddress,
           moneyShip: feeShip,
           voucher: idVoucher,
-          moneyReduce: percent * calculateTotalDone(listProducts),
+          moneyReduce: (percent / 100) * calculateTotalDone(listProducts),
           totalMoney: calculateTotalDone(listProducts),
 
           note: "",
@@ -320,21 +321,19 @@ const PayMentWithUser = () => {
                   <span className="font-medium text-sm ml-2 text-red-600 mr-2">
                     Địa chỉ nhận hàng
                   </span>
-                  {!!dataAddress && dataAddress.length > 0 && (
-                    <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
-                      <img
-                        src={Images.iconPlus}
-                        className="w-[15px] h-auto object-contain"
-                      />
+                  <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
+                    <img
+                      src={Images.iconPlus}
+                      className="w-[15px] h-auto object-contain"
+                    />
 
-                      <button
-                        className="text-white text-xs "
-                        onClick={() => setModalOpen(true)}
-                      >
-                        Thêm địa chỉ mới
-                      </button>
+                    <button
+                      className="text-white text-xs "
+                      onClick={() => setModalOpen(true)}
+                    >
+                      Thêm địa chỉ mới
                     </button>
-                  )}
+                  </button>
                 </div>
               </div>
               <div className="flex gap-3 mt-2">
@@ -362,7 +361,29 @@ const PayMentWithUser = () => {
               </div>
             </div>
           ) : (
-            ""
+            <div className="w-full m-4 ">
+              <div className="flex items-end ">
+                <img src={Images.iconAddressRed} alt="" className="w-[20px]" />
+                <div className="flex items-center">
+                  <span className="font-medium text-sm ml-2 text-red-600 mr-2">
+                    Địa chỉ nhận hàng
+                  </span>
+                  <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
+                    <img
+                      src={Images.iconPlus}
+                      className="w-[15px] h-auto object-contain"
+                    />
+
+                    <button
+                      className="text-white text-xs "
+                      onClick={() => setModalOpen(true)}
+                    >
+                      Thêm địa chỉ mới
+                    </button>
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
         <div className="w-full mx-auto  bg-white shadow-md rounded-sm p-4 mt-5">
@@ -581,7 +602,7 @@ const PayMentWithUser = () => {
           <div className="w-full py-5 flex items-center justify-between px-4">
             <span>
               Nhấn "Đặt Hàng" đồng nghĩa với việc bạn đồng ý với các điều khoản
-              của BeeShoe
+              của BeeShoes
             </span>
             <button
               className="bg-red-600 text-white text-base font-medium px-10 py-2"

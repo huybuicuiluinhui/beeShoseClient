@@ -36,9 +36,9 @@ const Registration = ({
             Khách hàng đã có tài khoản
           </h2>
           <p className="mb-4 text-sm text-gray-700">
-            Bằng cách tạo tài khoản với BeeShoe, bạn sẽ có thể di chuyển qua quy
-            trình thanh toán nhanh hơn, lưu trữ nhiều địa chỉ giao hàng, xem và
-            theo dõi đơn hàng của bạn trong tài khoản của bạn và hơn thế nữa.
+            Bằng cách tạo tài khoản với BeeShoes, bạn sẽ có thể di chuyển qua
+            quy trình thanh toán nhanh hơn, lưu trữ nhiều địa chỉ giao hàng, xem
+            và theo dõi đơn hàng của bạn trong tài khoản của bạn và hơn thế nữa.
           </p>
           <button
             className="bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -52,9 +52,9 @@ const Registration = ({
         <>
           <h2 className="text-lg mb-4 font-semibold">Khách hàng đăng ký mới</h2>
           <p className="mb-4 text-sm text-gray-700">
-            Bằng cách tạo tài khoản với BeeShoe, bạn sẽ có thể di chuyển qua quy
-            trình thanh toán nhanh hơn, lưu trữ nhiều địa chỉ giao hàng, xem và
-            theo dõi đơn hàng của bạn trong tài khoản của bạn và hơn thế nữa.
+            Bằng cách tạo tài khoản với BeeShoes, bạn sẽ có thể di chuyển qua
+            quy trình thanh toán nhanh hơn, lưu trữ nhiều địa chỉ giao hàng, xem
+            và theo dõi đơn hàng của bạn trong tài khoản của bạn và hơn thế nữa.
           </p>
           <button
             className="bg-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

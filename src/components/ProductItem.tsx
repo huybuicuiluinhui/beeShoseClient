@@ -45,7 +45,7 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
   const [status, setStatus] = useState<boolean>(false);
-
+  console.log("product", product);
   const getDataSize = async () => {
     try {
       const response = await axios.get(API.getSizeAll());
@@ -75,8 +75,6 @@ const ProductItem = ({
       url: API.getPriceDetailShoe(inforShoe?.name, chooseSize, chooseColor),
     });
     if (res.status) {
-      console.log("res?.data?.data[0]", res?.data?.data[0]);
-
       if (res?.data?.totalPages === 0) {
         setPrice(0);
       }
@@ -304,17 +302,22 @@ const ProductItem = ({
             <div className="flex justify-between w-full ">
               <div
                 className={`cursor-pointer  text-white font-semibold  flex  items-center justify-center  w-[49%] 
-                ${!!price ? "bg-[#0161e7]" : "bg-[#0161e767]"}
+                ${
+                  !!amountShoe && amountShoe > 0
+                    ? "bg-[#0161e7]"
+                    : "bg-[#0161e767]"
+                }
                 `}
                 onClick={() => {
-                  if (!!userPrf) {
-                    addToCartUser(idAddToCart, amount);
+                  if (!!userPrf && amountShoe) {
+                    if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
                     openCart();
                   } else if (!userPrf) {
                     if (
                       !!idAddToCart &&
                       !!price &&
+                      price > 0 &&
                       amountShoe >= amountItemInCart + amount &&
                       amountItemInCart <= 10
                     ) {
@@ -323,14 +326,18 @@ const ProductItem = ({
                       toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
                       openCart();
                     } else if (
-                      (!!price && amount < amountShoe - amountItemInCart) ||
+                      (!!price &&
+                        price > 0 &&
+                        amount < amountShoe - amountItemInCart) ||
                       amount >= 10
                     ) {
-                      toast("Sản phẩm đã tối đa trong giỏ hàng");
+                      toast.warning("Số lượng thêm đã đạt tối đa ");
                       return;
                     } else {
-                      toast("Bạn cần chọn sản phẩm khác");
+                      toast.warning("Bạn cần chọn sản phẩm khác");
                     }
+                  } else {
+                    toast.warning("Bạn cần chọn sản phẩm khác");
                   }
                 }}
               >

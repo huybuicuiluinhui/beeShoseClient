@@ -52,7 +52,6 @@ const ListProductsByBrandWithSearch = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
-  const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
   const [isDropdownOpen5, setIsDropdownOpen5] = useState<boolean>(true);
   const [priceRange2, setPriceRange2] = useState([
     {
@@ -177,8 +176,8 @@ const ListProductsByBrandWithSearch = () => {
           "",
           selectedPriceRange?.minPrice,
           selectedPriceRange?.maxPrice,
-          param?.key
-          // page
+          param?.key,
+          page
         ),
       });
 
@@ -432,7 +431,6 @@ const ListProductsByBrandWithSearch = () => {
                             onClick={() => handleMaterialsSelect(material)}
                           >
                             <input
-                              // onChange={handleChangeSole}
                               id={`material-${material.id}`}
                               type="checkbox"
                               checked={isSelected}
@@ -441,10 +439,7 @@ const ListProductsByBrandWithSearch = () => {
                               }}
                               className="w-4 h-4 bg-white border-gray-300 rounded text-primary-600 checked:bg-gray-600  focus:ring-0"
                             />
-                            <span
-                              // htmlFor={`material-${material.id}`}
-                              className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                            >
+                            <span className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                               {material.name}
                             </span>
                           </li>
@@ -550,10 +545,12 @@ const ListProductsByBrandWithSearch = () => {
               </div>
               {/* Lọc sản phẩm */}
             </div>
-            <div className="grid grid-cols-4 gap-2 mx-auto mt-4 px-2">
-              {/* <Fade top distance="10%" duration={1500}> */}
+            <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {!!listShoes && listShoes.length > 0 ? (
-                listShoes.map((e: any, i: number) => {
+                listShoes.map((e: IProduct, i: number) => {
+                  if (e.quantity === 0 || !e.quantity) {
+                    return;
+                  }
                   return (
                     <div key={i}>
                       <ProductStanding product={e} />

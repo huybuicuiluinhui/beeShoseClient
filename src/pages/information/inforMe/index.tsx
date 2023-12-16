@@ -19,7 +19,6 @@ const InforMe = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(
     infoUser?.avatar ? infoUser?.avatar : null
   );
-  console.log("infoUser", infoUser);
   useEffect(() => {
     if (!!infoUser) {
       setBirthday(infoUser?.birthday);

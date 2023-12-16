@@ -50,7 +50,6 @@ const ListProductsByBrand = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
   const [isDropdownOpen2, setIsDropdownOpen2] = useState<boolean>(true);
   const [isDropdownOpen3, setIsDropdownOpen3] = useState<boolean>(true);
-  const [isDropdownOpen4, setIsDropdownOpen4] = useState<boolean>(true);
   const [isDropdownOpen5, setIsDropdownOpen5] = useState<boolean>(true);
   const [priceRange2, setPriceRange2] = useState([
     {
@@ -106,29 +105,10 @@ const ListProductsByBrand = () => {
   const [shoeSizes, setShoesSize] = useState<Product[]>();
   const [colors, setColors] = useState<Product[]>();
   const [materials, setMaterials] = useState<Product[]>();
-  const [brands, setBrands] = useState<Product[]>();
   const [listShoes, setListShoes] = useState<IProduct[]>();
   const [idCategories, setIDCategories] = useState<any>("");
   const [idBrands, setIdBrands] = useState<any>();
   const [name, setName] = useState<String>("Tất cả sản phẩm");
-  console.log("listShoes", listShoes);
-  // const [selectedOption, setSelectedOption] = useState("");
-  // const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setSelectedOption(event.target.value); // Cập nhật giá trị khi tùy chọn thay đổi
-  // };
-  // const handleBrandsSelect = (brand: Product) => {
-  //   setSelectedBrands((prevBrands) => {
-  //     const existingSize = prevBrands.find((s) => s.brand === brand.name);
-  //     if (existingSize) {
-  //       return prevBrands.filter((s) => s.brand !== brand.name);
-  //     } else {
-  //       return [
-  //         ...prevBrands,
-  //         { id: brand.id, brand: brand.name, selected: true },
-  //       ];
-  //     }
-  //   });
-  // };
   const handleSizeSelect = (size: Product) => {
     setSelectedSizes((prevSizes) => {
       const existingSize = prevSizes.find((s) => s.size === size.name);

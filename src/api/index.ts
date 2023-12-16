@@ -71,7 +71,7 @@ const API = {
     page: number
   ) =>
     baseUrl +
-    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}&sizePage=15`,
+    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${page}&sizePage=20`,
   getFilterWithSearch: (
     colorID: string,
     sizeID: string,
@@ -80,10 +80,11 @@ const API = {
     category: string,
     minPrice: number,
     maxPrice: any,
-    name: string
+    name: string,
+    page: number
   ) =>
     baseUrl +
-    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&name=${name}`,
+    `api/shoe?color=${colorID}&size=${sizeID}&sole=${sole}&brand=${brand}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&name=${name}&page=${page}&sizePage=20`,
   getSearchBill: (code: string) =>
     baseUrl + `api/bill/find-by-code?code=${code}`,
 

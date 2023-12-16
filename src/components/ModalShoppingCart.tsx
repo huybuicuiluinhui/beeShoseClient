@@ -13,6 +13,7 @@ import {
 } from "../types/product.type";
 import { calculateTotalDone, convertToCurrencyString } from "../utils/format";
 import ModalComponent from "./Modal";
+import { toast } from "react-toastify";
 type ShoppingCartProps = {
   isOpen: boolean;
 };
@@ -21,7 +22,6 @@ type CartItemProps = {
   quantity: number;
 };
 const ItemInCart = ({ id, quantity }: CartItemProps) => {
-  console.log(id);
   const [infoShoe, setInfoShoe] = useState<IDetailProductCart2>();
   const [showToast, setShowToast] = useState<boolean>();
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
@@ -37,7 +37,6 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
       setInfoShoe(res?.data?.data);
     }
   };
-  console.log("infoShoe", infoShoe);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);
@@ -77,7 +76,8 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
             <div
               className="border-[1px] border-gray-300 w-6 flex items-center justify-center"
               onClick={() => {
-                if (quantity >= infoShoe.quantity) {
+                if (quantity >= infoShoe?.quantity) {
+                  toast.warning("Số lượng thêm đã đạt tối đa ");
                   setShowToast(true);
                   return;
                 } else {
@@ -314,13 +314,12 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
     };
   }, [isOpen]);
   if (!isOpen) return null;
-  console.log("listDetailShoe", listDetailShoe);
   return (
     <div>
       {isOpen ? (
         <div className="fixed inset-0 flex items-center justify-end bg-black bg-opacity-50 z-10    ">
           <div className="w-full h-full" onClick={() => closeCart()}></div>
-          <div className="bg-white  shadow-lg h-screen w-[30%]  transform   transition-transform ease-in-out   ">
+          <div className="bg-white  shadow-lg h-screen w-[30%]  transform   transition-transform ease-in-out  relative  ">
             <div className="flex justify-between items-center px-4 pt-4 mb-2  top-0 bg-white  w-full ">
               <h2 className="text-lg font-semibold  uppercase   ">
                 {!!userPrf && !!listProducts
@@ -333,7 +332,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
             </div>
             <div className="w-full bg-gray-500 h-[1.5px]  " />
 
-            <div className="w-full overflow-y-auto max-h-[550px]  ">
+            <div className="w-full overflow-y-auto h-[80%]   ">
               {!!userPrf && !!listProducts
                 ? listProducts.map((item) => {
                     return (
@@ -349,57 +348,62 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                     return <ItemInCart key={item.id} {...item} />;
                   })}
             </div>
-            <div className="mt-4 px-2">
-              <p className="text-sm font-medium">
-                Tổng số lượng: {!!userPrf ? cartQuantityUser : cartQuantity}
-              </p>
-              <p className="text-sm font-medium">
-                Tổng giá:{" "}
-                <span className="text-red-500">
-                  {!!userPrf && !!listProducts
-                    ? formatCurrency(calculateTotalDone(listProducts))
-                    : cartItems &&
-                      !!listDetailShoe &&
-                      !!listDetailShoe.length &&
-                      formatCurrency(
-                        cartItems.reduce((total, cartItem) => {
-                          const item = listDetailShoe.find(
-                            (i) => i.id === cartItem.id
-                          );
-                          return (
-                            total +
-                            (item?.discountValue
-                              ? item?.discountValue
-                              : item?.price || 0) *
-                              cartItem.quantity
-                          );
-                        }, 0)
-                      )}
-                </span>
-              </p>
-            </div>
-            <div className=" flex justify-around items-center my-5 ">
-              <button
-                className="border-gray-300 border-[1px] px-3 py-2 rounded font-medium w-[45%] hover:border-gray-500"
-                onClick={() => [closeCart(), navigate(path.cart)]}
-              >
-                Xem giỏ hàng
-              </button>
-              {!!userPrf ? (
+            <div className="absolute bottom-0 w-full h-[15%]">
+              <div className="mt-4 px-2">
+                <p className="text-sm font-medium">
+                  Tổng số lượng: {!!userPrf ? cartQuantityUser : cartQuantity}
+                </p>
+                <p className="text-sm font-medium">
+                  Tổng giá:{" "}
+                  <span className="text-red-500">
+                    {!!userPrf && !!listProducts
+                      ? formatCurrency(calculateTotalDone(listProducts))
+                      : cartItems &&
+                        !!listDetailShoe &&
+                        !!listDetailShoe.length &&
+                        formatCurrency(
+                          cartItems.reduce((total, cartItem) => {
+                            const item = listDetailShoe.find(
+                              (i) => i.id === cartItem.id
+                            );
+                            return (
+                              total +
+                              (item?.discountValue
+                                ? item?.discountValue
+                                : item?.price || 0) *
+                                cartItem.quantity
+                            );
+                          }, 0)
+                        )}
+                  </span>
+                </p>
+              </div>
+              <div className=" flex justify-around items-center my-5   ">
                 <button
-                  className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
-                  onClick={() => [navigate(path.payMentWithUser), closeCart()]}
+                  className="border-gray-300 border-[1px] px-3 py-2 rounded font-medium w-[45%] hover:border-gray-500"
+                  onClick={() => [closeCart(), navigate(path.cart)]}
                 >
-                  Thanh toán ({listProducts.length})
+                  Xem giỏ hàng
                 </button>
-              ) : (
-                <button
-                  className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
-                  onClick={() => [navigate(path.payment), closeCart()]}
-                >
-                  Thanh toán ({cartItems.length})
-                </button>
-              )}
+                {!!userPrf ? (
+                  <button
+                    className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
+                    onClick={() => [
+                      navigate(path.payMentWithUser),
+                      closeCart(),
+                    ]}
+                  >
+                    Thanh toán ({listProducts.length})
+                  </button>
+                ) : (
+                  <button
+                    className="rounded font-medium bg-[#5ae0d7] px-3 py-2 w-[45%] "
+                    onClick={() => [navigate(path.payment), closeCart()]}
+                  >
+                    Thanh toán ({cartItems.length})
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

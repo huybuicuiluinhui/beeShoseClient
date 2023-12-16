@@ -65,7 +65,6 @@ const Item = ({
       console.error("Error fetching shoe details: ", error);
     }
   };
-  console.log("quantity: ", quantity);
   useEffect(() => {
     getDetailShoeWithId();
   }, [id]);

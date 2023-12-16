@@ -5,7 +5,6 @@ import SliderListProduct from "../../components/SliderListProduct";
 import axios from "axios";
 import API from "../../api";
 import { IDetailProduct, IInforShoe, IProduct } from "../../types/product.type";
-import { toSlug } from "../../utils/format";
 const ProductPage = () => {
   const params = useParams();
   const id = params?.id;
@@ -92,12 +91,6 @@ const ProductPage = () => {
               );
             })}
         </p>
-        {/* {!!inforShoe?.description && (
-          <p className="font-medium my-4 text-sm">
-            Chi tiết:{" "}
-            <span className="font-normal ">{inforShoe?.description}</span>
-          </p>
-        )} */}
       </div>
     ) : (
       <div> </div>
@@ -107,7 +100,7 @@ const ProductPage = () => {
     return (
       <div className="w-[70%] mx-auto">
         <p className="font-normal">
-          Chính sách trao đổi tại <span className="font-bold">BeeShoe</span>
+          Chính sách trao đổi tại <span className="font-bold">BeeShoes</span>
         </p>
         <p className="text-red-600 font-semibold">
           <span className="underline">Lưu ý</span>: Trong thời gian khuyến mãi,
@@ -118,13 +111,13 @@ const ProductPage = () => {
           {" "}
           Sản phẩm áp dụng:{" "}
           <span className="font-normal">
-            Tất cả sản phẩm được bán trên Website BeeShoe
+            Tất cả sản phẩm được bán trên Website BeeShoes
           </span>
         </p>
         <span className="font-semibold"> Sản phẩm không áp dụng: </span>
-        <p className="font-normal">Các sản phẩm tại cửa hàng BeeShoe,...</p>
+        <p className="font-normal">Các sản phẩm tại cửa hàng BeeShoes,...</p>
         <p className="font-normal">
-          Không áp dụng cho sản phẩm mua trực tiếp tại BeeShoe.
+          Không áp dụng cho sản phẩm mua trực tiếp tại BeeShoes.
         </p>
         <p className="font-semibold">
           {" "}
@@ -132,7 +125,7 @@ const ProductPage = () => {
           <span className="font-normal">
             Trong vòng 30 ngày (với sản phẩm nguyên giá) và 10 ngày (với sản
             phẩm giao ngay) kể từ ngày khách hàng nhận sản phẩm cho đến khi
-            BeeShoe nhận lại sản phẩm (tính theo Postmark). Xem thêm thông tin
+            BeeShoes nhận lại sản phẩm (tính theo Postmark). Xem thêm thông tin
             tại CHÍNH SÁCH HOÀN TRẢ SẢN PHẨM
           </span>
         </p>

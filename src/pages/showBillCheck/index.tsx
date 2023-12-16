@@ -108,57 +108,62 @@ const ShowBillCheck = () => {
           </div>
         </div>
       </div>
-      {!!bill && !!billDetail}
-      <div className="border-[1px] border-gray-300 mt-5 rounded">
-        <p className="font-semibold text-base m-4 ">Danh sách sản phẩm </p>
-        {billDetail?.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className={`flex items-center gap-4 m-4 pb-4 ${
-                index === billDetail.length - 1
-                  ? ""
-                  : "border-b-[1px] border-gray-300"
-              }`}
-            >
-              <img
-                src={item?.images.split(",")[0]}
-                alt=""
-                className="w-20 h-20 object-contain"
-              />
-              <div className=" flex flex-col justify-between  h-20">
-                <p className="text-xs font-semibold uppercase">{item?.name}</p>
-                <div className="flex items-center  gap-8">
-                  <p className="text-xs font-normal">
-                    Màu sắc: <span className="font-medium">{item?.color}</span>
+      {!!bill && !!billDetail && (
+        <div className="border-[1px] border-gray-300 mt-5 rounded">
+          <p className="font-semibold text-base m-4 ">Danh sách sản phẩm </p>
+          {billDetail?.map((item, index) => {
+            return (
+              <div
+                key={index}
+                className={`flex items-center gap-4 m-4 pb-4 ${
+                  index === billDetail.length - 1
+                    ? ""
+                    : "border-b-[1px] border-gray-300"
+                }`}
+              >
+                <img
+                  src={item?.images.split(",")[0]}
+                  alt=""
+                  className="w-20 h-20 object-contain"
+                />
+                <div className=" flex flex-col justify-between  h-20">
+                  <p className="text-xs font-semibold uppercase">
+                    {item?.name}
                   </p>
+                  <div className="flex items-center  gap-8">
+                    <p className="text-xs font-normal">
+                      Màu sắc:{" "}
+                      <span className="font-medium">{item?.color}</span>
+                    </p>
+                    <p className="text-xs font-normal">
+                      Số lượng:{" "}
+                      <span className="font-medium">{item?.quantity}</span>
+                    </p>
+                    <p className="text-xs font-normal">
+                      Kích thước:{" "}
+                      <span className="font-medium">{item?.size}</span>
+                    </p>
+                    <p className="text-xs font-normal">
+                      Chất liệu:{" "}
+                      <span className="font-medium">{item?.sole}</span>
+                    </p>
+                  </div>
                   <p className="text-xs font-normal">
-                    Số lượng:{" "}
-                    <span className="font-medium">{item?.quantity}</span>
-                  </p>
-                  <p className="text-xs font-normal">
-                    Kích thước:{" "}
-                    <span className="font-medium">{item?.size}</span>
-                  </p>
-                  <p className="text-xs font-normal">
-                    Chất liệu: <span className="font-medium">{item?.sole}</span>
+                    Thành tiền :{" "}
+                    <span className="font-medium">
+                      {!!item?.discountValue
+                        ? convertToCurrencyString(
+                            item?.discountValue * item?.quantity
+                          )
+                        : convertToCurrencyString(item?.price * item?.quantity)}
+                    </span>
                   </p>
                 </div>
-                <p className="text-xs font-normal">
-                  Thành tiền :{" "}
-                  <span className="font-medium">
-                    {!!item?.discountValue
-                      ? convertToCurrencyString(
-                          item?.discountValue * item?.quantity
-                        )
-                      : convertToCurrencyString(item?.price * item?.quantity)}
-                  </span>
-                </p>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
       <div className="w-full  flex justify-center my-20 gap-8">
         <button
           className="border-[1px] border-gray-500 px-4 py-2 rounded-lg font-medium "

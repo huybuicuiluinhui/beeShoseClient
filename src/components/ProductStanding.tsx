@@ -40,38 +40,40 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
             Xem nhanh
           </button>
           <div className="hover-translate-up">
-            <div className={`min-h-[110px] max-h-[170px] flex flex-col gap-2`}>
+            <div className={`h-[170px] flex flex-col gap-2`}>
               <img
                 src={product?.images ? product?.images : Images.imgNotFound}
                 className="max-h-[170px] w-full  object-contain mx-auto"
               />
             </div>
-            <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-1">
-              {product.name}
-            </p>
-            <div className="px-2">
-              {product.discountValue !== null ? (
-                <div className="flex items-end ">
-                  <p className="text-red-500 font-semibold text-base mr-2">
-                    {convertToCurrencyString(product.discountValue)}
-                  </p>
-                  <p className="text-gray-500 font-semibold text-sm  line-through">
+            <div className="px-2 flex flex-col justify-between h-[130px]">
+              <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-2">
+                {product.name}
+              </p>
+              <div>
+                {product.discountValue !== null ? (
+                  <div className="flex items-end ">
+                    <p className="text-red-500 font-semibold text-base mr-2">
+                      {convertToCurrencyString(product.discountValue)}
+                    </p>
+                    <p className="text-gray-500 font-semibold text-sm  line-through">
+                      {convertToCurrencyString(product.minPrice)}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-red-500 font-semibold text-base  ">
                     {convertToCurrencyString(product.minPrice)}
                   </p>
-                </div>
-              ) : (
-                <p className="text-red-500 font-semibold text-base  ">
-                  {convertToCurrencyString(product.minPrice)}
+                )}
+                <p className=" text-gray-400 font-normal text-sm  line-clamp-1">
+                  <span className="text-slate-800 ">Màu sắc</span>:{" "}
+                  {product.color.replace(/,/g, ", ")}
                 </p>
-              )}
-              <p className=" text-gray-400 font-normal text-sm  line-clamp-1">
-                <span className="text-slate-800 ">Màu sắc</span>:{" "}
-                {product.color.replace(/,/g, ", ")}
-              </p>
-              <p className=" text-gray-400 font-normal text-sm  line-clamp-1 ">
-                <span className="text-slate-800 ">Danh mục:</span>{" "}
-                {product?.category}
-              </p>
+                <p className=" text-gray-400 font-normal text-sm  line-clamp-1 ">
+                  <span className="text-slate-800 ">Danh mục:</span>{" "}
+                  {product?.category}
+                </p>
+              </div>
             </div>
           </div>
           <span
@@ -93,7 +95,6 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
         <div className="hover-translate-up">
           <div
             className={`min-h-[110px] max-h-[170px] flex flex-col gap-2
-        
       `}
           >
             <LazyLoadImage

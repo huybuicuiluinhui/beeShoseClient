@@ -28,23 +28,13 @@ const HomePage = () => {
   const [products, setProducts] = useState<IProduct[]>();
   const [productsAll, setProductsAll] = useState<IProduct[]>();
   const [productsTop, setProductsTop] = useState<IProduct[]>();
-  const [productsAdidas, setProductsAdidas] = useState<IProduct[]>();
   const [totalPages, setTotalPages] = useState<number>(1);
   const [sekeletonItemShoe, setSekeletonItemShoe] = useState<boolean>(true);
   const [sekeletonItemShoeAll, setSekeletonItemShoeAll] =
     useState<boolean>(true);
   const [sekeletonItemShoeTop, setSekeletonItemShoeTop] =
     useState<boolean>(true);
-  const today = new Date();
-  const dayIndex = today.getDay();
-  let promotionType = "";
-  if (dayIndex === 1 || dayIndex === 2) {
-    promotionType = "Khuyến mãi đầu tuần";
-  } else if (dayIndex >= 3 && dayIndex <= 5) {
-    promotionType = "Khuyến mãi giữa tuần";
-  } else {
-    promotionType = "Khuyến mãi cuối tuần";
-  }
+  console.log("productsAll", productsAll);
   const settings: Settings = {
     dots: false,
     arrows: false,
@@ -70,7 +60,7 @@ const HomePage = () => {
   const getDataShoes = async () => {
     const res = await axios({
       method: "get",
-      url: API.getShoe(page, 15),
+      url: API.getShoe(page, 20),
     });
     setSekeletonItemShoe(true);
     if (res.status) {
@@ -101,26 +91,14 @@ const HomePage = () => {
       setSekeletonItemShoeTop(false);
     }
   };
-  const getDataShoesAdidas = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getBrandChoose(1, 1, 10),
-    });
-    if (res.status) {
-      setProductsAdidas(res?.data?.data);
-    }
-  };
-
   useEffect(() => {
     getDataShoes();
   }, [page]);
   useEffect(() => {
     window.scrollTo(0, 0);
     getDataTopSale();
-    getDataShoesAdidas();
     getAllShoe();
   }, []);
-  console.log("products", products);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       <SliderHome />
