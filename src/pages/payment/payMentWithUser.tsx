@@ -185,7 +185,9 @@ const PayMentWithUser = () => {
           ward: dataAddress[0]?.ward,
           specificAddress: dataAddress[0]?.specificAddress,
           moneyShip: feeShip,
-          moneyReduce: (10 / 100) * calculateTotalDone(listProducts),
+          moneyReduce:
+            percent * calculateTotalDone(listProducts) +
+            percent2 * calculateTotalDone(listProducts),
           totalMoney: calculateTotalDone(listProducts),
 
           note: "",
