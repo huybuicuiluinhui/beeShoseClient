@@ -107,7 +107,7 @@ const PaymentPage = () => {
   const [inputValue, setInputValue] = useState("");
   const [percent, setPrecent] = useState<number>(0);
   const [radioChoose, setRadioChoose] = React.useState<number>(0);
-  const [voucher, setVoucher] = useState<IVoucher[]>();
+  const [voucher, setVoucher] = useState<number>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
   const [districts, setDistricts] = useState<District[]>([]);
@@ -141,6 +141,7 @@ const PaymentPage = () => {
   //     setVoucher(res?.data?.data);
   //   }
   // };
+  console.log(voucher);
   const postBill = async () => {
     if (textHVT === "" || textHVT === null || textHVT === undefined) {
       toast.warning("Không được để trống họ và tên");

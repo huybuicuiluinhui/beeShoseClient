@@ -100,6 +100,8 @@ export interface IListDeatilShoe {
   sole: string;
   status: boolean;
   weight: number;
+  discountPercent: number;
+  discountValue: number;
 }
 export interface IVoucher {
   code: string;

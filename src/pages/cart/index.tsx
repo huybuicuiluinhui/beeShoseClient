@@ -5,13 +5,7 @@ import path from "../../constants/path";
 import ShippingProcess from "../../components/shippingProcess";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import axios from "axios";
-import {
-  IDetailProductCart,
-  IDetailProductCart2,
-  IIForDetailShoe,
-  IListDeatilShoe,
-  IVoucher,
-} from "../../types/product.type";
+import { IDetailProductCart2, IIForDetailShoe } from "../../types/product.type";
 import {
   calculateSale,
   calculateTotal,
@@ -90,7 +84,7 @@ const Item = ({
         <div className="w-20">
           <img
             className="h-auto w-[80%] object-contain"
-            src={infoShoe?.images}
+            src={infoShoe?.images.split(",")[0]}
           />
         </div>
         <div className="flex flex-col justify-start ml-4 flex-grow">

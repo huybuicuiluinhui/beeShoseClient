@@ -16,7 +16,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
         <div
           className="border-[0.2px] py-4  relative h-[300px] group btn4 leading-none overflow-hidden  border-gray-100"
           onClick={() => {
-            if (!!product.minPrice && !!product.maxPrice && product.images) {
+            if (!!product.minPrice && !!product.maxPrice && product?.images) {
               navigate(`/product/${product.id}`);
             } else {
               return;
@@ -66,7 +66,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
               )}
               <p className=" text-gray-400 font-normal text-sm  line-clamp-1">
                 <span className="text-slate-800 ">Màu sắc</span>:{" "}
-                {product.color}
+                {product.color.replace(/,/g, ", ")}
               </p>
               <p className=" text-gray-400 font-normal text-sm  line-clamp-1 ">
                 <span className="text-slate-800 ">Danh mục:</span>{" "}

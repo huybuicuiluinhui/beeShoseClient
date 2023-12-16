@@ -122,7 +122,7 @@ const ShowBillCheck = () => {
               }`}
             >
               <img
-                src={item?.images}
+                src={item?.images.split(",")[0]}
                 alt=""
                 className="w-20 h-20 object-contain"
               />
@@ -159,7 +159,7 @@ const ShowBillCheck = () => {
           );
         })}
       </div>
-      <div className="w-full  flex justify-center mt-20 gap-8">
+      <div className="w-full  flex justify-center my-20 gap-8">
         <button
           className="border-[1px] border-gray-500 px-4 py-2 rounded-lg font-medium "
           onClick={() => {

@@ -92,12 +92,12 @@ const ProductPage = () => {
               );
             })}
         </p>
-        {!!inforShoe?.description && (
-          <p className="font-medium my-4 text-xs">
+        {/* {!!inforShoe?.description && (
+          <p className="font-medium my-4 text-sm">
             Chi tiết:{" "}
             <span className="font-normal ">{inforShoe?.description}</span>
           </p>
-        )}
+        )} */}
       </div>
     ) : (
       <div> </div>

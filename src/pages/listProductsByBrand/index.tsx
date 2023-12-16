@@ -587,14 +587,17 @@ const ListProductsByBrand = () => {
               </div>
             </div>
             <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
-              {/* <Fade top distance="10%" duration={1500}> */}
               {!!listShoes && !!listShoes.length ? (
                 listShoes.map((item, index) => {
-                  return (
-                    <div key={index}>
-                      <ProductStanding product={item} key={index} />
-                    </div>
-                  );
+                  if (!item?.quantity) {
+                    return;
+                  } else {
+                    return (
+                      <div key={index}>
+                        <ProductStanding product={item} key={index} />
+                      </div>
+                    );
+                  }
                 })
               ) : !!listShoes && listShoes.length === 0 ? (
                 <div className="text-sm font-semibold">Không có sản phẩm</div>
@@ -609,7 +612,6 @@ const ListProductsByBrand = () => {
                     );
                   })
               )}
-              {/* </Fade> */}
             </div>
             {totalPage <= 1 ? (
               ""

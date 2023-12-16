@@ -120,6 +120,7 @@ const HomePage = () => {
     getDataShoesAdidas();
     getAllShoe();
   }, []);
+  console.log("products", products);
   return (
     <div className=" w-full flex flex-col flex-1 bg-white no-scrollbar overflow-x-hidden ">
       <SliderHome />
@@ -271,11 +272,15 @@ const HomePage = () => {
         <div className="grid grid-cols-5 gap-0 ">
           {!!products && !!products.length && sekeletonItemShoe === false
             ? products.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <ProductStanding product={item} key={index} />
-                  </div>
-                );
+                if (!item.quantity) {
+                  return;
+                } else {
+                  return (
+                    <div key={index}>
+                      <ProductStanding product={item} key={index} />
+                    </div>
+                  );
+                }
               })
             : !!sekeletonItemShoe &&
               sekeletonItemShoe === true &&

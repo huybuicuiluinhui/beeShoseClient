@@ -314,6 +314,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
     };
   }, [isOpen]);
   if (!isOpen) return null;
+  console.log("listDetailShoe", listDetailShoe);
   return (
     <div>
       {isOpen ? (
@@ -365,7 +366,13 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                           const item = listDetailShoe.find(
                             (i) => i.id === cartItem.id
                           );
-                          return total + (item?.price || 0) * cartItem.quantity;
+                          return (
+                            total +
+                            (item?.discountValue
+                              ? item?.discountValue
+                              : item?.price || 0) *
+                              cartItem.quantity
+                          );
                         }, 0)
                       )}
                 </span>
