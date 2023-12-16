@@ -9,16 +9,21 @@ const ShowVoucher = ({
   isOpen,
   onClose,
   valueCheck,
+  userId,
   setPrecent,
+  setIdVoucher,
 }: {
   valueCheck: number;
   isOpen: boolean;
   onClose: any;
   setPrecent: any;
+  setIdVoucher: any;
+  userId: number;
 }) => {
-  const [selected, setSelected] = useState<number>();
+  const [selected, setSelected] = useState<string>();
   const [inputVoucher, setInputVoucher] = useState<string>();
   const [voucher, setVoucher] = useState<IVoucher[]>();
+  const [voucherWith, setVoucherWith] = useState<IVoucher[]>();
   const getVoucherSearch = async () => {
     const res = await axios({
       method: "get",
@@ -28,6 +33,7 @@ const ShowVoucher = ({
       if (res?.data?.data.length === 1) {
         if (valueCheck >= res?.data?.data[0].minBillValue) {
           setPrecent(res?.data?.data[0]?.percentReduce);
+          setIdVoucher(res?.data?.data[0]?.id);
           toast.success("Áp dụng voucher thành công");
           setInputVoucher("");
           onClose();
@@ -37,6 +43,19 @@ const ShowVoucher = ({
       } else {
         toast.warning("Không tìm thấy mã");
       }
+    }
+  };
+  const getVoucherWithUser = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: API.getVoucherWithUser(userId),
+      });
+      if (res.status) {
+        setVoucherWith(res?.data?.data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const handleChangeInput = (event: any) => {
@@ -56,9 +75,9 @@ const ShowVoucher = ({
     }
   };
   useEffect(() => {
+    getVoucherWithUser();
     getVoucher();
   }, []);
-
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -70,7 +89,6 @@ const ShowVoucher = ({
     };
   }, [isOpen]);
   if (!isOpen) return null;
-
   return (
     <div
       className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
@@ -100,7 +118,7 @@ const ShowVoucher = ({
             Chọn BeeShoes Voucher
           </p>
           <div className="bg-[#f8f8f8] px-3 py-2 flex items-center justify-between">
-            <p className="text-[#0000008a] text-xs font-light">Mã voucher</p>
+            <p className="text-[#0000008a] text-xs font-normal">Mã voucher</p>
             <input
               onChange={handleChangeInput}
               value={inputVoucher}
@@ -117,18 +135,23 @@ const ShowVoucher = ({
             </button>
           </div>
           <div className="mt-2 py-3 overflow-y-scroll max-h-72">
-            {!!voucher &&
-              voucher.map((voucher, index) => (
+            <div className="text-sm font-medium  bg-slate-200 px-2 py-2">
+              Voucher dành riêng cho bạn
+            </div>
+
+            {!!voucherWith && !!voucherWith?.length ? (
+              voucherWith.map((voucher, index) => (
                 <div
                   key={index}
                   className={`w-full flex justify-around   hover:bg-[#f5f5f5] cursor-pointer mt-2  px-2 py-2 ${
-                    selected === index ? "bg-[#f5f5f5]" : "null"
+                    selected === voucher.code ? "bg-[#f5f5f5]" : "null"
                   }`}
                   onClick={() => {
                     if (valueCheck >= voucher?.minBillValue) {
                       setPrecent(voucher?.percentReduce);
+                      setSelected(voucher.code);
+                      setIdVoucher(voucher?.id);
                       toast.success("Áp dụng voucher thành công");
-                      setSelected(index);
                       onClose();
                       setInputVoucher("");
                     } else {
@@ -167,18 +190,69 @@ const ShowVoucher = ({
                     </p>
                   </div>
                 </div>
-              ))}
-            {/* Content based on the provided image */}
+              ))
+            ) : (
+              <p className="text-center text-sm my-2">Không có voucher</p>
+            )}
+            <div className="text-sm font-medium  bg-slate-200 px-2 py-2">
+              BeeShoes Voucher
+            </div>
+            {!!voucher?.length ? (
+              voucher.map((voucher, index) => (
+                <div
+                  key={index}
+                  className={`w-full flex justify-around   hover:bg-[#f5f5f5] cursor-pointer mt-2  px-2 py-2 ${
+                    selected === voucher.code ? "bg-[#f5f5f5]" : "null"
+                  }`}
+                  onClick={() => {
+                    if (valueCheck >= voucher?.minBillValue) {
+                      setPrecent(voucher?.percentReduce);
+                      setSelected(voucher?.code);
+                      setIdVoucher(voucher?.id);
+                      onClose();
+                      toast.success("Áp dụng voucher thành công");
+                      setInputVoucher("");
+                    } else {
+                      toast.warning("Voucher không được áp dụng");
+                    }
+                  }}
+                >
+                  <div className={`w-[50%] `}>
+                    <div
+                      key={voucher?.name}
+                      className={`w-full  text-sm  text-[#BFAEE3] `}
+                    >
+                      {voucher?.name}
+                    </div>
+
+                    <p className="text-xs mt-2">
+                      Phần trăm giảm: {voucher.percentReduce}%
+                    </p>
+                    <p className="text-xs mt-2">
+                      Số lượng còn: {voucher.quantity}
+                    </p>
+                  </div>
+                  <div className={`w-[50%] flex flex-col justify-start gap-2 `}>
+                    <div
+                      key={voucher?.name}
+                      className={`w-full  text-[12px]   `}
+                    >
+                      Mã voucher: {voucher?.code}
+                    </div>
+
+                    <p className="text-[12px]">
+                      Đơn tối thiểu:{" "}
+                      <span className="text-red-400">
+                        {convertToCurrencyString(voucher.minBillValue)}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-sm my-2">Không có voucher</p>
+            )}
           </div>
-          {/* <div className="items-center px-4 py-3">
-            <button
-              id="ok-btn"
-              className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
-              onClick={onClose}
-            >
-              OK
-            </button>
-          </div> */}
         </div>
       </div>
     </div>

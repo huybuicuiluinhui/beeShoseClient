@@ -11,10 +11,12 @@ const ShowVoucherList = ({
   valueCheck,
   setPrecent,
   setCodeVoucher,
+  setVoucher,
 }: {
   valueCheck: number;
   setPrecent: any;
   setCodeVoucher: any;
+  setVoucher: any;
 }) => {
   const settings = {
     dots: false,
@@ -47,6 +49,7 @@ const ShowVoucherList = ({
         if (valueCheck >= res?.data?.data[0].minBillValue) {
           console.log(res.data?.data[0]);
           setPrecent(res?.data?.data[0]?.percentReduce);
+          setVoucher(res?.data?.data[0]?.id);
           toast.success("Áp dụng voucher thành công");
         } else {
           toast.warning("Voucher không được áp dụng");
@@ -109,6 +112,7 @@ const ShowVoucherList = ({
                     if (valueCheck >= item?.minBillValue) {
                       setPrecent(item?.percentReduce);
                       setCodeVoucher(item?.code);
+                      setVoucher(item?.id);
                       toast.success("Áp dụng voucher thành công");
                     } else {
                       toast.warning("Voucher không được áp dụng");

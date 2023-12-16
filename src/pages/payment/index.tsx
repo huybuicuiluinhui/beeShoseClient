@@ -132,15 +132,15 @@ const PaymentPage = () => {
       setListDetailShoe(res?.data?.data);
     }
   };
-  const getVoucher = async () => {
-    const res = await axios({
-      method: "get",
-      url: API.getVoucherSearch(inputValue),
-    });
-    if (res.status) {
-      setVoucher(res?.data?.data);
-    }
-  };
+  // const getVoucher = async () => {
+  //   const res = await axios({
+  //     method: "get",
+  //     url: API.getVoucherSearch(inputValue),
+  //   });
+  //   if (res.status) {
+  //     setVoucher(res?.data?.data);
+  //   }
+  // };
   const postBill = async () => {
     if (textHVT === "" || textHVT === null || textHVT === undefined) {
       toast.warning("Không được để trống họ và tên");
@@ -168,6 +168,7 @@ const PaymentPage = () => {
           const newBill = {
             customerName: textHVT,
             email: email,
+            voucher: voucher,
             district: selectedDistrict,
             province: selectedProvince,
             ward: selectedWard,
@@ -325,7 +326,7 @@ const PaymentPage = () => {
   useEffect(() => {
     getDetailShoe();
     fetchProvinces();
-    getVoucher();
+    // getVoucher();
   }, []);
   useEffect(() => {
     if (selectedProvince) {
@@ -400,6 +401,7 @@ const PaymentPage = () => {
             </div>
             {!!listDetailShoe && (
               <ShowVoucherList
+                setVoucher={setVoucher}
                 setCodeVoucher={setCodeVoucher}
                 setPrecent={setPrecent}
                 valueCheck={cartItems.reduce((total, cartItem) => {

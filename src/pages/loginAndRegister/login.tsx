@@ -212,20 +212,8 @@ const LoginScreen = () => {
       } else {
       }
     } catch (error) {
-      console.log(emailR, newPassword, phone);
-
-      if (typeof error === "string") {
-        // Nếu error là một chuỗi, giả sử đó là một thông báo lỗi từ server
-        toast.error(error);
-      } else if (error instanceof Error) {
-        // Nếu error là một đối tượng Error và có response
-        const customError = error as CustomError;
-        if (customError.response && customError.response.data) {
-          toast.error(customError.response.data);
-        } else {
-          toast.error(customError.message);
-        }
-      }
+      console.log("error", error);
+      toast.error("Đăng ký thất bại");
     }
   };
   const forgotPasss = async () => {

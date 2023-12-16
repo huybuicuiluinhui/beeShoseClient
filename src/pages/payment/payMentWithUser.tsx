@@ -21,8 +21,6 @@ import { configApi } from "../../utils/config";
 import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
 import AddAddressModal from "../information/address/modalAddAdr";
-import { getCookie } from "../../helper/CookiesRequest";
-import ShowVoucherWithMe from "./ShowVoucherWithMe";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf, removeAllCart } = useShoppingCart();
@@ -44,18 +42,13 @@ const PayMentWithUser = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [showModalBill, setShowModalBill] = useState(false);
   const [isModalOpenVoucher, setModalOpenVoucher] = useState(false);
-  const [isModalOpenVoucher2, setModalOpenVoucher2] = useState(false);
   const [chooseRadio, setChooseRadio] = useState<number>();
   const [selectedName, setSelectedName] = useState<string>("");
   const [percent, setPrecent] = useState<number>(0);
-  const [percent2, setPrecent2] = useState<number>(0);
+  const [idVoucher, setIdVoucher] = useState<number>(0);
   const toggleModal = () => {
     setModalOpenVoucher(!isModalOpenVoucher);
   };
-  const toggleModal2 = () => {
-    setModalOpenVoucher2(!isModalOpenVoucher2);
-  };
-
   const getListDetailCart = async () => {
     try {
       const res = await axios({
@@ -185,9 +178,8 @@ const PayMentWithUser = () => {
           ward: dataAddress[0]?.ward,
           specificAddress: dataAddress[0]?.specificAddress,
           moneyShip: feeShip,
-          moneyReduce:
-            percent * calculateTotalDone(listProducts) +
-            percent2 * calculateTotalDone(listProducts),
+          voucher: idVoucher,
+          moneyReduce: percent * calculateTotalDone(listProducts),
           totalMoney: calculateTotalDone(listProducts),
 
           note: "",
@@ -490,49 +482,6 @@ const PayMentWithUser = () => {
               </button>
             )}
           </div>
-          <div className=" flex justify-between items-center">
-            <div className="flex items-center gap-2 ">
-              <img
-                src={Images.iconVoucher}
-                alt=""
-                className="w-10 object-contain h-auto "
-              />
-              <span className="text-base font-normal text-red-500 ">
-                Voucher của bạn
-              </span>
-            </div>
-
-            {!!listProducts && !!percent2 && percent2 > 0 ? (
-              <div className=" py-2 border border-solid px-2 border-red-500 rounded relative">
-                <p className="flex-1 text-end font-semibold text-sm  ">
-                  -
-                  {formatCurrency(
-                    (percent2 / 100) * calculateTotalDone(listProducts)
-                  )}
-                </p>
-                <div
-                  className="bg-red-600 rounded-full p-[1px] absolute -top-1 -right-1 cursor-pointer "
-                  onClick={() => {
-                    setPrecent2(0);
-                    // setCodeVoucher("");
-                  }}
-                >
-                  <img
-                    src={Images.iconClose2}
-                    alt=""
-                    className="  w-3 h-3 object-contain "
-                  />
-                </div>
-              </div>
-            ) : (
-              <button
-                className="text-sm font-medium text-red-500 border-[1px] border-red-500 mx-4 py-2 px-4"
-                onClick={toggleModal2}
-              >
-                Chọn voucher
-              </button>
-            )}
-          </div>
         </div>
 
         <div className="w-full bg-white  mt-5 shadow-md  rounded-sm relative ">
@@ -598,16 +547,14 @@ const PayMentWithUser = () => {
 
             <div className="w-[30%] flex items-center justify-between mx-5">
               <span className="text-gray-600  text-sm font-normal">
-                Tổng voucher giảm giá
+                Voucher giảm giá
               </span>
               <span className="text-red-500  text-sm font-medium">
                 {" "}
                 -
-                {(!!listProducts && percent > 0) ||
-                (!!listProducts && percent2 > 0)
+                {!!listProducts && percent > 0
                   ? formatCurrency(
-                      (percent / 100) * calculateTotalDone(listProducts) +
-                        (percent2 / 100) * calculateTotalDone(listProducts)
+                      (percent / 100) * calculateTotalDone(listProducts)
                     )
                   : formatCurrency(0)}
               </span>
@@ -624,8 +571,7 @@ const PayMentWithUser = () => {
                   {formatCurrency(
                     calculateTotalDone(listProducts) +
                       Number(feeShip ? feeShip : 0) -
-                      ((percent / 100) * calculateTotalDone(listProducts) +
-                        (percent2 / 100) * calculateTotalDone(listProducts))
+                      (percent / 100) * calculateTotalDone(listProducts)
                   )}
                 </span>
               )}
@@ -725,21 +671,15 @@ const PayMentWithUser = () => {
       />
       {!!listProducts && (
         <ShowVoucher
+          setIdVoucher={setIdVoucher}
           isOpen={isModalOpenVoucher}
           onClose={toggleModal}
           valueCheck={calculateTotalDone(listProducts)}
           setPrecent={setPrecent}
-        />
-      )}
-      {!!listProducts && (
-        <ShowVoucherWithMe
           userId={Number(userPrf?.id)}
-          isOpen2={isModalOpenVoucher2}
-          onClose2={toggleModal2}
-          valueCheck={calculateTotalDone(listProducts)}
-          setPrecent2={setPrecent2}
         />
       )}
+
       {showModalBill && (
         <ModalComponent
           check={true}
