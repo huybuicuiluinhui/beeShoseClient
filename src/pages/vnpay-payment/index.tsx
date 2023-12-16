@@ -8,9 +8,7 @@ import { useShoppingCart } from "../../context/shoppingCart.context";
 
 export default function Payment() {
   const navigate = useNavigate();
-  // eslint-disable-next-line
   const { removeAllCart } = useShoppingCart();
-
   useEffect(() => {
     let isMounted = true;
 

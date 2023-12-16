@@ -349,23 +349,29 @@ const ProductItem = ({
                 ${!!price ? "bg-[#fe662b]" : "bg-[#fe672b58]"}
               `}
                 onClick={() => {
-                  if (
-                    !!idAddToCart &&
-                    !!price &&
-                    amountShoe >= amountItemInCart + amount &&
-                    amountItemInCart <= 10
-                  ) {
-                    addMultipleToCart(idAddToCart, amount);
+                  if (!!userPrf && amountShoe) {
+                    if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
-                    navigate(path.cart);
-                  } else if (
-                    (!!price && amount < amountShoe - amountItemInCart) ||
-                    amount >= 10
-                  ) {
-                    toast("Sản phẩm đã tối đa trong giỏ hàng");
-                    return;
+                    openCart();
                   } else {
-                    toast("Bạn cần chọn sản phẩm khác");
+                    if (
+                      !!idAddToCart &&
+                      !!price &&
+                      amountShoe >= amountItemInCart + amount &&
+                      amountItemInCart <= 10
+                    ) {
+                      addMultipleToCart(idAddToCart, amount);
+                      setAmount(1);
+                      navigate(path.cart);
+                    } else if (
+                      (!!price && amount < amountShoe - amountItemInCart) ||
+                      amount >= 10
+                    ) {
+                      toast("Sản phẩm đã tối đa trong giỏ hàng");
+                      return;
+                    } else {
+                      toast("Bạn cần chọn sản phẩm khác");
+                    }
                   }
                 }}
               >

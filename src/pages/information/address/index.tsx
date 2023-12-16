@@ -121,7 +121,7 @@ const Address = () => {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
-
+  console.log("dataAddress", dataAddress);
   return (
     <div className="w-full h-full  ">
       <div className="w-[80%] mx-auto min-h-screen shadow-lg mb-10">

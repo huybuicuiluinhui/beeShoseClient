@@ -4,6 +4,7 @@ import { District, Province, Ward } from "../../../types/product.type";
 import API from "../../../api";
 import { toast } from "react-toastify";
 import { useShoppingCart } from "../../../context/shoppingCart.context";
+import { regexPhoneNumber } from "../../../utils/format";
 
 const AddAddressModal = ({
   isOpen,
@@ -35,7 +36,38 @@ const AddAddressModal = ({
   const [textHVT, setTextHVT] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [checkDefault, setCheckDefault] = useState<boolean>(false);
+  const [errors, setErrors] = useState({
+    textHVT: "",
+    phoneNumber: "",
+    specificAddress: "",
+  });
   const AddAdrForUser = async () => {
+    if (textHVT.trim() === "") {
+      setErrors((prev) => ({ ...prev, textHVT: "Không được để trống tên." }));
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, textHVT: "" }));
+    }
+
+    if (!regexPhoneNumber.test(phoneNumber)) {
+      setErrors((prev) => ({
+        ...prev,
+        phoneNumber: "Sai định dạng số điện thoại",
+      }));
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, phoneNumber: "" }));
+    }
+
+    if (specificAddress.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        specificAddress: "Bạn cần nhập địa chỉ chi tiết",
+      }));
+      return;
+    } else {
+      setErrors((prev) => ({ ...prev, specificAddress: "" }));
+    }
     try {
       const res = await axios({
         method: "post",
@@ -98,6 +130,11 @@ const AddAddressModal = ({
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
+                {errors.textHVT && (
+                  <p className="text-red-500 text-xs italic">
+                    {errors.textHVT}
+                  </p>
+                )}
               </div>
               <div className="relative z-0  w-[45%]  flex flex-col items-start">
                 <span className="text-xs text-gray-700 ">
@@ -114,6 +151,11 @@ const AddAddressModal = ({
                   className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-xs italic">
+                    {errors.phoneNumber}
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex justify-between w-full px-4 my-3">
@@ -188,6 +230,11 @@ const AddAddressModal = ({
                   className="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
                   placeholder=" "
                 />
+                {errors.specificAddress && (
+                  <p className="text-red-500 text-xs italic">
+                    {errors.specificAddress}
+                  </p>
+                )}
               </div>
             </div>
           </div>

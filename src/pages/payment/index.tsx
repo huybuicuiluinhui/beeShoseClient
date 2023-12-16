@@ -7,13 +7,10 @@ import { convertToCurrencyString, validateEmail } from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
 import API, { baseUrl } from "../../api";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import ModalComponent from "../../components/Modal";
 import { configApi } from "../../utils/config";
 import { toast } from "react-toastify";
-import path from "../../constants/path";
 import Images from "../../static";
-import ShowVoucher from "./showVoucher";
 import ShowVoucherList from "./showVoucherList";
 interface Province {
   ProvinceID: number;
@@ -104,10 +101,9 @@ const PaymentPage = () => {
   const navigate = useNavigate();
   const { cartItems, clearCart } = useShoppingCart();
   const [showModal, setShowMoal] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState("");
   const [percent, setPrecent] = useState<number>(0);
   const [radioChoose, setRadioChoose] = React.useState<number>(0);
-  const [voucher, setVoucher] = useState<number>();
+  const [voucher, setVoucher] = useState<number | null>(null);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
   const [districts, setDistricts] = useState<District[]>([]);
@@ -115,9 +111,8 @@ const PaymentPage = () => {
   const [wards, setWards] = useState<Ward[]>([]);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [specificAddress, setSpecificAddress] = useState<string>(" ");
-  // const [quantity, setQuantity] = useState<number>();
   const [codeVoucher, setCodeVoucher] = useState<string>();
-  const [feeShip, setFeeShip] = useState();
+  const [feeShip, setFeeShip] = useState(0);
   const [listDetailShoe, setListDetailShoe] = useState<IDetailProductCart2[]>();
   const [textHVT, setTextHVT] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -159,7 +154,7 @@ const PaymentPage = () => {
           const newBill = {
             customerName: textHVT,
             email: email,
-            voucher: voucher,
+            voucher: voucher ? voucher : null,
             district: selectedDistrict,
             province: selectedProvince,
             ward: selectedWard,
@@ -210,7 +205,34 @@ const PaymentPage = () => {
               console.log("ahihihihi");
               const response = await axios.get(
                 baseUrl +
-                  `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+                  `api/vn-pay/payment?id=${tempNewBill.id}&total=${
+                    cartItems.reduce((total, cartItem) => {
+                      const item = listDetailShoe.find(
+                        (i) => i.id === cartItem.id
+                      );
+                      return (
+                        total +
+                        (item?.discountValue
+                          ? item?.discountValue
+                          : item?.price || 0) *
+                          cartItem.quantity
+                      );
+                    }, 0) +
+                    feeShip -
+                    (percent / 100) *
+                      cartItems.reduce((total, cartItem) => {
+                        const item = listDetailShoe.find(
+                          (i) => i.id === cartItem.id
+                        );
+                        return (
+                          total +
+                          (item?.discountValue
+                            ? item?.discountValue
+                            : item?.price || 0) *
+                            cartItem.quantity
+                        );
+                      }, 0)
+                  }`
               );
               console.log("response", response);
               if (response.status) {

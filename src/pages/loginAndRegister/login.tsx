@@ -131,7 +131,6 @@ const LoginScreen = () => {
       }
     } catch (error) {
       if (typeof error === "string") {
-        // Nếu error là một chuỗi, giả sử đó là một thông báo lỗi từ server
         toast.error(error);
       } else if (error instanceof Error) {
         // Nếu error là một đối tượng Error và có response

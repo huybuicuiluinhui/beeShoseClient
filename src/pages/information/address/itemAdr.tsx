@@ -12,6 +12,7 @@ import API from "../../../api";
 import { toast } from "react-toastify";
 import { getTokenCustomer } from "../../../helper/useCookie";
 import ModalComponent from "../../../components/Modal";
+import DetailAddress from "./detailAddress";
 
 const ItemAdr = ({
   item,
@@ -26,6 +27,7 @@ const ItemAdr = ({
   checkUp: boolean;
   setCheckUp: any;
 }) => {
+  console.log("zôzzozozoozo");
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<boolean>(false);
   const [districts, setDistricts] = useState<District[]>([]);
@@ -35,7 +37,6 @@ const ItemAdr = ({
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const itemRef = useRef<IAddress | null>(null);
-
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
@@ -96,18 +97,18 @@ const ItemAdr = ({
       fetchWardsByDistrict(Number(item?.district));
     }
   }, [selectedDistrict, item?.district]);
-  const nameProvince =
-    selectedProvince === true
-      ? provinces.find((d) => d?.ProvinceID === Number(item?.province))
-      : null;
-  const nameDistrict =
-    selectedDistrict === true
-      ? districts.find((d) => d?.DistrictID === Number(item?.district))
-      : null;
-  const nameWard =
-    selectedWard === true
-      ? wards.find((d) => Number(d?.WardCode) === Number(item?.ward))
-      : null;
+  // const nameProvince =
+  //   selectedProvince === true
+  //     ? provinces.find((d) => d?.ProvinceID === Number(item?.province))
+  //     : null;
+  // const nameDistrict =
+  //   selectedDistrict === true
+  //     ? districts.find((d) => d?.DistrictID === Number(item?.district))
+  //     : null;
+  // const nameWard =
+  //   selectedWard === true
+  //     ? wards.find((d) => Number(d?.WardCode) === Number(item?.ward))
+  //     : null;
   const deleteAdrID = async (id: number | string) => {
     try {
       const res = await axios({
@@ -160,14 +161,13 @@ const ItemAdr = ({
             {item?.phoneNumber ? item?.phoneNumber : ""}
           </span>
         </div>
-        <p className="text-[#0000008a]  text-sm">
-          {" "}
-          {item?.specificAddress}, {nameWard ? nameWard?.WardName : " "}
-        </p>
-        <p className="text-[#0000008a]  text-sm">
-          {nameDistrict ? nameDistrict?.DistrictName : ""},{" "}
-          {nameProvince ? nameProvince?.ProvinceName : ""}
-        </p>
+        <DetailAddress
+          spec={item?.specificAddress}
+          distr={item?.district}
+          prov={item?.province}
+          war={item?.ward}
+        />
+
         {item?.defaultAddress && (
           <button className="px-2  mt-2 border-red-400 border-[1px] w-fit text-red-500 text-sm">
             Mặc định

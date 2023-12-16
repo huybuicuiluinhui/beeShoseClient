@@ -21,6 +21,7 @@ import { configApi } from "../../utils/config";
 import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
 import AddAddressModal from "../information/address/modalAddAdr";
+import DetailAddress from "../information/address/detailAddress";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const { userPrf, removeAllCart } = useShoppingCart();
@@ -35,7 +36,7 @@ const PayMentWithUser = () => {
   const [selectedWard, setSelectedWard] = useState<number>();
   const [selectedDefault, setSelectedDefault] = useState<boolean>();
   const [method, setMethod] = useState<number>(0);
-  const [feeShip, setFeeShip] = useState();
+  const [feeShip, setFeeShip] = useState(0);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [indexArr, setIndexArr] = useState<number>(0);
   const [carts, setCarts] = useState({ quantity: null, id: null });
@@ -45,7 +46,7 @@ const PayMentWithUser = () => {
   const [chooseRadio, setChooseRadio] = useState<number>();
   const [selectedName, setSelectedName] = useState<string>("");
   const [percent, setPrecent] = useState<number>(0);
-  const [idVoucher, setIdVoucher] = useState<number>(0);
+  const [idVoucher, setIdVoucher] = useState<number | null>(null);
   const toggleModal = () => {
     setModalOpenVoucher(!isModalOpenVoucher);
   };
@@ -131,7 +132,6 @@ const PayMentWithUser = () => {
       }
     );
   }
-
   const caculateFee = async () => {
     if (!!dataAddress && dataAddress.length > 0) {
       try {
@@ -140,8 +140,8 @@ const PayMentWithUser = () => {
           {
             service_id: 53320,
             service_type_id: null,
-            to_district_id: Number(dataAddress[0].district),
-            to_ward_code: dataAddress[0].ward,
+            to_district_id: Number(selectedDistrict),
+            to_ward_code: String(selectedWard),
             height: 50,
             length: 20,
             weight: 200,
@@ -166,7 +166,6 @@ const PayMentWithUser = () => {
       return;
     }
   };
-  console.log("method", method);
   const postBill = async () => {
     if (!!dataAddress && dataAddress.length > 0 && !!listProducts) {
       try {
@@ -196,7 +195,6 @@ const PayMentWithUser = () => {
             toast.success("Đặt hàng thành công");
             removeAllCart();
             navigate(path.home);
-            // clearCart();
           }
         } else if (method === 1) {
           const tempNewBill = { ...newBill, id: generateUUID() };
@@ -204,7 +202,11 @@ const PayMentWithUser = () => {
           try {
             const response = await axios.get(
               baseUrl +
-                `api/vn-pay/payment?id=${tempNewBill.id}&total=${newBill.totalMoney}`
+                `api/vn-pay/payment?id=${tempNewBill.id}&total=${
+                  calculateTotalDone(listProducts) +
+                  Number(feeShip ? feeShip : 0) -
+                  (percent / 100) * calculateTotalDone(listProducts)
+                }`
             );
             if (response.status) {
               window.location.href = response.data.data;
@@ -236,7 +238,7 @@ const PayMentWithUser = () => {
   };
   useEffect(() => {
     caculateFee();
-  }, [dataAddress]);
+  }, [selectedDistrict, selectedWard]);
   useEffect(() => {
     fetchProvinces();
   }, []);
@@ -253,7 +255,6 @@ const PayMentWithUser = () => {
         setSpecificAddress(defaultAddress.specificAddress);
         setSelectedDefault(defaultAddress.defaultAddress);
         setSelectedName(defaultAddress?.name);
-        // Log the index
         setChooseRadio(defaultAddressIndex);
       }
     }
@@ -337,14 +338,15 @@ const PayMentWithUser = () => {
                 </div>
               </div>
               <div className="flex gap-3 mt-2">
-                <span className="text-sm font-semibold text-black ">
+                <span className="text-base font-semibold text-black ">
                   {selectedName}
                 </span>
-                <span className="text-sm font-normal text-black ">
-                  {specificAddress},{wardName(wards, selectedWard)},
-                  {districtName(districts, selectedDistrict)},
-                  {provinceName(provinces, selectedProvince)}
-                </span>
+                <DetailAddress
+                  prov={String(selectedProvince)}
+                  distr={String(selectedDistrict)}
+                  war={String(selectedWard)}
+                  spec={specificAddress ? specificAddress : ""}
+                />
                 {selectedDefault && (
                   <div className="border-red-500 px-1 text-xs  border-[1px] text-red-500 ">
                     Mặc định

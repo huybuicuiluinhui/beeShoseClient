@@ -30,7 +30,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
           )}
 
           <button
-            className="opacity-0 group-hover:opacity-100 absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-sm font-bold py-2 transition-opacity duration-300 ease-in-out cursor-pointer"
+            className="opacity-0 group-hover:opacity-100 absolute bottom-0 z-10 left-0 right-0 bg-black bg-opacity-50 text-white text-sm font-bold py-2 transition-opacity duration-300 ease-in-out cursor-pointer"
             type="button"
             onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
               event.stopPropagation();
