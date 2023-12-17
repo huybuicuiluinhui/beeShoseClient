@@ -427,7 +427,7 @@ const ListProductsByBrand = () => {
                 type="button"
               >
                 <span className="absolute inset-x-0 h-[1.5px] bottom-0 bg-gray-400" />
-                <p className="font-medium text-xs">Chất liệu</p>
+                <p className="font-medium text-xs">Loại đế</p>
 
                 <svg
                   className="w-4 h-4 ml-2"

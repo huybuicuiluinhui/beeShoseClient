@@ -245,13 +245,9 @@ const HomePage = () => {
           !!productsAll.length &&
           sekeletonItemShoeAll === false
             ? productsAll.map((item, index) => {
-                return item.discountValue !== null ? (
+                return !!item.discountValue ? (
                   <div key={index}>
-                    <ProductStandingTop
-                      product={item}
-                      key={index}
-                      checkTop={false}
-                    />
+                    <ProductStanding product={item} key={index} />
                   </div>
                 ) : (
                   <></>

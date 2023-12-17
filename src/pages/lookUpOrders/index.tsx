@@ -11,6 +11,7 @@ import { CustomError, IBill, IDetailOrder } from "../../types/product.type";
 import { formartDate, formatCurrency } from "../../utils/formatCurrency";
 import { toast } from "react-toastify";
 import { convertToCurrencyString } from "../../utils/format";
+import DetailAddress from "../information/address/detailAddress";
 
 const LookUpOrders = () => {
   const [inputHD, setInputHD] = useState<string>("");
@@ -63,6 +64,7 @@ const LookUpOrders = () => {
       }
     }
   };
+  console.log("listDataBill", listDataBill);
   return (
     <div className="w-full h-full bg-white min-h-screen">
       <div className="relative w-fit h-fit">
@@ -164,7 +166,8 @@ const LookUpOrders = () => {
                     {formatCurrency(listDataBill.moneyShip)}{" "}
                   </td>
                   <td className="px-6 py-4">
-                    {formatCurrency(listDataBill.totalMoney)}{" "}
+                    {formatCurrency(listDataBill.totalMoney) +
+                      listDataBill.moneyShip}{" "}
                   </td>
                 </tr>
               </tbody>
@@ -202,6 +205,7 @@ const LookUpOrders = () => {
                     </label>
                     <p className="text-gray-700">
                       {listDataBill?.customerName}
+                      {!!listDataBill && -listDataBill?.phoneNumber}
                     </p>
                   </div>
                   <div>
@@ -222,6 +226,20 @@ const LookUpOrders = () => {
                         ? "Đã hủy"
                         : ""}
                     </p>
+                  </div>
+                  <div>
+                    {" "}
+                    {!!listDataBill && (
+                      <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Địa chỉ:
+                      </label>
+                    )}
+                    <DetailAddress
+                      spec={listDataBill.address.split("##")[0]}
+                      war={listDataBill.address.split("##")[1]}
+                      distr={listDataBill.address.split("##")[2]}
+                      prov={listDataBill.address.split("##")[3]}
+                    />
                   </div>
                 </div>
               </div>
@@ -265,8 +283,7 @@ const LookUpOrders = () => {
                       <span className="font-medium">{item?.size}</span>
                     </p>
                     <p className="text-xs font-normal">
-                      Chất liệu:{" "}
-                      <span className="font-medium">{item?.sole}</span>
+                      Loại đế: <span className="font-medium">{item?.sole}</span>
                     </p>
                   </div>
                   <p className="text-xs font-normal">

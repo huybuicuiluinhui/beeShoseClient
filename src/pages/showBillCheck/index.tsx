@@ -144,8 +144,7 @@ const ShowBillCheck = () => {
                       <span className="font-medium">{item?.size}</span>
                     </p>
                     <p className="text-xs font-normal">
-                      Chất liệu:{" "}
-                      <span className="font-medium">{item?.sole}</span>
+                      Loại đế: <span className="font-medium">{item?.sole}</span>
                     </p>
                   </div>
                   <p className="text-xs font-normal">

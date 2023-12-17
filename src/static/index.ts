@@ -89,6 +89,7 @@ import iconInti from "./icons/iconInti.png";
 import iconClose from "./icons/iconClose.png";
 import iconClose2 from "./icons/iconClose2.png";
 import iconNoti from "./icons/iconNoti.png";
+import iconNote from "./icons/iconNote.png";
 
 const Images = {
   banner01,
@@ -182,5 +183,6 @@ const Images = {
   iconClose2,
   iconClose,
   iconNoti,
+  iconNote,
 };
 export default Images;

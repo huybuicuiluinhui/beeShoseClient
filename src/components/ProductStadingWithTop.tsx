@@ -37,13 +37,13 @@ const ProductStandingTop = ({
           )}
 
           <div className="">
-            <div className={`min-h-[110px] max-h-[170px] flex flex-col gap-2`}>
+            <div className={`h-[170px] flex flex-col gap-2`}>
               <img
                 src={product?.images ? product?.images : Images.imgNotFound}
                 className="max-h-[170px] w-full  object-contain mx-auto"
               />
             </div>
-            <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-1">
+            <p className="text-[#282828] font-medium text-xs text-center mt-4  line-clamp-2">
               {product.name}
             </p>
             <div className="px-2">

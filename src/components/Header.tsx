@@ -139,83 +139,85 @@ const Header = () => {
   const CategoryTable = () => {
     return (
       <div className="w-screen flex justify-center">
-        <div
-          className=" max-w-screen-xl mx-auto w-full bg-[#fff] absolute  z-40 max-h-64  mt-[1px] shadow-sm"
-          onMouseEnter={() => {
-            handleHover(true);
-          }}
-          onMouseLeave={() => {
-            handleHover(false);
-          }}
-        >
-          <div className="w-full flex  mx-10">
-            <div className="w-[20%]">
-              <span className="text-sm  font-medium whitespace-nowrap text-black uppercase border-b-[1px] border-b-gray-400 ">
-                Thương hiệu
-              </span>
-              <ul className="mx-auto   flex flex-col   py-2 ">
-                {!!listBrandHeader &&
-                  !!listBrandHeader.length &&
-                  listBrandHeader.map((item, index) => (
-                    <Link
-                      to={`/brand/${item.id}/${toSlug(item.name)}`}
-                      key={index}
-                      onClick={() => {
-                        handleHover(false);
-                      }}
-                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
-                    >
-                      <span
-                        className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
-                      />
-                      <span
-                        className={`cursor-pointer  text-xs hover:text-[#6756ca] ${"text-gray-900"}`}
+        <Fade top distance="10%" duration={800}>
+          <div
+            className=" max-w-screen-xl mx-auto w-full bg-[#fff] absolute  z-40 max-h-64  mt-[1px] shadow-sm"
+            onMouseEnter={() => {
+              handleHover(true);
+            }}
+            onMouseLeave={() => {
+              handleHover(false);
+            }}
+          >
+            <div className="w-full flex  mx-10">
+              <div className="w-[20%]">
+                <span className="text-sm  font-medium whitespace-nowrap text-black uppercase border-b-[1px] border-b-gray-600 ">
+                  Thương hiệu
+                </span>
+                <ul className="mx-auto   flex flex-col   py-2 ">
+                  {!!listBrandHeader &&
+                    !!listBrandHeader.length &&
+                    listBrandHeader.map((item, index) => (
+                      <Link
+                        to={`/brand/${item.id}/${toSlug(item.name)}`}
+                        key={index}
+                        onClick={() => {
+                          handleHover(false);
+                        }}
+                        className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit "
                       >
-                        {item.name}
-                      </span>
-                    </Link>
-                  ))}
+                        <span
+                          className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                        />
+                        <span
+                          className={`cursor-pointer  text-sm font-medium hover:text-[#6756ca] ${"text-gray-900"}`}
+                        >
+                          {item.name}
+                        </span>
+                      </Link>
+                    ))}
+                </ul>
+              </div>
+
+              <ul
+                className=" w-full "
+                onMouseEnter={() => {
+                  handleHover(true);
+                }}
+                onMouseLeave={() => {
+                  handleHover(false);
+                }}
+              >
+                <span className="text-sm font-medium whitespace-nowrap text-black uppercase border-b-gray-600  border-b-[1px]">
+                  Danh mục
+                </span>
+                <div className="grid grid-rows-4 grid-flow-col ">
+                  {!!listCategory &&
+                    !!listCategory.length &&
+                    listCategory.map((item, index) => (
+                      <Link
+                        onClick={() => {
+                          handleHover(false);
+                        }}
+                        to={`/category/${item.id}/${toSlug(item.name)}`}
+                        key={index}
+                        className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit group "
+                      >
+                        <span
+                          className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
+                        />
+                        <span
+                          className={`cursor-pointer text-[12px] group-hover:text-[#6756ca] ${"text-gray-900"}`}
+                        >
+                          {item.name}
+                        </span>
+                      </Link>
+                    ))}
+                </div>
               </ul>
             </div>
-
-            <ul
-              className=" w-full "
-              onMouseEnter={() => {
-                handleHover(true);
-              }}
-              onMouseLeave={() => {
-                handleHover(false);
-              }}
-            >
-              <span className="text-sm font-medium whitespace-nowrap text-black uppercase border-b-gray-400  border-b-[1px]">
-                Danh mục
-              </span>
-              <div className="grid grid-rows-4 grid-flow-col ">
-                {!!listCategory &&
-                  !!listCategory.length &&
-                  listCategory.map((item, index) => (
-                    <Link
-                      onClick={() => {
-                        handleHover(false);
-                      }}
-                      to={`/category/${item.id}/${toSlug(item.name)}`}
-                      key={index}
-                      className="relative tracking-wider btn4 leading-none overflow-hidden py-1  w-fit group "
-                    >
-                      <span
-                        className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
-                      />
-                      <span
-                        className={`cursor-pointer text-[12px] group-hover:text-[#6756ca] ${"text-gray-900"}`}
-                      >
-                        {item.name}
-                      </span>
-                    </Link>
-                  ))}
-              </div>
-            </ul>
           </div>
-        </div>
+        </Fade>
       </div>
     );
   };
@@ -364,11 +366,11 @@ const Header = () => {
                       setShowModalNoti(false),
                       getDataNoti(),
                     ]}
-                    // onClick={() => }
                   >
                     <div className=" flex justify-center items-center my-auto ">
                       <div className="relative">
-                        {unreadNotificationsCount === 0 ? (
+                        {unreadNotificationsCount === 0 ||
+                        !unreadNotificationsCount ? (
                           ""
                         ) : (
                           <div className=" absolute left-4 -top-[5%]">
@@ -388,144 +390,146 @@ const Header = () => {
                         <p className="text-sm font-semibold">Thông báo</p>
                       </div>
                     </div>
-                    {showModalNoti && (
-                      <div className="absolute -left-[10%]    w-96 rounded-lg drop-shadow-lg    ">
-                        <Fade top distance="20%" duration={300}>
-                          {userPrf && (
-                            <div className="w-7  inline-block ml-[10%] drop-shadow-lg ">
-                              <div className=" h-4 w-5 bg-white rotate-45 transform origin-bottom-left  z-10 shadow-2xl"></div>
-                            </div>
-                          )}
-                          <div className="w-full bg-white z-10 shadow-xl -mt-[6px] drop-shadow-lg rounded-lg overflow-y-scroll max-h-72">
-                            {!!dataNoti &&
-                              dataNoti.length > 0 &&
-                              dataNoti.map((e, i) => {
-                                if (type === false) {
-                                  if (i >= 4) {
-                                    return;
-                                  } else {
-                                    return (
-                                      <div
-                                        onClick={() => {
-                                          setShowModalNoti(false);
-                                          navigate(`/notification/${e.id}`);
-                                          getDataNoti();
-                                        }}
-                                        className={`group  relative px-2 py-3 ${
-                                          e.type === 1 ? "bg-gray-100" : ""
-                                        }`}
-                                        key={i}
-                                      >
-                                        <p
-                                          className={`text-sm  line-clamp-1 ${
-                                            e.type === 1
-                                              ? "font-normal"
-                                              : "font-bold "
-                                          }`}
-                                        >
-                                          {e.title}
-                                        </p>
-                                        <p
-                                          className={`text-xs  line-clamp-2 ${
-                                            e.type === 1
-                                              ? "font-normal"
-                                              : "font-medium"
+                    {!!userPrf
+                      ? showModalNoti && (
+                          <div className="absolute -left-[10%]    w-96 rounded-lg drop-shadow-lg    ">
+                            <Fade top distance="20%" duration={300}>
+                              {userPrf && (
+                                <div className="w-7  inline-block ml-[10%] drop-shadow-lg ">
+                                  <div className=" h-4 w-5 bg-white rotate-45 transform origin-bottom-left  z-10 shadow-2xl"></div>
+                                </div>
+                              )}
+                              <div className="w-full bg-white z-10 shadow-xl -mt-[6px] drop-shadow-lg rounded-lg overflow-y-scroll max-h-72">
+                                {!!dataNoti &&
+                                  dataNoti.length > 0 &&
+                                  dataNoti.map((e, i) => {
+                                    if (type === false) {
+                                      if (i >= 4) {
+                                        return;
+                                      } else {
+                                        return (
+                                          <div
+                                            onClick={() => {
+                                              setShowModalNoti(false);
+                                              navigate(`/notification/${e.id}`);
+                                              getDataNoti();
+                                            }}
+                                            className={`group  relative px-2 py-3 ${
+                                              e.type === 1 ? "bg-gray-100" : ""
+                                            }`}
+                                            key={i}
+                                          >
+                                            <p
+                                              className={`text-sm  line-clamp-1 ${
+                                                e.type === 1
+                                                  ? "font-normal"
+                                                  : "font-bold "
+                                              }`}
+                                            >
+                                              {e.title}
+                                            </p>
+                                            <p
+                                              className={`text-xs  line-clamp-2 ${
+                                                e.type === 1
+                                                  ? "font-normal"
+                                                  : "font-medium"
+                                              }`}
+                                              key={i}
+                                            >
+                                              {e.content}
+                                            </p>
+                                            <button
+                                              className="absolute top-0 right-0 mt-2 mr-2 p-1 cursor-pointer  text-white rounded-full opacity-0 group-hover:opacity-100  transform transition-transform ease-in-out duration-300 hover:-translate-x-2"
+                                              onClick={() => {
+                                                deleteNotiOne(e.id);
+                                              }}
+                                            >
+                                              <img
+                                                src={Images.iconClose}
+                                                className="w-4 h-4 object-contain"
+                                              />
+                                            </button>
+                                          </div>
+                                        );
+                                      }
+                                    } else {
+                                      return (
+                                        <div
+                                          onClick={() => {
+                                            setShowModalNoti(false);
+                                            navigate(`/notification/${e.id}`);
+                                            getDataNoti();
+                                          }}
+                                          className={`group  relative px-2 py-3 ${
+                                            e.type === 1 ? "bg-gray-100" : ""
                                           }`}
                                           key={i}
                                         >
-                                          {e.content}
-                                        </p>
-                                        <button
-                                          className="absolute top-0 right-0 mt-2 mr-2 p-1 cursor-pointer  text-white rounded-full opacity-0 group-hover:opacity-100  transform transition-transform ease-in-out duration-300 hover:-translate-x-2"
-                                          onClick={() => {
-                                            deleteNotiOne(e.id);
-                                          }}
-                                        >
-                                          <img
-                                            src={Images.iconClose}
-                                            className="w-4 h-4 object-contain"
-                                          />
-                                        </button>
-                                      </div>
-                                    );
-                                  }
-                                } else {
-                                  return (
-                                    <div
-                                      onClick={() => {
-                                        setShowModalNoti(false);
-                                        navigate(`/notification/${e.id}`);
-                                        getDataNoti();
-                                      }}
-                                      className={`group  relative px-2 py-3 ${
-                                        e.type === 1 ? "bg-gray-100" : ""
-                                      }`}
-                                      key={i}
-                                    >
-                                      <p
-                                        className={`text-sm  line-clamp-1 ${
-                                          e.type === 1
-                                            ? "font-normal"
-                                            : "font-bold "
-                                        }`}
-                                      >
-                                        {e.title}
-                                      </p>
-                                      <p
-                                        className={`text-xs  line-clamp-2 ${
-                                          e.type === 1
-                                            ? "font-normal"
-                                            : "font-medium"
-                                        }`}
-                                        key={i}
-                                      >
-                                        {e.content}
-                                      </p>
-                                      <button
-                                        className="absolute top-0 right-0 mt-2 mr-2 p-1 cursor-pointer  text-white rounded-full opacity-0 group-hover:opacity-100  transform transition-transform ease-in-out duration-300 hover:-translate-x-2"
-                                        onClick={() => {
-                                          deleteNotiOne(e.id);
-                                        }}
-                                      >
-                                        <img
-                                          src={Images.iconClose}
-                                          className="w-4 h-4 object-contain"
-                                        />
-                                      </button>
-                                    </div>
-                                  );
-                                }
-                              })}
-                            {type === false &&
-                            !!dataNoti &&
-                            dataNoti?.length > 4 ? (
-                              <p
-                                className="text-sm font-semibold  line-clamp-1 text-center py-2 bg-slate-100 cursor-pointer"
-                                onClick={() => {
-                                  setType(true);
-                                }}
-                              >
-                                Xem tất cả
-                              </p>
-                            ) : (
-                              ""
-                            )}
-                            {dataNoti?.length === 0 && (
-                              <div className="my-5">
-                                <img
-                                  src={Images.iconNoti}
-                                  alt=""
-                                  className="w-20 mx-auto h-auto  "
-                                />
-                                <p className="text-center font-light text-xl my-2">
-                                  Thông báo trống
-                                </p>
+                                          <p
+                                            className={`text-sm  line-clamp-1 ${
+                                              e.type === 1
+                                                ? "font-normal"
+                                                : "font-bold "
+                                            }`}
+                                          >
+                                            {e.title}
+                                          </p>
+                                          <p
+                                            className={`text-xs  line-clamp-2 ${
+                                              e.type === 1
+                                                ? "font-normal"
+                                                : "font-medium"
+                                            }`}
+                                            key={i}
+                                          >
+                                            {e.content}
+                                          </p>
+                                          <button
+                                            className="absolute top-0 right-0 mt-2 mr-2 p-1 cursor-pointer  text-white rounded-full opacity-0 group-hover:opacity-100  transform transition-transform ease-in-out duration-300 hover:-translate-x-2"
+                                            onClick={() => {
+                                              deleteNotiOne(e.id);
+                                            }}
+                                          >
+                                            <img
+                                              src={Images.iconClose}
+                                              className="w-4 h-4 object-contain"
+                                            />
+                                          </button>
+                                        </div>
+                                      );
+                                    }
+                                  })}
+                                {type === false &&
+                                !!dataNoti &&
+                                dataNoti?.length > 4 ? (
+                                  <p
+                                    className="text-sm font-semibold  line-clamp-1 text-center py-2 bg-slate-100 cursor-pointer"
+                                    onClick={() => {
+                                      setType(true);
+                                    }}
+                                  >
+                                    Xem tất cả
+                                  </p>
+                                ) : (
+                                  ""
+                                )}
+                                {dataNoti?.length === 0 && (
+                                  <div className="my-5">
+                                    <img
+                                      src={Images.iconNoti}
+                                      alt=""
+                                      className="w-20 mx-auto h-auto  "
+                                    />
+                                    <p className="text-center font-light text-xl my-2">
+                                      Thông báo trống
+                                    </p>
+                                  </div>
+                                )}
                               </div>
-                            )}
+                            </Fade>
                           </div>
-                        </Fade>
-                      </div>
-                    )}
+                        )
+                      : " "}
                   </li>
                   <li className=" px-0 cursor-pointer">
                     <div
@@ -655,9 +659,8 @@ const Header = () => {
         </header>
 
         {showTable && (
-          <Fade top distance="10%" duration={800}>
-            <CategoryTable />
-          </Fade>
+          <CategoryTable />
+          // </Fade>
         )}
 
         <FormLogin

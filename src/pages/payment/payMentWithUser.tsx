@@ -47,6 +47,7 @@ const PayMentWithUser = () => {
   const [selectedName, setSelectedName] = useState<string>("");
   const [percent, setPrecent] = useState<number>(0);
   const [idVoucher, setIdVoucher] = useState<number | null>(null);
+  const [note, setNote] = useState<string>("");
   const toggleModal = () => {
     setModalOpenVoucher(!isModalOpenVoucher);
   };
@@ -183,7 +184,7 @@ const PayMentWithUser = () => {
           totalMoney:
             calculateTotalDone(listProducts) -
             (percent / 100) * calculateTotalDone(listProducts),
-          note: "",
+          note: note,
           paymentMethod: method,
           carts: carts,
         };
@@ -210,7 +211,7 @@ const PayMentWithUser = () => {
                 }`
             );
             if (response.status) {
-              // window.location.href = response.data.data;
+              window.location.href = response?.data?.data;
             }
           } catch (error) {
             console.error("Error making axios request:", error);
@@ -452,6 +453,21 @@ const PayMentWithUser = () => {
           </div>
         </div>
         <div className="w-full bg-white  mt-5 shadow-md p-4 rounded-sm ">
+          <div className=" flex justify-start gap-5 mb-4 items-center border-b border-dashed py-2 ">
+            <div className="flex items-center gap-2 ">
+              <span className="text-base font-normal text-gray-500">
+                Lời nhắn tới shop:
+              </span>
+            </div>
+            <input
+              className="py-1 border border-gray-300 rounded focus:border-gray-500 p-2 outline-none  text-sm "
+              type="text "
+              value={note}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setNote(e?.target.value);
+              }}
+            />
+          </div>
           <div className=" flex justify-between mb-4 items-center ">
             <div className="flex items-center gap-2 ">
               <img

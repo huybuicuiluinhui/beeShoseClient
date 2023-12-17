@@ -54,7 +54,7 @@ const ItemPayMent = ({ item }: { item: any }) => {
           <span className="font-bold text-sm  ">{inforShoe?.name}</span>
           <span className="text-red-500 text-xs font-medium">
             <span className="text-xs font-medium  text-[#333333]">
-              Chất liệu:
+              Loại đế:
             </span>{" "}
             {inforShoe?.sole}
           </span>
@@ -591,6 +591,17 @@ const PaymentPage = () => {
                   Nhập địa chỉ cụ thể
                 </label>
               </div>
+            </div>
+            <div className="w-full flex gap-5 items-center">
+              <span className="text-sm font-medium">Lời nhắn tới shop:</span>
+              <input
+                className="py-1 border border-gray-300 rounded focus:border-gray-500 p-2 outline-none  text-sm "
+                type="text"
+                value={note}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setNote(e.target.value);
+                }}
+              />
             </div>
             <label
               htmlFor="card-holder"
