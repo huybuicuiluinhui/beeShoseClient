@@ -352,7 +352,8 @@ const ProductItem = ({
                   if (!!userPrf && amountShoe) {
                     if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
-                    openCart();
+                    // openCart();
+                    navigate(path.payment);
                   } else {
                     if (
                       !!idAddToCart &&

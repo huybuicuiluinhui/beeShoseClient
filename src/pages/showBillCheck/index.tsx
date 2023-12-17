@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { CustomError, IBill, IDetailOrder } from "../../types/product.type";
 import { formartDate } from "../../utils/formatCurrency";
 import { convertToCurrencyString } from "../../utils/format";
+import DetailAddress from "../information/address/detailAddress";
 
 const ShowBillCheck = () => {
   const params = useParams();
@@ -161,6 +162,25 @@ const ShowBillCheck = () => {
               </div>
             );
           })}
+        </div>
+      )}
+      {!!bill && (
+        <div className="w-full border rounded-md mt-5 p-4 flex flex-col gap-4 ">
+          <h3 className="font-medium">Thông tin người nhận:</h3>
+          <p className="font-medium">
+            Tên khách hàng:{" "}
+            <span className="font-normal"> {bill?.customerName}</span>
+          </p>
+          {bill?.phoneNumber && <p>Số điện thoại: {bill?.phoneNumber}</p>}
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Địa chỉ: </span>
+            <DetailAddress
+              spec={bill.address.split("##")[0]}
+              war={bill.address.split("##")[1]}
+              distr={bill.address.split("##")[2]}
+              prov={bill.address.split("##")[3]}
+            />
+          </div>
         </div>
       )}
       <div className="w-full  flex justify-center my-20 gap-8">

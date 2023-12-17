@@ -112,6 +112,8 @@ const API = {
   getBill: (id: number) => baseUrl + `/api/bill/${id}`,
   getDetailBill: (id: number) => baseUrl + `api/bill-detail?bill=${id}`,
   getBillHistory: (idBill: number) => baseUrl + `api/bill-history/${idBill}`,
+  changeStatusBill: (idBill: number) =>
+    baseUrl + `api/bill/change-status/${idBill}`,
   // noti
   getNoti: (idAcconut: number) => baseUrl + `api/notification/${idAcconut}`,
 };

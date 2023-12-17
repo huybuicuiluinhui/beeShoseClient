@@ -6,6 +6,7 @@ import axios from "axios";
 import API from "../../../api";
 import { IDetailOrder, IOrder } from "../../../types/product.type";
 import { convertToCurrencyString } from "../../../utils/format";
+import { toast } from "react-toastify";
 type ItemProps = {
   name: string;
   price: number;
@@ -53,9 +54,23 @@ const Item = ({ item }: { item: IDetailOrder }) => {
     </div>
   );
 };
-const ItemOrder = ({ item }: { item: IOrder }) => {
+const ItemOrder = ({
+  item,
+  setLoading,
+  loading,
+}: {
+  item: IOrder;
+  setLoading: any;
+  loading: boolean;
+}) => {
   const navigate = useNavigate();
   const [dataDetailOrder, setDataDetailOrder] = useState<IDetailOrder[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedOption(event.target.value);
+  };
+
   const getDetailBill = async () => {
     try {
       const res = await axios({
@@ -74,6 +89,26 @@ const ItemOrder = ({ item }: { item: IOrder }) => {
       getDetailBill();
     }
   }, [item?.id]);
+  const changeStatusBill = async () => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: `http://localhost:8080/client/api/bill/change-status/${item?.id}`,
+        params: {
+          note: selectedOption,
+          isCancel: true,
+        },
+      });
+      if (res.status) {
+        setLoading(!loading);
+        toast.success("Đã hủy đơn hàng thành công");
+      } else {
+        toast.warning("Lỗi hủy đơn hàng");
+      }
+    } catch (error) {
+      console.error("Error fetching order details: ", error);
+    }
+  };
   return (
     <div className="bg-white mb-3 shadow-lg flex flex-col">
       <div className="w-full px-2 py-2 border-b-[1px] flex items-center justify-between">
@@ -117,15 +152,103 @@ const ItemOrder = ({ item }: { item: IOrder }) => {
           {" "}
         </svg>
       )}
-      <div className="p-4 self-end">
+      <div className="p-4 flex items-center justify-between">
+        {item?.status === 1 ||
+          (item?.status === 2 && (
+            <div
+              className="border border-red-400 rounded px-2 py-1 cursor-pointer"
+              onClick={() => {
+                setShowModal(true);
+              }}
+            >
+              <span className="text-red-500">Hủy đơn hàng</span>
+            </div>
+          ))}
         <div className="font-semibold text-xs">
           Thành tiền:{" "}
           <span className="text-red-600">
             {convertToCurrencyString(item?.totalMoney + item?.moneyShip)}
-            VND
           </span>
         </div>
       </div>
+      {showModal === true && (
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full mt-20"
+          id="my-modal"
+        >
+          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                Lý Do Hủy
+              </h3>
+              <div className="mt-2">
+                <label className="flex justify-start items-center gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi muốn thay đổi mã giảm giá"
+                    checked={selectedOption === "Tôi muốn thay đổi mã giảm giá"}
+                    onChange={handleChange}
+                    className="mr-2 
+"
+                  />
+                  Tôi muốn thay đổi mã giảm giá.
+                </label>
+                <label className="flex justify-start items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi muốn thay đổi sản phẩm"
+                    checked={selectedOption === "Tôi muốn thay đổi sản phẩm"}
+                    onChange={handleChange}
+                    className="mr-2 
+"
+                  />
+                  Tôi muốn thay đổi sản phẩm.
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                    checked={
+                      selectedOption ===
+                      "Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                    }
+                    onChange={handleChange}
+                    className="mr-2 "
+                  />
+                  Tôi muốn cập nhật địa chỉ/sđt nhận hàng.
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tìm được chỗ khác rẻ hơn"
+                    checked={selectedOption === "Tìm được chỗ khác rẻ hơn"}
+                    onChange={handleChange}
+                    className="mr-2 
+"
+                  />
+                  Tìm được chỗ khác rẻ hơn
+                </label>
+              </div>
+              <div className="items-center px-4 py-3">
+                <button
+                  id="ok-btn"
+                  className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  onClick={() => {
+                    changeStatusBill();
+                    setShowModal(false);
+                  }}
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -133,6 +256,7 @@ const InvoiceAll = ({ status }: { status: number | null }) => {
   const { userPrf } = useShoppingCart();
   const [dataOrder, setDataOrder] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loading2, setLoading2] = useState<boolean>(true);
   const getAllOrders = async () => {
     if (status === null) {
       try {
@@ -170,14 +294,21 @@ const InvoiceAll = ({ status }: { status: number | null }) => {
     if (userPrf) {
       getAllOrders();
     }
-  }, [userPrf]);
-
+  }, [userPrf, loading2]);
+  console.log("loading2", loading2);
   return (
     <div className="w-full h-full">
       <div className="  rounded-lg overflow-hidden flex flex-col w-[80%] mx-auto  px-[1px]  mb-10">
         {!!dataOrder && dataOrder?.length > 0 && loading === false ? (
           dataOrder.map((e, i) => {
-            return <ItemOrder item={e} key={i} />;
+            return (
+              <ItemOrder
+                item={e}
+                key={i}
+                setLoading={setLoading2}
+                loading={loading2}
+              />
+            );
           })
         ) : dataOrder.length === 0 ? (
           <div className="flex flex-col items-center justify-center">

@@ -196,7 +196,9 @@ const PayMentWithUser = () => {
           if (response.status) {
             toast.success("Đặt hàng thành công");
             removeAllCart();
-            navigate(path.home);
+            navigate(
+              `/showBillCheck/${response?.data?.data?.data?.id}/${response?.data?.data?.data?.code}`
+            );
           }
         } else if (method === 1) {
           const tempNewBill = { ...newBill, id: generateUUID() };
