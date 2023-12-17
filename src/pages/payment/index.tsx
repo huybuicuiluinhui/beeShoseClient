@@ -172,14 +172,28 @@ const PaymentPage = () => {
                     cartItem.quantity
                 );
               }, 0),
-            totalMoney: cartItems.reduce((total, cartItem) => {
-              const item = listDetailShoe.find((i) => i.id === cartItem.id);
-              return (
-                total +
-                (item?.discountValue ? item?.discountValue : item?.price || 0) *
-                  cartItem.quantity
-              );
-            }, 0),
+            totalMoney:
+              cartItems.reduce((total, cartItem) => {
+                const item = listDetailShoe.find((i) => i.id === cartItem.id);
+                return (
+                  total +
+                  (item?.discountValue
+                    ? item?.discountValue
+                    : item?.price || 0) *
+                    cartItem.quantity
+                );
+              }, 0) -
+              (percent / 100) *
+                cartItems.reduce((total, cartItem) => {
+                  const item = listDetailShoe.find((i) => i.id === cartItem.id);
+                  return (
+                    total +
+                    (item?.discountValue
+                      ? item?.discountValue
+                      : item?.price || 0) *
+                      cartItem.quantity
+                  );
+                }, 0),
             note: note,
             paymentMethod: paymentMethod,
             carts: cartItems,

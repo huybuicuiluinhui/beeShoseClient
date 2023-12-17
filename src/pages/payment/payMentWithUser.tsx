@@ -210,7 +210,6 @@ const PayMentWithUser = () => {
                 }`
             );
             if (response.status) {
-              console.log("ahihihihihihihih");
               // window.location.href = response.data.data;
             }
           } catch (error) {
