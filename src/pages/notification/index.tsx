@@ -5,6 +5,7 @@ import API from "../../api";
 import { IDataNoti } from "../../types/product.type";
 import { formartDate } from "../../utils/formatCurrency";
 import Images from "../../static";
+import path from "../../constants/path";
 
 const Notification = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Notification = () => {
             alt=""
             className="w-7"
             onClick={() => {
-              navigate(-1);
+              navigate(path.home);
             }}
           />
           <p className="text-base font-normal"> Chi tiết thông báo</p>

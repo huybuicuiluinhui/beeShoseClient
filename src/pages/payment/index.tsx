@@ -200,9 +200,9 @@ const PaymentPage = () => {
           }
           if (radioChoose === 1) {
             const tempNewBill = { ...newBill, id: generateUUID() };
+            console.log(tempNewBill);
             localStorage.setItem("checkout", JSON.stringify(tempNewBill));
             try {
-              console.log("ahihihihi");
               const response = await axios.get(
                 baseUrl +
                   `api/vn-pay/payment?id=${tempNewBill.id}&total=${
@@ -234,8 +234,8 @@ const PaymentPage = () => {
                       }, 0)
                   }`
               );
-              console.log("response", response);
               if (response.status) {
+                console.log(response.data.data);
                 window.location.href = response.data.data;
               }
             } catch (error) {
@@ -340,7 +340,6 @@ const PaymentPage = () => {
   useEffect(() => {
     getDetailShoe();
     fetchProvinces();
-    // getVoucher();
   }, []);
   useEffect(() => {
     if (selectedProvince) {

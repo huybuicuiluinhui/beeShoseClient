@@ -180,8 +180,9 @@ const PayMentWithUser = () => {
           moneyShip: feeShip,
           voucher: idVoucher,
           moneyReduce: (percent / 100) * calculateTotalDone(listProducts),
-          totalMoney: calculateTotalDone(listProducts),
-
+          totalMoney:
+            calculateTotalDone(listProducts) -
+            (percent / 100) * calculateTotalDone(listProducts),
           note: "",
           paymentMethod: method,
           carts: carts,
@@ -209,7 +210,8 @@ const PayMentWithUser = () => {
                 }`
             );
             if (response.status) {
-              window.location.href = response.data.data;
+              console.log("ahihihihihihihih");
+              // window.location.href = response.data.data;
             }
           } catch (error) {
             console.error("Error making axios request:", error);
@@ -279,20 +281,7 @@ const PayMentWithUser = () => {
       loadAddress();
     }
   }, [userPrf?.id, isModalOpen]);
-  const provinceName = (mang: Province[], idCanTim: number) => {
-    const doiTuongCanTim = mang.find((item) => item.ProvinceID === idCanTim);
-    return doiTuongCanTim?.ProvinceName;
-  };
-  const districtName = (mang: District[], idCanTim: number) => {
-    const doiTuongCanTim = mang.find((item) => item.DistrictID === idCanTim);
-    return doiTuongCanTim?.DistrictName;
-  };
-  const wardName = (mang: Ward[], idCanTim: number) => {
-    const doiTuongCanTim = mang.find(
-      (item) => Number(item.WardCode) === Number(idCanTim)
-    );
-    return doiTuongCanTim?.WardName;
-  };
+
   return (
     <div className="w-full h-full">
       <ShippingProcess type={2} />

@@ -121,7 +121,7 @@ const ItemOrder = ({ item }: { item: IOrder }) => {
         <div className="font-semibold text-xs">
           Thành tiền:{" "}
           <span className="text-red-600">
-            {item.totalMoney.toLocaleString()}
+            {convertToCurrencyString(item?.totalMoney + item?.moneyShip)}
             VND
           </span>
         </div>

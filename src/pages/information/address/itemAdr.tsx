@@ -27,88 +27,9 @@ const ItemAdr = ({
   checkUp: boolean;
   setCheckUp: any;
 }) => {
-  console.log("zôzzozozoozo");
-  const [provinces, setProvinces] = useState<Province[]>([]);
-  const [selectedProvince, setSelectedProvince] = useState<boolean>(false);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [selectedDistrict, setSelectedDistrict] = useState<boolean>(false);
-  const [wards, setWards] = useState<Ward[]>([]);
-  const [selectedWard, setSelectedWard] = useState<boolean>(false);
   const [showUpdate, setShowUpdate] = useState<boolean>(false);
   const [showModalDelete, setShowModalDelete] = useState<boolean>(false);
   const itemRef = useRef<IAddress | null>(null);
-  const fetchProvinces = async () => {
-    try {
-      const response = await axios.get(
-        "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
-        configApi
-      );
-      if (response.status) {
-        setProvinces(response?.data?.data);
-      }
-    } catch (error) {
-      console.error("Lỗi:", error);
-    } finally {
-      setSelectedProvince(true);
-    }
-  };
-  const fetchDistrictsByProvince = async (provinceId: number) => {
-    try {
-      const response = await axios.get(
-        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${provinceId}`,
-        configApi
-      );
-      if (response.status) {
-        setDistricts(response?.data?.data);
-      }
-    } catch (error) {
-      console.error("Error fetching districts:", error);
-    } finally {
-      setSelectedDistrict(true);
-    }
-  };
-  const fetchWardsByDistrict = async (districtId: number) => {
-    try {
-      const response = await axios.get(
-        `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtId}`,
-        configApi
-      );
-      if (response.status) {
-        setWards(response?.data?.data);
-      }
-    } catch (error) {
-      console.error("Error fetching wards:", error);
-    } finally {
-      setSelectedWard(true);
-    }
-  };
-  useEffect(() => {
-    if (!!item) {
-      fetchProvinces();
-    }
-  }, [item]);
-  useEffect(() => {
-    if (selectedProvince === true && !!item?.province) {
-      fetchDistrictsByProvince(Number(item?.province));
-    }
-  }, [selectedProvince, item?.province]);
-  useEffect(() => {
-    if (selectedDistrict === true && !!item?.district) {
-      fetchWardsByDistrict(Number(item?.district));
-    }
-  }, [selectedDistrict, item?.district]);
-  // const nameProvince =
-  //   selectedProvince === true
-  //     ? provinces.find((d) => d?.ProvinceID === Number(item?.province))
-  //     : null;
-  // const nameDistrict =
-  //   selectedDistrict === true
-  //     ? districts.find((d) => d?.DistrictID === Number(item?.district))
-  //     : null;
-  // const nameWard =
-  //   selectedWard === true
-  //     ? wards.find((d) => Number(d?.WardCode) === Number(item?.ward))
-  //     : null;
   const deleteAdrID = async (id: number | string) => {
     try {
       const res = await axios({

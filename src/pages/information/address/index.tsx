@@ -80,7 +80,6 @@ const Address = () => {
         },
       });
       if (res.data) {
-        toast.success("Đã sửa thành công");
       }
     } catch (error) {
       console.log(error);
@@ -103,7 +102,7 @@ const Address = () => {
     if (dataAddress?.length === 1 && dataAddress[0].defaultAddress !== true) {
       updateStatus(dataAddress[0]);
     }
-  }, [dataAddress]);
+  }, [dataAddress, isModalOpen]);
   useEffect(() => {
     loadAddress();
   }, [userPrf?.id, isModalOpen, check, checkUp]);
@@ -121,7 +120,6 @@ const Address = () => {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
-  console.log("dataAddress", dataAddress);
   return (
     <div className="w-full h-full  ">
       <div className="w-[80%] mx-auto min-h-screen shadow-lg mb-10">

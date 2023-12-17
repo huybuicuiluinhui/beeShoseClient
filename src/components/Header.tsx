@@ -276,14 +276,16 @@ const Header = () => {
                           !!results.length &&
                           results.map((result, index) => {
                             return (
-                              <div className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors">
+                              <div
+                                className="flex items-end justify-start mb-1 hover:bg-[#f4f4f4] transition-colors"
+                                key={index}
+                              >
                                 <img
                                   src={result.images}
                                   alt=""
                                   className="w-10 h-10 object-cover rounded mr-2  "
                                 />
                                 <p
-                                  key={index}
                                   className="text-sm font-medium mb-2  cursor-pointer "
                                   onClick={() => {
                                     setSearchValue(result?.name);
@@ -351,10 +353,6 @@ const Header = () => {
 
                       <div className="ml-3">
                         <p className="text-sm font-semibold">Giỏ hàng</p>
-                        {/* <span className="text-sm font-semibold">
-                        {!!userPrf ? listProducts.length : cartItems.length} sản
-                        phẩm
-                      </span> */}
                       </div>
                     </div>
                   </li>
@@ -363,6 +361,7 @@ const Header = () => {
                     className=" px-0 "
                     onMouseEnter={() => setShowModalNoti(true)}
                     onMouseLeave={() => setShowModalNoti(false)}
+                    onClick={() => getDataNoti()}
                   >
                     <div className=" flex justify-center items-center my-auto ">
                       <div className="relative">
@@ -384,17 +383,16 @@ const Header = () => {
                       </div>
                       <div className="ml-3">
                         <p className="text-sm font-semibold">Thông báo</p>
-                        {/* <p className="text-sm font-semibold">
-                        {unreadNotificationsCount} thông báo mới
-                      </p> */}
                       </div>
                     </div>
                     {showModalNoti && (
                       <Fade top distance="20%" duration={300}>
-                        <div className="absolute left-[71%]  w-96   rounded-lg drop-shadow-lg   ">
-                          <div className="w-7 overflow-hidden inline-block ml-[10%] drop-shadow-lg ">
-                            <div className=" h-4 w-5 bg-white rotate-45 transform origin-bottom-left  z-10 shadow-2xl"></div>
-                          </div>
+                        <div className="absolute left-[74%]  w-96   rounded-lg drop-shadow-lg   ">
+                          {userPrf && (
+                            <div className="w-7 overflow-hidden inline-block ml-[10%] drop-shadow-lg ">
+                              <div className=" h-4 w-5 bg-white rotate-45 transform origin-bottom-left  z-10 shadow-2xl"></div>
+                            </div>
+                          )}
                           <div className="w-full bg-white z-10 shadow-xl -mt-[6px] drop-shadow-lg rounded-lg overflow-y-hidden max-h-72">
                             {!!dataNoti &&
                               dataNoti.length > 0 &&
@@ -415,7 +413,7 @@ const Header = () => {
                                         key={i}
                                       >
                                         <p
-                                          className={`text-xs  line-clamp-1 ${
+                                          className={`text-sm  line-clamp-1 ${
                                             e.type === 1
                                               ? "font-normal"
                                               : "font-bold "
