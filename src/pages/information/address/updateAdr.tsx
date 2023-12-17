@@ -7,9 +7,8 @@ import {
 } from "../../../types/product.type";
 import axios from "axios";
 import API from "../../../api";
-import { configApi } from "../../../utils/config";
-import { regexPhoneNumber, validateEmail } from "../../../utils/format";
 import { toast } from "react-toastify";
+import { configApi } from "../../../utils/config";
 
 const UpdateAdr = ({
   item,
@@ -113,10 +112,6 @@ const UpdateAdr = ({
   if (!isOpen) return null;
 
   const updateAdress = async () => {
-    if (!regexPhoneNumber.test(phoneNumber)) {
-      toast.error("Sai định dạng số điện thoại");
-      return;
-    }
     if (!!item) {
       try {
         const res = await axios({

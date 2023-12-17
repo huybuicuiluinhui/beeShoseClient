@@ -34,7 +34,7 @@ const HomePage = () => {
     useState<boolean>(true);
   const [sekeletonItemShoeTop, setSekeletonItemShoeTop] =
     useState<boolean>(true);
-  console.log("productsAll", productsAll);
+  console.log("productsTop", productsTop);
   const settings: Settings = {
     dots: false,
     arrows: false,
@@ -158,12 +158,50 @@ const HomePage = () => {
             </p>
             <span className="text-[#999] italic  text-sm font-semibold   uppercase mb-5 "></span>
           </div>
-          <div className="w-full flex mx-auto ">
-            <button onClick={() => prev()}>
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADdUlEQVR4nO2ay2sTURTGf8XaRBRrU6PiSpdSUf8KbfFV3al1p9SNtVS3PtbVlVDo36EUUVEpqFgftQGxvrrysRDrzrRFJXLwGzhokiaTmcm09IOBtPfOdx/n3HPP/e7ACpYvckAvcBUYA94A34EFPfZ7WmVW5zDQQUqQBU4Cd4DfQKnO5xdwG+gDMs0YwBrgPPDFdWoeuA9clGV2aMZX6+nQ/6zsEvBA7wTvfwaGNDmJYD8w4zrwDDgFtIfg2gCcBp47vg9ADzHCZmrUNfgC2Bshfzfw0vGPxGGdLeq4NfADOAusiroR/nKeA4rO2pujIt8uc5cUdXYSP3YBb9Xme/WhIeQd4VNgI8mhA3iotmfkFaGQde70GFhL8lgLPHFuFmrNjDp3ss2uWeh0XmEBoO4QGyzsJNZELWumqD5ZdKt5swv2CYtOacGgW/w1udgFt09EGWJtsRbE2xLi/VZgSn2zQVVF1qUdeyMexLR4bTBh0SOOT4vlZn0uQsQxiOlGwih/LRlE0uPVKt5VJcudooDtyq/EaWn91gg4+8V3q1KFnNLq+ZAJYJyW+HejtPPNz0r9PKJG75FOS3iMi/sgZXBNhXaeSKMlPK6If5gyGFPhIdJriX+95wZl8E6FdopLqyUCdLnJ+g+zKsyl2BIBNqqtr5TBggrbqB+FhCwRION0guU7kNkGXGuTc623CbhWvpprLZvFPqZCUwDDIinLHK0WfoMN0cSzJb0h9qrQ1MJGEbdlxsV9oFIyFiSNpgCSUsvkXNK4vlKl22rYZExSapkz4rM1XREnVMm02LQerCbFdWyxo+5nVdxHPIOxc3dY7BfHx1quIYZUeTIG8WFKghshxYeC+jZQywtZp/WaoJwWDLm1lqlXrShKHGs29gBzYdWdETcDJls2C3mJctaX62EIspKFSvLrZojY64AJ9WGikXvGvBKz4FrB/k4KOeCRu45r+MJnuzOtudluklkT79WmZeXboiLe7NysKO3VwmHUaFV0mnPuZNlBpMi6ABBsbFHdvrZosys4/utx3713O7MHqn1/yK8YcsqdgrSjJFeKUkBf1DqDUsWDDiwovb4s3alLYbtNT6cujY6qzrjTCYK0Y6BZX0BkpIrf0hGg3k84fiqLPdasAZRDu7RYO7XdVJL4zX1UY79f63g6rLoVzxMrYInjDz+3Tj/tKuNyAAAAAElFTkSuQmCC" />
-            </button>
-            <div className="w-[95%] mx-auto ">
-              <Slider {...settings} ref={sliderRef}>
+          {productsTop?.length >= 6 ? (
+            <div className="w-full flex mx-auto ">
+              <button onClick={() => prev()}>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADdUlEQVR4nO2ay2sTURTGf8XaRBRrU6PiSpdSUf8KbfFV3al1p9SNtVS3PtbVlVDo36EUUVEpqFgftQGxvrrysRDrzrRFJXLwGzhokiaTmcm09IOBtPfOdx/n3HPP/e7ACpYvckAvcBUYA94A34EFPfZ7WmVW5zDQQUqQBU4Cd4DfQKnO5xdwG+gDMs0YwBrgPPDFdWoeuA9clGV2aMZX6+nQ/6zsEvBA7wTvfwaGNDmJYD8w4zrwDDgFtIfg2gCcBp47vg9ADzHCZmrUNfgC2Bshfzfw0vGPxGGdLeq4NfADOAusiroR/nKeA4rO2pujIt8uc5cUdXYSP3YBb9Xme/WhIeQd4VNgI8mhA3iotmfkFaGQde70GFhL8lgLPHFuFmrNjDp3ss2uWeh0XmEBoO4QGyzsJNZELWumqD5ZdKt5swv2CYtOacGgW/w1udgFt09EGWJtsRbE2xLi/VZgSn2zQVVF1qUdeyMexLR4bTBh0SOOT4vlZn0uQsQxiOlGwih/LRlE0uPVKt5VJcudooDtyq/EaWn91gg4+8V3q1KFnNLq+ZAJYJyW+HejtPPNz0r9PKJG75FOS3iMi/sgZXBNhXaeSKMlPK6If5gyGFPhIdJriX+95wZl8E6FdopLqyUCdLnJ+g+zKsyl2BIBNqqtr5TBggrbqB+FhCwRION0guU7kNkGXGuTc623CbhWvpprLZvFPqZCUwDDIinLHK0WfoMN0cSzJb0h9qrQ1MJGEbdlxsV9oFIyFiSNpgCSUsvkXNK4vlKl22rYZExSapkz4rM1XREnVMm02LQerCbFdWyxo+5nVdxHPIOxc3dY7BfHx1quIYZUeTIG8WFKghshxYeC+jZQywtZp/WaoJwWDLm1lqlXrShKHGs29gBzYdWdETcDJls2C3mJctaX62EIspKFSvLrZojY64AJ9WGikXvGvBKz4FrB/k4KOeCRu45r+MJnuzOtudluklkT79WmZeXboiLe7NysKO3VwmHUaFV0mnPuZNlBpMi6ABBsbFHdvrZosys4/utx3713O7MHqn1/yK8YcsqdgrSjJFeKUkBf1DqDUsWDDiwovb4s3alLYbtNT6cujY6qzrjTCYK0Y6BZX0BkpIrf0hGg3k84fiqLPdasAZRDu7RYO7XdVJL4zX1UY79f63g6rLoVzxMrYInjDz+3Tj/tKuNyAAAAAElFTkSuQmCC" />
+              </button>
+              <div className="w-[95%] mx-auto ">
+                <Slider {...settings} ref={sliderRef}>
+                  {!!productsTop && !!productsTop.length
+                    ? productsTop.map((item, index) => {
+                        return (
+                          <div key={index}>
+                            <ProductStandingTop
+                              product={item}
+                              key={index}
+                              checkTop={true}
+                            />
+                          </div>
+                        );
+                      })
+                    : !!sekeletonItemShoeTop &&
+                      sekeletonItemShoeTop === true &&
+                      Array(10)
+                        .fill({})
+                        .map((item, index) => {
+                          return (
+                            <div key={index}>
+                              <SekeletonItemShoe />
+                            </div>
+                          );
+                        })}
+                  {/* </div> */}
+                </Slider>
+              </div>
+              <button
+                onClick={() => {
+                  next();
+                }}
+              >
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADeElEQVR4nO2ay08UQRDGf0Rk12hUFhDiSY9Go/4VisEnNxVvGryIBr36OKMnExP+Dg0haNSQqBEfCMb45uTjYMSbCEGzpuI3SUV3YXe2Z3YgfskkC9Vd3T1VXV319cB/LF8UgIPAZWAIeA18A+b02O9XklmbA0AzGUEeOAbcBH4BxSqfn8AI0APk6rGAVcBZ4LOb1CxwBzgvy2zRG1+pp1n/M9kF4K76RP0/Af16OamgC5hyE3gMHAfWxdC1HjgBPHH63gN7SBD2pgbdgE+BXQH1dwLPnP5rSVinQxO3Ab4Dp4AVoQfhj87TwIyzdnso5Ztl7qKizjaSx3bgjcZ8pznUhDan8BHQSnpoBu5p7Cl5RSzknTs9AFaTPlYDD52bxdozg86d7LCrF1qcV1gAqDrERhs7jT1RyZ6Z0ZwsulV82EXnhEWnrOCM2/wVudg5d07EDbHmzxO1bNASaJTOoha1IPIu7ajlsJtw+yvkYvZI78fFcrMeFyFqQYcWEXoxDS6SHlmo4S01stypVmwAXkifRZ2NhEGvdA6Xa1BQWj0bMwFMyzLNqm/my83zkAa8TVgkYZlR6dtXSnhFQqsnQiO0ZS5J10Ap4ZCE+0kGIS1zSHqulxK+ldCquKQQyjJbpcN4gX8wLWHSeVUIy7Sq/5dSwjkJm0ge3jKTMfrnHE+QmYVYFhB0IdMpuVa7c63XMV2rbSHXWjabfUhCYwCzaokI3QuF3+hANPJsSR+IByU0tjCrlvg7RdlLmWQsShqNAcxq0lhwSePaco1GNKjRmFm0hOGkdNqeLoujamRcbFYLq3HpPbxYqftJDXfXMODzhErdLun9UMk1RL8aj8ckH6JyNAnyYVJz66ukQ95xvUYoZwX9LtHMVctWzIgcqzd2Aj/isjvX3Bsw2rJeaBMpZ3O5GkdBXrRQUURyPUjsNcCY5jBWyz1jm86A6FrB/k4LBeC+u46r+cJnszOtudkO0tkT7zSmZeWbQilud242I+7VwmFoNCo6/XDuZKVxUORdAIgqu1C3rw067Cad/qtJ3713OrNHrH1vzK8YCsqdorSjKFcKeVu8qHXOiBWPJjCn9PqieKetCttNelp0adStNqOOJ4jSjr56fQGREys+rBKg2k845pXFHq7XAkphnbhYq9puKGH86j6qsd8vVZ4OqG3ZeuI/WOL4DcGhTkEx2L2DAAAAAElFTkSuQmCC" />{" "}
+              </button>
+            </div>
+          ) : (
+            <div className="w-full flex mx-auto ">
+              <div className="grid grid-cols-5 gap-0 ">
                 {!!productsTop && !!productsTop.length
                   ? productsTop.map((item, index) => {
                       return (
@@ -187,17 +225,9 @@ const HomePage = () => {
                           </div>
                         );
                       })}
-                {/* </div> */}
-              </Slider>
+              </div>
             </div>
-            <button
-              onClick={() => {
-                next();
-              }}
-            >
-              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAADeElEQVR4nO2ay08UQRDGf0Rk12hUFhDiSY9Go/4VisEnNxVvGryIBr36OKMnExP+Dg0haNSQqBEfCMb45uTjYMSbCEGzpuI3SUV3YXe2Z3YgfskkC9Vd3T1VXV319cB/LF8UgIPAZWAIeA18A+b02O9XklmbA0AzGUEeOAbcBH4BxSqfn8AI0APk6rGAVcBZ4LOb1CxwBzgvy2zRG1+pp1n/M9kF4K76RP0/Af16OamgC5hyE3gMHAfWxdC1HjgBPHH63gN7SBD2pgbdgE+BXQH1dwLPnP5rSVinQxO3Ab4Dp4AVoQfhj87TwIyzdnso5Ztl7qKizjaSx3bgjcZ8pznUhDan8BHQSnpoBu5p7Cl5RSzknTs9AFaTPlYDD52bxdozg86d7LCrF1qcV1gAqDrERhs7jT1RyZ6Z0ZwsulV82EXnhEWnrOCM2/wVudg5d07EDbHmzxO1bNASaJTOoha1IPIu7ajlsJtw+yvkYvZI78fFcrMeFyFqQYcWEXoxDS6SHlmo4S01stypVmwAXkifRZ2NhEGvdA6Xa1BQWj0bMwFMyzLNqm/my83zkAa8TVgkYZlR6dtXSnhFQqsnQiO0ZS5J10Ap4ZCE+0kGIS1zSHqulxK+ldCquKQQyjJbpcN4gX8wLWHSeVUIy7Sq/5dSwjkJm0ge3jKTMfrnHE+QmYVYFhB0IdMpuVa7c63XMV2rbSHXWjabfUhCYwCzaokI3QuF3+hANPJsSR+IByU0tjCrlvg7RdlLmWQsShqNAcxq0lhwSePaco1GNKjRmFm0hOGkdNqeLoujamRcbFYLq3HpPbxYqftJDXfXMODzhErdLun9UMk1RL8aj8ckH6JyNAnyYVJz66ukQ95xvUYoZwX9LtHMVctWzIgcqzd2Aj/isjvX3Bsw2rJeaBMpZ3O5GkdBXrRQUURyPUjsNcCY5jBWyz1jm86A6FrB/k4LBeC+u46r+cJnszOtudkO0tkT7zSmZeWbQilud242I+7VwmFoNCo6/XDuZKVxUORdAIgqu1C3rw067Cad/qtJ3713OrNHrH1vzK8YCsqdorSjKFcKeVu8qHXOiBWPJjCn9PqieKetCttNelp0adStNqOOJ4jSjr56fQGREys+rBKg2k845pXFHq7XAkphnbhYq9puKGH86j6qsd8vVZ4OqG3ZeuI/WOL4DcGhTkEx2L2DAAAAAElFTkSuQmCC" />{" "}
-            </button>
-          </div>
+          )}
         </>
       )}
 

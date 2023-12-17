@@ -35,7 +35,7 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
 
   return (
     <>
-      {!!products && products.length >= 5 ? (
+      {!!products && products.length >= 6 ? (
         <div className="w-full flex px-4 my-2 mb-5 ">
           {products.length > 1 && (
             <button onClick={() => prev()}>
@@ -107,47 +107,54 @@ const SliderListProduct = ({ products }: { products: IProduct[] }) => {
           )}
         </div>
       ) : (
-        !!products.length &&
-        products.map((item, index) => {
-          if (index === 0) {
-            return;
-          }
-          if (!!item.images) {
-            return (
-              <div
-                key={index}
-                className="group relative px-5  "
-                onClick={() => {
-                  navigate(`/product/${item.id}`);
-                }}
-              >
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
-                  <div className="relative h-full w-full">
-                    <LazyLoadImage
-                      src={item.images}
-                      className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
-                    />
+        <div className="grid grid-cols-5 gap-0  my-2">
+          {!!products.length &&
+            products.map((item, index) => {
+              if (index === 0) {
+                return;
+              }
+              if (!!item.images) {
+                return (
+                  <div
+                    key={index}
+                    className="group relative px-5  "
+                    onClick={() => {
+                      navigate(`/product/${item.id}`);
+                    }}
+                  >
+                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-white lg:aspect-none group-hover:opacity-75 lg:h-56">
+                      <div className="relative h-full w-full">
+                        <LazyLoadImage
+                          src={item.images}
+                          className="h-full w-[80%] object-center  object-cover lg:h-full lg:w-full"
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4  ">
+                      <h3 className="text-sm text-gray-700 group-hover:font-semibold   line-clamp-1 ">
+                        <span
+                          aria-hidden="true"
+                          className="absolute inset-0  "
+                        />
+                        {item.name}
+                      </h3>
+                      <span className=" text-sm text-gray-500">
+                        {item.color}
+                      </span>
+                      <div className="">
+                        <p className="text-sm font-medium text-red-500  ">
+                          {convertToCurrencyString(item.minPrice)}-
+                          {convertToCurrencyString(item.maxPrice)}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-4  ">
-                  <h3 className="text-sm text-gray-700 group-hover:font-semibold   line-clamp-1 ">
-                    <span aria-hidden="true" className="absolute inset-0  " />
-                    {item.name}
-                  </h3>
-                  <span className=" text-sm text-gray-500">{item.color}</span>
-                  <div className="">
-                    <p className="text-sm font-medium text-red-500  ">
-                      {convertToCurrencyString(item.minPrice)}-
-                      {convertToCurrencyString(item.maxPrice)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          } else {
-            return null;
-          }
-        })
+                );
+              } else {
+                return null;
+              }
+            })}
+        </div>
       )}
     </>
   );

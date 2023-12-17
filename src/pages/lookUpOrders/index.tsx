@@ -17,24 +17,28 @@ const LookUpOrders = () => {
   const [listDataBill, setListDataBill] = useState<IBill>();
   const [detailBill, setDetailBill] = useState<IDetailOrder[]>();
   const getInfoDetailProduct = async () => {
+    console.log(inputHD);
     try {
       const res = await axios({
         method: "get",
         url: API.getSearchBill(inputHD),
       });
       if (res.status) {
-        setListDataBill(res.data);
-        //   setDetail(res)
+        setListDataBill(res?.data);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      if (listDataBill?.id) {
-        getBillDetail();
-      }
     }
   };
+  useEffect(() => {
+    if (listDataBill?.id) {
+      getBillDetail();
+    }
+  }, [listDataBill]);
 
+  console.log("listDataBill", listDataBill);
+  console.log("detailBill", detailBill);
   const getBillDetail = async () => {
     try {
       const res = await axios({
@@ -118,9 +122,6 @@ const LookUpOrders = () => {
                     Mã phiếu gửi
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Người gửi
-                  </th>
-                  <th scope="col" className="px-6 py-3">
                     Ngày tạo đơn
                   </th>
 
@@ -143,7 +144,6 @@ const LookUpOrders = () => {
                   >
                     {listDataBill?.code}
                   </th>
-                  <td className="px-6 py-4">{listDataBill?.customer?.name}</td>
                   <td className="px-6 py-4">
                     {formartDate(listDataBill?.createAt)}
                   </td>
@@ -187,12 +187,7 @@ const LookUpOrders = () => {
                       {formatCurrency(listDataBill.moneyShip)}
                     </p>
                   </div>
-                  <div>
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Người gửi:
-                    </label>
-                    <p className="text-gray-700">Shop giày BeeShoe</p>
-                  </div>
+
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Dịch vụ:
@@ -206,7 +201,7 @@ const LookUpOrders = () => {
                       Người nhận:
                     </label>
                     <p className="text-gray-700">
-                      {listDataBill?.customer?.name}
+                      {listDataBill?.customerName}
                     </p>
                   </div>
                   <div>
@@ -248,7 +243,7 @@ const LookUpOrders = () => {
                 }`}
               >
                 <img
-                  src={item?.images}
+                  src={item?.images.split(",")[0]}
                   alt=""
                   className="w-20 h-20 object-contain"
                 />

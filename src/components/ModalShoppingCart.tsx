@@ -332,7 +332,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
             </div>
             <div className="w-full bg-gray-500 h-[1.5px]  " />
 
-            <div className="w-full overflow-y-auto h-[80%]   ">
+            <div className="w-full overflow-y-auto h-[70%]   ">
               {!!userPrf && !!listProducts
                 ? listProducts.map((item) => {
                     return (
@@ -348,7 +348,7 @@ const ShoppingCart = ({ isOpen }: ShoppingCartProps) => {
                     return <ItemInCart key={item.id} {...item} />;
                   })}
             </div>
-            <div className="absolute bottom-0 w-full h-[15%]">
+            <div className="absolute bottom-0 w-full h-[20%] ">
               <div className="mt-4 px-2">
                 <p className="text-sm font-medium">
                   Tổng số lượng: {!!userPrf ? cartQuantityUser : cartQuantity}

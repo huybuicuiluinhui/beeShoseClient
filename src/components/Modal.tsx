@@ -15,13 +15,14 @@ const ModalComponent = ({
   check,
 }: ModalComponentType) => {
   useEffect(() => {
+    const body = document.documentElement;
     if (isVisible) {
-      document.body.classList.add("overflow-hidden");
+      body.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove("overflow-hidden");
+      body.classList.remove("overflow-hidden");
     }
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      body.classList.remove("overflow-hidden");
     };
   }, [isVisible]);
 
@@ -35,7 +36,7 @@ const ModalComponent = ({
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[100]"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50  h-full w-full z-[100]"
       onClick={handleClose}
     >
       <div
@@ -62,7 +63,7 @@ const ModalComponent = ({
           </svg>
         </button>
 
-        <div className="bg-white p-2 rounded-xl overflow-y-hidden">
+        <div className="bg-white p-2 rounded-xl overflow-y-hidden px-4">
           {children}
         </div>
       </div>

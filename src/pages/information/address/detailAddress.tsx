@@ -27,7 +27,6 @@ function DetailAddress({ prov, distr, war, spec }: AddressProps) {
   const [province, setProvince] = useState<string | null>(null);
   const [district, setDistrict] = useState<string | null>(null);
   const [ward, setWard] = useState<string | null>(null);
-
   const configApi = {
     headers: {
       Token: "aef361b5-f26a-11ed-bc91-ba0234fcde32",
@@ -35,7 +34,7 @@ function DetailAddress({ prov, distr, war, spec }: AddressProps) {
       ShopId: 124173,
     },
   };
-
+  console.log(province, district, ward);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -43,30 +42,37 @@ function DetailAddress({ prov, distr, war, spec }: AddressProps) {
           "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
           configApi
         );
-        setProvince(
-          provinceResponse.data.data.find(
-            (item: any) => item.ProvinceID === parseInt(prov, 10)
-          )?.ProvinceName || null
-        );
+        console.log("provinceResponse", provinceResponse);
 
         const districtResponse: AxiosResponse = await axios.get(
           `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${prov}`,
           configApi
         );
-        setDistrict(
-          districtResponse.data.data.find(
-            (item: any) => item.DistrictID === parseInt(distr, 10)
-          )?.DistrictName || null
-        );
+
+        console.log("districtResponse", districtResponse);
 
         const wardResponse: AxiosResponse = await axios.get(
           `https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${distr}`,
           configApi
         );
-        setWard(
-          wardResponse.data.data.find((item: any) => item.WardCode === war)
-            ?.WardName || null
-        );
+
+        console.log("wardResponse", wardResponse?.data.data);
+        if (!!provinceResponse && !!wardResponse && !!districtResponse) {
+          setProvince(
+            provinceResponse?.data?.data.find(
+              (item: any) => item?.ProvinceID === parseInt(prov, 10)
+            )?.ProvinceName || null
+          );
+          setDistrict(
+            districtResponse?.data?.data.find(
+              (item: any) => item?.DistrictID === parseInt(distr, 10)
+            )?.DistrictName || null
+          );
+          setWard(
+            wardResponse?.data?.data.find((item: any) => item?.WardCode === war)
+              ?.WardName || null
+          );
+        }
       } catch (error) {
         console.log(error);
       }

@@ -615,7 +615,7 @@ const PayMentWithUser = () => {
         >
           <div className="bg-white  ">
             <div className="border-b-[1px] border-b-gray-400 border-solid w-full p-2">
-              <span>Địa Chỉ Của Tôi</span>
+              <span className="font-medium text-lg">Địa Chỉ Của Tôi</span>
             </div>
             <div className="max-h-80 overflow-y-auto">
               {!!dataAddress &&
@@ -667,19 +667,21 @@ const PayMentWithUser = () => {
           </div>
         </ModalComponent>
       )}
-      <AddAddressModal
-        selectedProvince={selectedProvince}
-        selectedDistrict={selectedDistrict}
-        selectedWard={selectedWard}
-        setSelectedProvince={setSelectedProvince}
-        setSelectedDistrict={setSelectedDistrict}
-        setSelectedWard={setSelectedWard}
-        wards={wards}
-        districts={districts}
-        provinces={provinces}
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      {!!dataAddress && (
+        <AddAddressModal
+          selectedProvince={selectedProvince}
+          selectedDistrict={selectedDistrict}
+          selectedWard={selectedWard}
+          setSelectedProvince={setSelectedProvince}
+          setSelectedDistrict={setSelectedDistrict}
+          setSelectedWard={setSelectedWard}
+          wards={wards}
+          districts={districts}
+          provinces={provinces}
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
       {!!listProducts && (
         <ShowVoucher
           setIdVoucher={setIdVoucher}

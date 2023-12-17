@@ -358,10 +358,13 @@ const Header = () => {
                   </li>
 
                   <li
-                    className=" px-0 "
-                    onMouseEnter={() => setShowModalNoti(true)}
-                    onMouseLeave={() => setShowModalNoti(false)}
-                    onClick={() => getDataNoti()}
+                    className=" px-0  relative"
+                    onMouseEnter={() => [setShowModalNoti(true), getDataNoti()]}
+                    onMouseLeave={() => [
+                      setShowModalNoti(false),
+                      getDataNoti(),
+                    ]}
+                    // onClick={() => }
                   >
                     <div className=" flex justify-center items-center my-auto ">
                       <div className="relative">
@@ -386,14 +389,14 @@ const Header = () => {
                       </div>
                     </div>
                     {showModalNoti && (
-                      <Fade top distance="20%" duration={300}>
-                        <div className="absolute left-[74%]  w-96   rounded-lg drop-shadow-lg   ">
+                      <div className="absolute -left-[10%]    w-96 rounded-lg drop-shadow-lg    ">
+                        <Fade top distance="20%" duration={300}>
                           {userPrf && (
-                            <div className="w-7 overflow-hidden inline-block ml-[10%] drop-shadow-lg ">
+                            <div className="w-7  inline-block ml-[10%] drop-shadow-lg ">
                               <div className=" h-4 w-5 bg-white rotate-45 transform origin-bottom-left  z-10 shadow-2xl"></div>
                             </div>
                           )}
-                          <div className="w-full bg-white z-10 shadow-xl -mt-[6px] drop-shadow-lg rounded-lg overflow-y-hidden max-h-72">
+                          <div className="w-full bg-white z-10 shadow-xl -mt-[6px] drop-shadow-lg rounded-lg overflow-y-scroll max-h-72">
                             {!!dataNoti &&
                               dataNoti.length > 0 &&
                               dataNoti.map((e, i) => {
@@ -404,6 +407,7 @@ const Header = () => {
                                     return (
                                       <div
                                         onClick={() => {
+                                          setShowModalNoti(false);
                                           navigate(`/notification/${e.id}`);
                                           getDataNoti();
                                         }}
@@ -448,13 +452,18 @@ const Header = () => {
                                 } else {
                                   return (
                                     <div
+                                      onClick={() => {
+                                        setShowModalNoti(false);
+                                        navigate(`/notification/${e.id}`);
+                                        getDataNoti();
+                                      }}
                                       className={`group  relative px-2 py-3 ${
                                         e.type === 1 ? "bg-gray-100" : ""
                                       }`}
                                       key={i}
                                     >
                                       <p
-                                        className={`text-xs  line-clamp-1 ${
+                                        className={`text-sm  line-clamp-1 ${
                                           e.type === 1
                                             ? "font-normal"
                                             : "font-bold "
@@ -489,7 +498,7 @@ const Header = () => {
                               })}
                             {type === false &&
                             !!dataNoti &&
-                            dataNoti?.length >= 4 ? (
+                            dataNoti?.length > 4 ? (
                               <p
                                 className="text-sm font-semibold  line-clamp-1 text-center py-2 bg-slate-100 cursor-pointer"
                                 onClick={() => {
@@ -514,8 +523,8 @@ const Header = () => {
                               </div>
                             )}
                           </div>
-                        </div>
-                      </Fade>
+                        </Fade>
+                      </div>
                     )}
                   </li>
                   <li className=" px-0 cursor-pointer">

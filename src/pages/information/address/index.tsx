@@ -80,6 +80,7 @@ const Address = () => {
         },
       });
       if (res.data) {
+        toast.success("Đã sửa thành công");
       }
     } catch (error) {
       console.log(error);
@@ -102,10 +103,13 @@ const Address = () => {
     if (dataAddress?.length === 1 && dataAddress[0].defaultAddress !== true) {
       updateStatus(dataAddress[0]);
     }
-  }, [dataAddress, isModalOpen]);
+  }, [dataAddress]);
   useEffect(() => {
+    // if (userPrf) {
     loadAddress();
+    // }
   }, [userPrf?.id, isModalOpen, check, checkUp]);
+
   useEffect(() => {
     fetchProvinces();
   }, []);
@@ -120,11 +124,14 @@ const Address = () => {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
+
   return (
     <div className="w-full h-full  ">
       <div className="w-[80%] mx-auto min-h-screen shadow-lg mb-10">
-        <div className="flex justify-between items-center p-4  border-b-[1px] border-gray-200">
-          <p className="font-semibold text-gray-800  ">Địa chỉ của tôi</p>
+        <div className="flex justify-between items-center py-4  px-2 border-b-[1px] border-gray-200">
+          <p className="font-semibold text-gray-800  text-lg">
+            Địa chỉ của tôi
+          </p>
           <button className="bg-red-500 flex items-center px-2 py-1 rounded-sm">
             <img
               src={Images.iconPlus}
@@ -132,7 +139,7 @@ const Address = () => {
             />
 
             <button
-              className="text-white text-xs "
+              className="text-white text-sm "
               onClick={() => setModalOpen(true)}
             >
               Thêm địa chỉ mới

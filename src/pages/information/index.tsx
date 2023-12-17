@@ -76,9 +76,6 @@ const Information = () => {
   const [selectedCategory, setSelectedCategory] = useState("Tài khoản của tôi");
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    if (category === "Đăng xuất") {
-      setShowMoal(true);
-    }
   };
   return (
     <div className="w-full h-full   relative  min-h-screen ">

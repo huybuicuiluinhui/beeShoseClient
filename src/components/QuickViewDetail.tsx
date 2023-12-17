@@ -404,10 +404,10 @@ const QuickViewDetail = ({
                     (!!price && amount < amountShoe - amountItemInCart) ||
                     amount >= 10
                   ) {
-                    toast("Sản phẩm đã tối đa trong giỏ hàng");
+                    toast.warning("Sản phẩm đã tối đa trong giỏ hàng");
                     return;
                   } else {
-                    toast("Bạn cần chọn sản phẩm khác");
+                    toast.warning("Bạn cần chọn sản phẩm khác");
                   }
                 }
               }}

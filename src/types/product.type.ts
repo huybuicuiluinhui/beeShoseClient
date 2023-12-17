@@ -214,6 +214,7 @@ export interface IBill {
   desiredDate: any;
   receiveDate: any;
   createAt: string;
+  customerName: string;
 }
 export interface IInfoAccount {
   addresses: any;

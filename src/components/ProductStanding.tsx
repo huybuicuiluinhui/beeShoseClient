@@ -42,7 +42,7 @@ const ProductStanding = ({ product }: { product: IProduct }) => {
           <div className="hover-translate-up">
             <div className={`h-[170px] flex flex-col gap-2`}>
               <img
-                src={product?.images ? product?.images : Images.imgNotFound}
+                src={product?.images.split(",")[0]}
                 className="max-h-[170px] w-full  object-contain mx-auto"
               />
             </div>

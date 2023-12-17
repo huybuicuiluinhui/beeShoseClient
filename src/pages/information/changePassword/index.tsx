@@ -34,7 +34,7 @@ const ChangePassword = () => {
       setErrors((prev) => ({
         ...prev,
         newPassword:
-          "Mật khẩu không hợp lệ. Định dạng mật khẩu: ít nhất 6 ký tự",
+          "Mật khẩu không hợp lệ. Định dạng mật khẩu: ít nhất 8  ký tự",
       }));
       return;
     } else {
