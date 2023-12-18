@@ -65,7 +65,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
         <div className="flex justify-between">
           <div className="flex ">
             <div
-              className=" border-[1px] border-gray-300 w-6 flex items-center justify-center"
+              className=" border-[1px] border-gray-300 w-6 flex items-center justify-center cursor-pointer"
               onClick={() => [decreaseCartQuantity(infoShoe.id)]}
             >
               -
@@ -74,7 +74,7 @@ const ItemInCart = ({ id, quantity }: CartItemProps) => {
               {quantity}
             </div>
             <div
-              className="border-[1px] border-gray-300 w-6 flex items-center justify-center"
+              className="border-[1px] border-gray-300 w-6 flex items-center justify-center cursor-pointer"
               onClick={() => {
                 if (quantity >= infoShoe?.quantity) {
                   toast.warning("Số lượng thêm đã đạt tối đa ");
@@ -191,7 +191,7 @@ const ItemInCart2 = ({
         <div className="flex justify-between">
           <div className="flex ">
             <div
-              className=" border-[1px] border-gray-300 w-6 flex items-center justify-center"
+              className=" border-[1px] border-gray-300 w-6 flex items-center justify-center cursor-pointer"
               onClick={() => {
                 if (getProductQuantityById(item.idProductDetail) === 1) {
                   setShowModalDelete(true);
@@ -209,7 +209,7 @@ const ItemInCart2 = ({
               {getProductQuantityById(item.idProductDetail)}
             </div>
             <div
-              className="border-[1px] border-gray-300 w-6 flex items-center justify-center"
+              className="border-[1px] border-gray-300 w-6 flex items-center justify-center cursor-pointer"
               onClick={() => {
                 addShoe(item.id, getProductQuantityById(item.idProductDetail));
               }}

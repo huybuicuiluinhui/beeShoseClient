@@ -7,6 +7,7 @@ import path from "../../constants/path";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 
 export default function Payment() {
+  console.log("đã vô rồi");
   const navigate = useNavigate();
   const { removeAllCart } = useShoppingCart();
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function Payment() {
               paymentReturn
             );
             if (response.status) {
+              console.log("ahihihihihih");
               toast.success("Đặt hàng thành công");
               removeAllCart();
               navigate(path.home);

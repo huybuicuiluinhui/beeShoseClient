@@ -191,6 +191,8 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         });
         if (res.status) {
           toast.success("đã thêm thành công");
+        } else {
+          return;
         }
       } catch (error) {
         if (typeof error === "string") {

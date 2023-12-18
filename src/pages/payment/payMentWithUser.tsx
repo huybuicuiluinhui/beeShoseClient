@@ -9,7 +9,7 @@ import {
   Province,
   Ward,
 } from "../../types/product.type";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import API, { baseUrl } from "../../api";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -24,6 +24,8 @@ import AddAddressModal from "../information/address/modalAddAdr";
 import DetailAddress from "../information/address/detailAddress";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
   const { userPrf, removeAllCart } = useShoppingCart();
   const [listProducts, setListProducts] = useState<IDetailProductCart[]>();
   const [dataAddress, setDataAddress] = useState<IAddress[]>();
@@ -31,6 +33,7 @@ const PayMentWithUser = () => {
   const [selectedProvince, setSelectedProvince] = useState<number>();
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
+  const [selectedPhoe, setSelectedPhone] = useState<string>("");
   const [wards, setWards] = useState<Ward[]>([]);
   const [specificAddress, setSpecificAddress] = useState<string>();
   const [selectedWard, setSelectedWard] = useState<number>();
@@ -70,7 +73,6 @@ const PayMentWithUser = () => {
       console.log(error);
     }
   };
-
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
@@ -261,6 +263,7 @@ const PayMentWithUser = () => {
         setSpecificAddress(defaultAddress.specificAddress);
         setSelectedDefault(defaultAddress.defaultAddress);
         setSelectedName(defaultAddress?.name);
+        setSelectedPhone(defaultAddress?.phoneNumber);
         setChooseRadio(defaultAddressIndex);
       }
     }
@@ -275,11 +278,26 @@ const PayMentWithUser = () => {
       fetchWardsByDistrict(selectedDistrict);
     }
   }, [selectedDistrict]);
+  const [delayedExecution, setDelayedExecution] = useState(false);
+
   useEffect(() => {
-    if (userPrf?.id) {
-      getListDetailCart();
-    }
-  }, [userPrf?.id]);
+    // Đặt độ trễ là 1000ms (1 giây)
+    const delayDuration = 1000;
+
+    const timerId = setTimeout(() => {
+      // Kiểm tra nếu userPrf.id tồn tại và chưa được thực thi trước đó
+      if (userPrf?.id && !delayedExecution) {
+        // Thực hiện hàm getListDetailCart
+        getListDetailCart();
+
+        // Đánh dấu rằng đã thực hiện
+        setDelayedExecution(true);
+      }
+    }, delayDuration);
+
+    // Xóa timer khi component unmount hoặc khi userPrf.id thay đổi
+    return () => clearTimeout(timerId);
+  }, [userPrf?.id, delayedExecution, getListDetailCart]);
   console.log("userPrf?.id", userPrf?.id);
   useEffect(() => {
     if (userPrf?.id) {
@@ -331,10 +349,16 @@ const PayMentWithUser = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex gap-3 mt-2">
-                <span className="text-base font-semibold text-black ">
-                  {selectedName}
+              <div className="flex items-center mt-2 ">
+                <span className="text-[#000000de]  text-sm font-semibold">
+                  {selectedName} |
                 </span>
+                <span className="text-gray-400 ml-2 text-sm font-normal">
+                  {/* {pho} */}
+                  {selectedPhoe}
+                </span>
+              </div>
+              <div className="flex gap-3 ">
                 <DetailAddress
                   prov={String(selectedProvince)}
                   distr={String(selectedDistrict)}

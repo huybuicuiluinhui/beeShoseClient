@@ -167,6 +167,9 @@ const HomePage = () => {
                 <Slider {...settings} ref={sliderRef}>
                   {!!productsTop && !!productsTop.length
                     ? productsTop.map((item, index) => {
+                        if (item.status === true) {
+                          return;
+                        }
                         return (
                           <div key={index}>
                             <ProductStandingTop
@@ -204,6 +207,9 @@ const HomePage = () => {
               <div className="grid grid-cols-5 gap-0 ">
                 {!!productsTop && !!productsTop.length
                   ? productsTop.map((item, index) => {
+                      if (item.status === true) {
+                        return;
+                      }
                       return (
                         <div key={index}>
                           <ProductStandingTop
@@ -245,13 +251,17 @@ const HomePage = () => {
           !!productsAll.length &&
           sekeletonItemShoeAll === false
             ? productsAll.map((item, index) => {
-                return !!item.discountValue ? (
-                  <div key={index}>
-                    <ProductStanding product={item} key={index} />
-                  </div>
-                ) : (
-                  <></>
-                );
+                if (item?.status === true) {
+                  return;
+                } else {
+                  return !!item.discountValue ? (
+                    <div key={index}>
+                      <ProductStanding product={item} key={index} />
+                    </div>
+                  ) : (
+                    <></>
+                  );
+                }
               })
             : !!sekeletonItemShoeAll &&
               sekeletonItemShoeAll === true &&
@@ -278,7 +288,7 @@ const HomePage = () => {
         <div className="grid grid-cols-5 gap-0 ">
           {!!products && !!products.length && sekeletonItemShoe === false
             ? products.map((item, index) => {
-                if (!item.quantity) {
+                if (!item.quantity || item.status === true) {
                   return;
                 } else {
                   return (

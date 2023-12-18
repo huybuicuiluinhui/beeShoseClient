@@ -566,7 +566,7 @@ const ListProductsByBrand = () => {
             <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {!!listShoes && !!listShoes.length ? (
                 listShoes.map((item, index) => {
-                  if (!item?.quantity) {
+                  if (!item?.quantity || item.status === true) {
                     return;
                   } else {
                     return (

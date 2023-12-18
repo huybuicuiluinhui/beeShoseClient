@@ -67,6 +67,26 @@ const ItemOrder = ({
   const [dataDetailOrder, setDataDetailOrder] = useState<IDetailOrder[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>("");
+  const [statusPayment, setStatusPayment] = useState<boolean>(false);
+  const getStatusPayMent = async (id: number) => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: `http://localhost:8080/client/api/payment-method/${id}`,
+      });
+      if (res.status) {
+        console.log(res.data);
+        setStatusPayment(res?.data[0].type);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (item?.id) {
+      getStatusPayMent(item?.id);
+    }
+  }, [item?.id]);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
   };
@@ -153,18 +173,29 @@ const ItemOrder = ({
         </svg>
       )}
       <div className="p-4 flex items-center justify-between">
-        {item?.status === 1 ||
-          (item?.status === 2 && (
-            <div
-              className="border border-red-400 rounded px-2 py-1 cursor-pointer"
-              onClick={() => {
-                setShowModal(true);
-              }}
-            >
-              <span className="text-red-500">Hủy đơn hàng</span>
-            </div>
-          ))}
-        <div className="font-semibold text-xs">
+        <div className="font-semibold text-xs ">
+          Trạng thái:{" "}
+          <span className="text-red-600">
+            {statusPayment === true ? (
+              <span>Đã thanh toán</span>
+            ) : (
+              <span>Chưa thanh toán</span>
+            )}
+          </span>
+        </div>
+        {item?.status === 1 || item?.status === 2 ? (
+          <div
+            className="border border-red-400 rounded px-2 py-1 cursor-pointer "
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            <span className="text-red-500">Hủy đơn hàng</span>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className="font-semibold text-xs ">
           Thành tiền:{" "}
           <span className="text-red-600">
             {convertToCurrencyString(item?.totalMoney + item?.moneyShip)}
@@ -295,6 +326,7 @@ const InvoiceAll = ({ status }: { status: number | null }) => {
       getAllOrders();
     }
   }, [userPrf, loading2]);
+
   console.log("loading2", loading2);
   return (
     <div className="w-full h-full">

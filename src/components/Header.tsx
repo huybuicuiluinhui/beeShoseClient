@@ -69,12 +69,11 @@ const Header = () => {
         ).length;
         setUnreadNotificationsCount(unreadNotificationsCount);
         console.log(res.data?.data);
-
+        console.log(userPrf?.id);
         setDataNoti(res.data?.data);
       }
     }
   };
-  console.log(userPrf?.id);
   const deleteNotiOne = async (id: number) => {
     if (!!userPrf) {
       const res = await axios({
@@ -87,9 +86,7 @@ const Header = () => {
     }
   };
   useEffect(() => {
-    if (userPrf?.id) {
-      getDataNoti();
-    }
+    getDataNoti();
   }, [userPrf?.id, type]);
 
   const getCategory = async () => {
@@ -172,7 +169,7 @@ const Header = () => {
                           className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
                         />
                         <span
-                          className={`cursor-pointer  text-sm font-medium hover:text-[#6756ca] ${"text-gray-900"}`}
+                          className={`cursor-pointer  text-sm font-normal hover:text-[#6756ca] ${"text-gray-900"}`}
                         >
                           {item.name}
                         </span>
@@ -209,7 +206,7 @@ const Header = () => {
                           className={`absolute inset-x-0 h-[1.5px] bottom-0 bg-[#6756ca] w-full `}
                         />
                         <span
-                          className={`cursor-pointer text-[12px] group-hover:text-[#6756ca] ${"text-gray-900"}`}
+                          className={`cursor-pointer text-sm group-hover:text-[#6756ca] ${"text-gray-900"}`}
                         >
                           {item.name}
                         </span>
@@ -329,7 +326,8 @@ const Header = () => {
                   <li
                     className="flex-1 px-0 cursor-pointer"
                     onClick={() => {
-                      openCart();
+                      // openCart();
+                      navigate(path.cart);
                     }}
                   >
                     <div className=" flex justify-center items-center my-auto ">

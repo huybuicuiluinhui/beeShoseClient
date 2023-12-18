@@ -548,7 +548,7 @@ const ListProductsByBrandWithSearch = () => {
             <div className="grid grid-cols-5 gap-2 mx-auto mt-4 px-2">
               {!!listShoes && listShoes.length > 0 ? (
                 listShoes.map((e: IProduct, i: number) => {
-                  if (e.quantity === 0 || !e.quantity) {
+                  if (e.quantity === 0 || !e.quantity || e.status === true) {
                     return;
                   }
                   return (

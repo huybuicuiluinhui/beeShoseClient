@@ -17,8 +17,9 @@ const LookUpOrders = () => {
   const [inputHD, setInputHD] = useState<string>("");
   const [listDataBill, setListDataBill] = useState<IBill>();
   const [detailBill, setDetailBill] = useState<IDetailOrder[]>();
+  const [statusPayment, setStatusPayment] = useState<boolean>(false);
+  console.log(statusPayment);
   const getInfoDetailProduct = async () => {
-    console.log(inputHD);
     try {
       const res = await axios({
         method: "get",
@@ -37,7 +38,25 @@ const LookUpOrders = () => {
       getBillDetail();
     }
   }, [listDataBill]);
-
+  const getStatusPayMent = async (id: number) => {
+    try {
+      const res = await axios({
+        method: "get",
+        url: `http://localhost:8080/client/api/payment-method/${id}`,
+      });
+      if (res.status) {
+        console.log(res.data);
+        setStatusPayment(res?.data[0].type);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (listDataBill?.id) {
+      getStatusPayMent(listDataBill?.id);
+    }
+  }, [listDataBill]);
   console.log("listDataBill", listDataBill);
   console.log("detailBill", detailBill);
   const getBillDetail = async () => {
@@ -136,6 +155,9 @@ const LookUpOrders = () => {
                   <th scope="col" className="px-6 py-3">
                     Tổng tiền
                   </th>
+                  <th scope="col" className="px-6 py-3">
+                    Trạng thái
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -169,6 +191,11 @@ const LookUpOrders = () => {
                     {formatCurrency(
                       listDataBill.totalMoney + listDataBill.moneyShip
                     )}{" "}
+                  </td>
+                  <td className="px-6 py-4">
+                    {statusPayment === true
+                      ? "Đã thanh toán"
+                      : "Chưa thanh toán"}
                   </td>
                 </tr>
               </tbody>

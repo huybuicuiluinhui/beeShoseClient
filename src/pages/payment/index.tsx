@@ -3,7 +3,11 @@ import ShippingProcess from "../../components/shippingProcess";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IDetailProductCart2, IVoucher } from "../../types/product.type";
-import { convertToCurrencyString, validateEmail } from "../../utils/format";
+import {
+  convertToCurrencyString,
+  regexPhoneNumber,
+  validateEmail,
+} from "../../utils/format";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import { formatCurrency } from "../../utils/formatCurrency";
 import API, { baseUrl } from "../../api";
@@ -118,6 +122,7 @@ const PaymentPage = () => {
   const [email, setEmail] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<number>(0);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const getDetailShoe = async () => {
     const res = await axios({
       method: "get",
@@ -132,6 +137,8 @@ const PaymentPage = () => {
       toast.warning("Không được để trống họ và tên");
     } else if (email === "" || email === null || email === undefined) {
       toast.warning("Không được để email");
+    } else if (!regexPhoneNumber.test(phoneNumber)) {
+      toast.warning("Số điện không hợp lệ");
     } else if (!validateEmail(email)) {
       toast.warning("Email không hợp lệ");
     } else if (
@@ -154,6 +161,7 @@ const PaymentPage = () => {
           const newBill = {
             customerName: textHVT,
             email: email,
+            phoneNumber: phoneNumber,
             voucher: voucher ? voucher : null,
             district: selectedDistrict,
             province: selectedProvince,
@@ -214,7 +222,7 @@ const PaymentPage = () => {
           }
           if (radioChoose === 1) {
             const tempNewBill = { ...newBill, id: generateUUID() };
-            console.log(tempNewBill);
+            console.log("tempNewBill", tempNewBill);
             localStorage.setItem("checkout", JSON.stringify(tempNewBill));
             try {
               const response = await axios.get(
@@ -249,7 +257,7 @@ const PaymentPage = () => {
                   }`
               );
               if (response.status) {
-                console.log(response.data.data);
+                // console.log(response.data.data);
                 window.location.href = response.data.data;
               }
             } catch (error) {
@@ -263,7 +271,7 @@ const PaymentPage = () => {
     }
   };
   function generateUUID() {
-    var d = new Date().getTime(); //Timestamp
+    var d = new Date().getTime();
     var d2 =
       (typeof performance !== "undefined" &&
         performance.now &&
@@ -592,16 +600,37 @@ const PaymentPage = () => {
                 </label>
               </div>
             </div>
-            <div className="w-full flex gap-5 items-center">
-              <span className="text-sm font-medium">Lời nhắn tới shop:</span>
-              <input
-                className="py-1 border border-gray-300 rounded focus:border-gray-500 p-2 outline-none  text-sm "
-                type="text"
-                value={note}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setNote(e.target.value);
-                }}
-              />
+            <div className="w-full flex justify-between items-end  px-4 my-5">
+              <div className="relative z-0 w-[45%] ">
+                <input
+                  autoComplete="off"
+                  value={phoneNumber}
+                  onChange={(e) => {
+                    setPhoneNumber(e?.target?.value);
+                  }}
+                  type="text"
+                  id="floating_standard"
+                  className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-gray-500 focus:outline-none focus:ring-0 focus:border-gray-600 peer"
+                  placeholder=" "
+                />
+                <label
+                  htmlFor="floating_standard"
+                  className="absolute text-sm text-gray-900 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-900 peer-focus:dark:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                >
+                  Nhập số điện thoại
+                </label>
+              </div>
+              <div className=" flex  items-end justify-between    w-[45%]">
+                <span className="text-sm font-medium">Lời nhắn :</span>
+                <input
+                  className="py-1 border border-gray-300 rounded focus:border-gray-500 p-2 outline-none  text-sm "
+                  type="text"
+                  value={note}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setNote(e.target.value);
+                  }}
+                />
+              </div>
             </div>
             <label
               htmlFor="card-holder"

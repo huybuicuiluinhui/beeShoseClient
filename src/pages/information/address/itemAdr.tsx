@@ -160,7 +160,7 @@ const ItemAdr = ({
                 {item?.name ? item?.name : ""}
               </span>
               <div className="h-[80%] w-[0.5px] ml-2 bg-[#0000008a]" />
-              <span className="text-gray-600 ml-2 text-base font-semibold">
+              <span className="text-gray-400 ml-2 text-sm font-normal">
                 {item?.phoneNumber ? item?.phoneNumber : ""}
               </span>
             </div>

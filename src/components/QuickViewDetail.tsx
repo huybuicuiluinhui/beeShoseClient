@@ -387,7 +387,7 @@ const QuickViewDetail = ({
                 if (userPrf) {
                   addToCartUser(idAddToCart, amount);
                   setShowQuickView(false);
-                  openCart();
+                  // openCart();
                 } else {
                   if (
                     !!idAddToCart &&
@@ -397,7 +397,7 @@ const QuickViewDetail = ({
                   ) {
                     setShowQuickView(false);
                     addMultipleToCart(idAddToCart, amount);
-                    openCart();
+                    // openCart();
                     setAmount(1);
                     toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
                   } else if (

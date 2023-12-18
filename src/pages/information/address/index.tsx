@@ -65,6 +65,7 @@ const Address = () => {
     }
   };
   const updateStatus = async (item: IAddress) => {
+    console.log("sẽ update ", item);
     try {
       const res = await axios({
         method: "put",
@@ -80,7 +81,7 @@ const Address = () => {
         },
       });
       if (res.data) {
-        toast.success("Đã sửa thành công");
+        loadAddress();
       }
     } catch (error) {
       console.log(error);
@@ -100,10 +101,10 @@ const Address = () => {
     }
   };
   useEffect(() => {
-    if (dataAddress?.length === 1 && dataAddress[0].defaultAddress !== true) {
+    if (dataAddress?.length === 1 && dataAddress[0].defaultAddress === false) {
       updateStatus(dataAddress[0]);
     }
-  }, [dataAddress]);
+  }, [dataAddress, isModalOpen]);
   useEffect(() => {
     // if (userPrf) {
     loadAddress();

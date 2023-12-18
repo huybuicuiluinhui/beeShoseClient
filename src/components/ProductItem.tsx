@@ -88,10 +88,6 @@ const ProductItem = ({
       }
     }
   };
-  console.log("số lượng có sẵn", amountShoe);
-  console.log("số lượng thêm", amount);
-  console.log("số lượng trong giỏ ", getItemQuantity(idAddToCart));
-  console.log("idAddToCart ", idAddToCart);
   const imgArr = useMemo(() => {
     const arr = [];
     for (let i = 0; i < product.length; i++) {
@@ -181,7 +177,6 @@ const ProductItem = ({
               </>
             ) : !!price && !priceSale && amountShoe > 0 ? (
               <span className="text-red-500 font-semibold text-lg  ">
-                {/* {convertToCurrencyString(Number(priceSale))} */}
                 {convertToCurrencyString(Number(price))}
               </span>
             ) : (
@@ -315,7 +310,7 @@ const ProductItem = ({
                   if (!!userPrf && amountShoe) {
                     if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
-                    openCart();
+                    // openCart();
                   } else if (!userPrf) {
                     if (
                       !!idAddToCart &&
@@ -327,8 +322,8 @@ const ProductItem = ({
                     ) {
                       addMultipleToCart(idAddToCart, amount);
                       setAmount(1);
-                      toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
-                      openCart();
+                      toast.success("Thêm thành công sản phẩm vào giỏ hàng");
+                      // openCart();
                     } else if (
                       (!!price &&
                         price > 0 &&
@@ -350,13 +345,12 @@ const ProductItem = ({
 
               <button
                 className={`bg-[#fe662b] text-white font-semibold  w-[49%] 
-                ${!!price ? "bg-[#fe662b]" : "bg-[#fe672b58]"}
+                ${!!price && amountShoe > 0 ? "bg-[#fe662b]" : "bg-[#fe672b58]"}
               `}
                 onClick={() => {
                   if (!!userPrf && amountShoe) {
                     if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
-                    // openCart();
                     navigate(path.payMentWithUser);
                   } else {
                     if (
@@ -366,6 +360,7 @@ const ProductItem = ({
                       amountItemInCart <= 10
                     ) {
                       addMultipleToCart(idAddToCart, amount);
+                      toast.success("Thêm thành công");
                       setAmount(1);
                       navigate(path.payment);
                     } else if (

@@ -39,13 +39,13 @@ code {
 
 /* Handle */
 sss ::-webkit-scrollbar-thumb {
-  background: #ffba00;
+  background: #939291;
   border-radius: 5px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffba00;
+  background: #939291;
 }
 .imageMagnifyer {
   width: 440px;
