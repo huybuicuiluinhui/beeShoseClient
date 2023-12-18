@@ -42,7 +42,7 @@ const ShowVoucherList = ({
   const getVoucherSearch = async () => {
     const res = await axios({
       method: "get",
-      url: API.getVoucherSearch(inputVoucher ? inputVoucher : ""),
+      url: API.getVoucherSearchPub(inputVoucher ? inputVoucher : ""),
     });
     if (res.status) {
       if (res?.data?.data.length === 1) {

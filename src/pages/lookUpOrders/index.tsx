@@ -147,7 +147,7 @@ const LookUpOrders = () => {
                   </th>
 
                   <th scope="col" className="px-6 py-3">
-                    Trạng thái
+                    Trạng thái đơn
                   </th>
                   <th scope="col" className="px-6 py-3">
                     Phí ship
@@ -236,6 +236,7 @@ const LookUpOrders = () => {
                       {!!listDataBill && -listDataBill?.phoneNumber}
                     </p>
                   </div>
+
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Trạng thái:
@@ -256,6 +257,14 @@ const LookUpOrders = () => {
                     </p>
                   </div>
                   <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Số điện thoại:
+                    </label>
+                    <p className="text-gray-700">
+                      {!!listDataBill && listDataBill?.phoneNumber}
+                    </p>
+                  </div>
+                  <div>
                     {" "}
                     {!!listDataBill && (
                       <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -268,6 +277,14 @@ const LookUpOrders = () => {
                       distr={listDataBill.address.split("##")[2]}
                       prov={listDataBill.address.split("##")[3]}
                     />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                      Lưu ý:
+                    </label>
+                    <p className="text-gray-700">
+                      {!!listDataBill && listDataBill?.note}
+                    </p>
                   </div>
                 </div>
               </div>

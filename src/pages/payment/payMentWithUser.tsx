@@ -22,6 +22,7 @@ import ChangeAdr from "./changeAdr";
 import ShowVoucher from "./showVoucher";
 import AddAddressModal from "../information/address/modalAddAdr";
 import DetailAddress from "../information/address/detailAddress";
+import LoadingScreen from "../../components/Loading";
 const PayMentWithUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,6 +32,7 @@ const PayMentWithUser = () => {
   const [dataAddress, setDataAddress] = useState<IAddress[]>();
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [selectedProvince, setSelectedProvince] = useState<number>();
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState<string>();
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedDistrict, setSelectedDistrict] = useState<number>();
   const [selectedPhoe, setSelectedPhone] = useState<string>("");
@@ -174,12 +176,13 @@ const PayMentWithUser = () => {
       try {
         const newBill = {
           account: userPrf?.id,
-          customerName: dataAddress[0].name,
+          customerName: selectedName,
           email: userPrf?.email,
-          district: dataAddress[0]?.district,
-          province: dataAddress[0]?.province,
-          ward: dataAddress[0]?.ward,
-          specificAddress: dataAddress[0]?.specificAddress,
+          district: selectedDistrict,
+          province: selectedProvince,
+          phoneNumber: selectedPhoneNumber,
+          ward: selectedWard,
+          specificAddress: specificAddress,
           moneyShip: feeShip,
           voucher: idVoucher,
           moneyReduce: (percent / 100) * calculateTotalDone(listProducts),
@@ -258,6 +261,7 @@ const PayMentWithUser = () => {
       if (defaultAddressIndex !== -1) {
         const defaultAddress = dataAddress[defaultAddressIndex];
         setSelectedProvince(Number(defaultAddress.province));
+        setSelectedPhoneNumber(String(defaultAddress.phoneNumber));
         setSelectedDistrict(Number(defaultAddress.district));
         setSelectedWard(Number(defaultAddress.ward));
         setSpecificAddress(defaultAddress.specificAddress);
@@ -427,6 +431,7 @@ const PayMentWithUser = () => {
               </thead>
 
               <tbody>
+                {delayedExecution === false && <LoadingScreen />}
                 {!!listProducts &&
                   listProducts.length > 0 &&
                   listProducts.map((item, index) => {

@@ -27,7 +27,26 @@ const ShowVoucher = ({
   const getVoucherSearch = async () => {
     const res = await axios({
       method: "get",
-      url: API.getVoucherSearch(inputVoucher ? inputVoucher : ""),
+      url: API.getVoucherSearchPRV(inputVoucher ? inputVoucher : "", userId),
+    });
+    if (res.status) {
+      if (res?.data?.data.length === 1) {
+        if (valueCheck >= res?.data?.data[0].minBillValue) {
+          setPrecent(res?.data?.data[0]?.percentReduce);
+          setIdVoucher(res?.data?.data[0]?.id);
+          toast.success("Áp dụng voucher thành công");
+          setInputVoucher("");
+          onClose();
+        }
+      } else {
+        getVoucherSearchPub();
+      }
+    }
+  };
+  const getVoucherSearchPub = async () => {
+    const res = await axios({
+      method: "get",
+      url: API.getVoucherSearchPub(inputVoucher ? inputVoucher : ""),
     });
     if (res.status) {
       if (res?.data?.data.length === 1) {
@@ -115,7 +134,7 @@ const ShowVoucher = ({
         </button>
         <div className="">
           <p className="text-lg leading-6 font-medium text-gray-900 text-center mb-3">
-            Chọn BeeShoes Voucher
+            Chọn Voucher
           </p>
           <div className="bg-[#f8f8f8] px-3 py-2 flex items-center justify-between">
             <p className="text-[#0000008a] text-xs font-normal">Mã voucher</p>

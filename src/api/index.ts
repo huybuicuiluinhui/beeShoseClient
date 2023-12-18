@@ -56,6 +56,10 @@ const API = {
   getVoucherActive: () => baseUrl + `api/voucher?status=1&sizePage=100000`,
   getVoucherSearch: (name: string) =>
     baseUrl + `api/voucher?name=${name}&status=1`,
+  getVoucherSearchPub: (name: string) =>
+    baseUrl + `api/voucher/public?name=${name}&status=1`,
+  getVoucherSearchPRV: (name: string, id: number) =>
+    baseUrl + `api/voucher/private/${id}?name=${name}&status=1`,
   getShoeSearch: (name: string, page: number) =>
     baseUrl + `api/shoe?name=${name}&page=${page}&sizePage=20`,
 

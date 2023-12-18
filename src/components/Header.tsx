@@ -13,12 +13,10 @@ import { getCookie } from "../helper/CookiesRequest";
 import Fade from "react-reveal/Fade";
 const Header = () => {
   const navigate = useNavigate();
-
   const { cartQuantity, openCart, cartItems, userPrf, listProducts, infoUser } =
     useShoppingCart();
   const [showTable, setShowTable] = useState<boolean>(false);
   const [showModalNoti, setShowModalNoti] = useState(false);
-
   const [results, setResults] = useState<IProduct[]>([]);
   const [listBrandHeader, setListBrandHeader] = useState<Product[]>();
   const [listCategory, setListCategory] = useState<Product[]>();
@@ -123,6 +121,7 @@ const Header = () => {
     getDataBrand();
     getCategory();
   }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsHeaderSticky(window.scrollY > 0);

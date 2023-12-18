@@ -190,7 +190,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
           },
         });
         if (res.status) {
-          toast.success("Đã thêm thành công");
+          toast.success("Thêm thành công");
         } else {
           return;
         }

@@ -322,7 +322,7 @@ const ProductItem = ({
                     ) {
                       addMultipleToCart(idAddToCart, amount);
                       setAmount(1);
-                      toast.success("Thêm thành công sản phẩm vào giỏ hàng");
+                      toast.success("Thêm thành công ");
                       // openCart();
                     } else if (
                       (!!price &&
@@ -360,7 +360,7 @@ const ProductItem = ({
                       amountItemInCart <= 10
                     ) {
                       addMultipleToCart(idAddToCart, amount);
-                      toast.success("Thêm thành công");
+                      toast.success("Thêm thành công ");
                       setAmount(1);
                       navigate(path.payment);
                     } else if (

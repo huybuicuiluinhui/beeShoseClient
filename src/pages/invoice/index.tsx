@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import InvoiceAll from "./invoiceAll";
-// import WaitForPay from "./waitForPay";
-// import Transport from "./transport";
-// import Delivering from "./delivering";
-// import Complete from "./complete";
-// import Cancelled from "./cancelled";
-// import Return from "./return";
-// import TimeLineOrder from "./timeLineOrder";
-import axios from "axios";
-import API from "../../api";
 import { useShoppingCart } from "../../context/shoppingCart.context";
-import { IOrder } from "../../types/product.type";
 interface StatusCounts {
   2: number;
   3: number;

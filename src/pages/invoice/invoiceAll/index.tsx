@@ -134,16 +134,18 @@ const ItemOrder = ({
       <div className="w-full px-2 py-2 border-b-[1px] flex items-center justify-between">
         <p className=" text-gray-500 text-sm">Mã Hóa Đơn: {item?.code}</p>
         <div className="flex items-center gap-4">
-          <button
-            className="text-gray-500 text-sm font-semibold"
-            onClick={() => {
-              navigate(
-                `/timeLineOrder/${item?.status}/${item?.id}/${item?.code}`
-              );
-            }}
-          >
-            Xem tình trạng đơn hàng
-          </button>
+          {item.status !== 7 && (
+            <button
+              className="text-gray-500 text-sm font-semibold"
+              onClick={() => {
+                navigate(
+                  `/timeLineOrder/${item?.status}/${item?.id}/${item?.code}`
+                );
+              }}
+            >
+              Xem tình trạng đơn hàng
+            </button>
+          )}
           <p className=" text-red-400 text-sm uppercase">
             |{" "}
             {item?.status === 2
@@ -183,7 +185,7 @@ const ItemOrder = ({
             )}
           </span>
         </div>
-        {item?.status === 1 || item?.status === 2 ? (
+        {item?.status === 4 || item?.status === 2 ? (
           <div
             className="border border-red-400 rounded px-2 py-1 cursor-pointer "
             onClick={() => {
@@ -207,7 +209,7 @@ const ItemOrder = ({
           className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full mt-20"
           id="my-modal"
         >
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div className="relative top-20 mx-auto p-5 border w-[30%] shadow-lg rounded-md bg-white px-10">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 Lý Do Hủy
@@ -235,21 +237,55 @@ const ItemOrder = ({
                     className="mr-2 
 "
                   />
-                  Tôi muốn thay đổi sản phẩm.
+                  Tôi muốn thay đổi sản phẩm
                 </label>
                 <label className="flex justify-start  items-center  gap-4 my-3">
                   <input
                     type="radio"
                     name="reason"
-                    value="Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                    value="Thủ tục thanh toán rắc rối"
+                    checked={selectedOption === "Thủ tục thanh toán rắc rối"}
+                    onChange={handleChange}
+                    className="mr-2 "
+                  />
+                  Thủ tục thanh toán rắc rối
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi tìm thấy chỗ mua khác tốt hơn"
                     checked={
-                      selectedOption ===
-                      "Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                      selectedOption === "Tôi tìm thấy chỗ mua khác tốt hơn"
                     }
                     onChange={handleChange}
                     className="mr-2 "
                   />
-                  Tôi muốn cập nhật địa chỉ/sđt nhận hàng.
+                  Tôi tìm thấy chỗ mua khác tốt hơn
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi không có nhu cầu mua nữa"
+                    checked={selectedOption === "Tôi không có nhu cầu mua nữa"}
+                    onChange={handleChange}
+                    className="mr-2 "
+                  />
+                  Tôi không có nhu cầu mua nữa
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi không tìm thấy lý do hủy phù hợp"
+                    checked={
+                      selectedOption === "Tôi không tìm thấy lý do hủy phù hợp"
+                    }
+                    onChange={handleChange}
+                    className="mr-2 "
+                  />
+                  Tôi không tìm thấy lý do hủy phù hợp
                 </label>
                 <label className="flex justify-start  items-center  gap-4 my-3">
                   <input
@@ -262,6 +298,21 @@ const ItemOrder = ({
 "
                   />
                   Tìm được chỗ khác rẻ hơn
+                </label>
+                <label className="flex justify-start  items-center  gap-4 my-3">
+                  <input
+                    type="radio"
+                    name="reason"
+                    value="Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                    checked={
+                      selectedOption ===
+                      "Tôi muốn cập nhật địa chỉ/sđt nhận hàng"
+                    }
+                    onChange={handleChange}
+                    className="mr-2 
+"
+                  />
+                  Tôi muốn cập nhật địa chỉ/sđt nhận hàng.
                 </label>
               </div>
               <div className="items-center px-4 py-3">

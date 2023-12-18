@@ -171,7 +171,12 @@ const ShowBillCheck = () => {
             Tên khách hàng:{" "}
             <span className="font-normal"> {bill?.customerName}</span>
           </p>
-          {bill?.phoneNumber && <p>Số điện thoại: {bill?.phoneNumber}</p>}
+          {bill?.phoneNumber && (
+            <p className="font-medium">
+              Số điện thoại:{" "}
+              <span className="font-normal"> {bill?.phoneNumber}</span>
+            </p>
+          )}
           <div className="flex items-center gap-2">
             <span className="font-medium">Địa chỉ: </span>
             <DetailAddress
@@ -181,6 +186,11 @@ const ShowBillCheck = () => {
               prov={bill.address.split("##")[3]}
             />
           </div>
+          {bill?.note && (
+            <p className="font-medium">
+              Lưu ý: <span className="font-normal"> {bill?.note}</span>
+            </p>
+          )}
         </div>
       )}
       <div className="w-full  flex justify-center my-20 gap-8">

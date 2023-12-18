@@ -132,6 +132,7 @@ const LoginScreen = () => {
           (jwtDecode(res.data.token) as { id: string }).id
         );
         navigate(path.home);
+        window.location.reload();
       }
     } catch (error) {
       if (typeof error === "string") {
@@ -149,7 +150,6 @@ const LoginScreen = () => {
         toast.error("Đăng nhập thất bại. Vui lòng thử lại sau.");
       }
     } finally {
-      window.location.reload();
     }
   };
   const register = async () => {

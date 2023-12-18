@@ -387,7 +387,7 @@ const QuickViewDetail = ({
                 if (userPrf) {
                   addToCartUser(idAddToCart, amount);
                   setShowQuickView(false);
-                  // openCart();
+                  openCart();
                 } else {
                   if (
                     !!idAddToCart &&
@@ -399,7 +399,7 @@ const QuickViewDetail = ({
                     addMultipleToCart(idAddToCart, amount);
                     // openCart();
                     setAmount(1);
-                    toast.success("Thêm thành công sản phẩm vào giỏ hàng!");
+                    toast.success("Thêm thành công ");
                   } else if (
                     (!!price && amount < amountShoe - amountItemInCart) ||
                     amount >= 10
