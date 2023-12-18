@@ -45,7 +45,6 @@ const ProductItem = ({
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [code, setCode] = useState<string>();
   const [status, setStatus] = useState<boolean>(false);
-  console.log("product", product);
   const getDataSize = async () => {
     try {
       const response = await axios.get(API.getSizeAll());
@@ -89,6 +88,10 @@ const ProductItem = ({
       }
     }
   };
+  console.log("số lượng có sẵn", amountShoe);
+  console.log("số lượng thêm", amount);
+  console.log("số lượng trong giỏ ", getItemQuantity(idAddToCart));
+  console.log("idAddToCart ", idAddToCart);
   const imgArr = useMemo(() => {
     const arr = [];
     for (let i = 0; i < product.length; i++) {
@@ -250,7 +253,7 @@ const ProductItem = ({
                 </div>
                 <div className="flex flex-col">
                   <button
-                    className="w-8   h-[50%]  border-[1px] border-[#e9e9e9] "
+                    className="w-8   h-[50%]  border-[1px] border-[#e9e9e9] cursor-pointer"
                     onClick={() => {
                       if (!!userPrf) {
                         if (
@@ -283,7 +286,7 @@ const ProductItem = ({
                     <span className="leading-[5px]">+</span>
                   </button>
                   <button
-                    className="w-8 h-[50%] border-[1px] border-[#e9e9e9] "
+                    className="w-8 h-[50%] border-[1px] border-[#e9e9e9]  cursor-pointer"
                     onClick={() => {
                       setAmount((prev) => {
                         if (prev > 1) {
@@ -319,7 +322,8 @@ const ProductItem = ({
                       !!price &&
                       price > 0 &&
                       amountShoe >= amountItemInCart + amount &&
-                      amountItemInCart <= 10
+                      amountItemInCart <= 10 &&
+                      amountItemInCart + amount <= 10
                     ) {
                       addMultipleToCart(idAddToCart, amount);
                       setAmount(1);

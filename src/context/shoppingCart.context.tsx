@@ -336,6 +336,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
     setCartItems((currItems) => {
       return currItems.filter((item) => item.id !== id);
     });
+    toast.success("đã xóa thành công");
   }
   function addMultipleToCart(id: number, quantityToAdd: number) {
     setCartItems((currItems) => {

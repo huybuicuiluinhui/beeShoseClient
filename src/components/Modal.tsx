@@ -42,7 +42,7 @@ const ModalComponent = ({
       <div
         className={`${
           check ? "w-fit" : "w-[600px]"
-        } relative top-20 mx-auto p-5 border w-[50%] shadow-lg rounded-md bg-white`}
+        } relative top-1/3 mx-auto py-5 px-10 border w-[50%] shadow-lg rounded-md bg-white `}
       >
         <button
           onClick={onClose}
