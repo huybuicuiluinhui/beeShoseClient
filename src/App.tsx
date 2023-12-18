@@ -71,7 +71,7 @@ function App() {
         { path: path.lookUpOrders, element: <LookUpOrders /> },
         { path: path.loginScreen, element: <LoginScreen /> },
         { path: path.changePassword, element: <ChangePassword /> },
-        { path: path.vnpayment, element: withAuth(VnPayPayment)() },
+        { path: path.vnpayment, element: <VnPayPayment /> },
         { path: path.timeLineOrder, element: <TimeLineOrder /> },
         { path: path.showBillCheck, element: <ShowBillCheck /> },
         { path: path.notification, element: <Notification /> },

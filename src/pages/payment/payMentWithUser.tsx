@@ -3,6 +3,7 @@ import ShippingProcess from "../../components/shippingProcess";
 import Images from "../../static";
 import { useShoppingCart } from "../../context/shoppingCart.context";
 import {
+  CustomError,
   District,
   IAddress,
   IDetailProductCart,
@@ -221,11 +222,33 @@ const PayMentWithUser = () => {
               window.location.href = response?.data?.data;
             }
           } catch (error) {
-            console.error("Error making axios request:", error);
+            if (typeof error === "string") {
+              toast.error(error);
+            } else if (error instanceof Error) {
+              const customError = error as CustomError;
+              if (customError.response && customError.response.data) {
+                toast.error(customError.response.data);
+              } else {
+                toast.error(customError.message);
+              }
+            } else {
+              toast.error("Hãy thử lại.");
+            }
           }
         }
       } catch (error) {
-        console.log(error);
+        if (typeof error === "string") {
+          toast.error(error);
+        } else if (error instanceof Error) {
+          const customError = error as CustomError;
+          if (customError.response && customError.response.data) {
+            toast.error(customError.response.data);
+          } else {
+            toast.error(customError.message);
+          }
+        } else {
+          toast.error("Hãy thử lại.");
+        }
       } finally {
         removeAllCart();
       }
@@ -647,7 +670,11 @@ const PayMentWithUser = () => {
             <button
               className="bg-red-600 text-white text-base font-medium px-10 py-2"
               onClick={() => {
-                setShowModalBill(true);
+                if (!!listProducts && listProducts.length > 0) {
+                  setShowModalBill(true);
+                } else {
+                  toast.warning("Không có sản phẩm");
+                }
               }}
             >
               Đặt hàng

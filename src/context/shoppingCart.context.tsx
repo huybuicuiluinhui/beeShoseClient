@@ -60,6 +60,7 @@ type ShoppingCartContext = {
   removeAllCart: () => void;
   infoUser: IInfoAccount | undefined;
   getItemQuantityUser: (id: number) => number;
+  removeAllCartKH: () => void;
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
@@ -251,6 +252,9 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
       getListDetailCart();
     }
   };
+  const removeAllCartKH = () => {
+    setCartItems([]);
+  };
   const getProductQuantityById = (productId: number) => {
     const product = listProducts.find(
       (product) => product?.idProductDetail === productId
@@ -386,6 +390,7 @@ export function ShoppingCartProvider({ children }: ShoppingCartProviderProps) {
         removeAllCart,
         infoUser,
         getItemQuantityUser,
+        removeAllCartKH,
       }}
     >
       {children}

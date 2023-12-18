@@ -226,6 +226,7 @@ const CartPage = () => {
   useEffect(() => {
     getDetailShoe();
   }, []);
+  console.log("listProducts", listProducts);
   return (
     <div className="container mx-auto ">
       <ShippingProcess type={1} />
@@ -340,7 +341,7 @@ const CartPage = () => {
               <span className="font-semibold text-sm uppercase text-red-400">
                 {formatCurrency(calculateTotal(listProducts))}
               </span>
-            ) : !!listDetailShoe ? (
+            ) : !userPrf && !!listDetailShoe ? (
               <span className="font-semibold text-sm uppercase text-red-400">
                 {" "}
                 {formatCurrency(
@@ -352,7 +353,9 @@ const CartPage = () => {
                   }, 0)
                 )}
               </span>
-            ) : null}
+            ) : (
+              convertToCurrencyString(0)
+            )}
           </div>
           <div className="flex justify-between mt-10 mb-5 ">
             <span className="font-semibold text-sm uppercase">
@@ -380,7 +383,9 @@ const CartPage = () => {
                   }, 0)
                 )}
               </span>
-            ) : null}
+            ) : (
+              convertToCurrencyString(0)
+            )}
           </div>
           <div className="border-t ">
             <div className="flex font-semibold justify-between py-6 text-sm uppercase">
@@ -389,7 +394,7 @@ const CartPage = () => {
                 <span className="text-red-700">
                   {formatCurrency(calculateTotalDone(listProducts))}
                 </span>
-              ) : !!listDetailShoe ? (
+              ) : !userPrf && !!listDetailShoe ? (
                 <span className="font-semibold text-sm uppercase text-red-700">
                   {" "}
                   {formatCurrency(
@@ -408,14 +413,15 @@ const CartPage = () => {
                   )}
                 </span>
               ) : (
-                0
+                convertToCurrencyString(0)
               )}
             </div>
-            {cartItems.length === 0 && listProducts?.length === 0 ? (
+            {cartItems.length === 0 ||
+            (listProducts?.length === 0 && !!userPrf) ? (
               <button
                 className="bg-[#fe672b7d] font-semibold   py-3 text-sm text-white uppercase w-full"
                 onClick={() => {
-                  toast("Không có sản phẩm trong giỏ hàng ");
+                  toast.warning("Không có sản phẩm trong giỏ hàng ");
                 }}
               >
                 Mua hàng

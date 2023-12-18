@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import ShippingProcess from "../../components/shippingProcess";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { IDetailProductCart2, IVoucher } from "../../types/product.type";
+import {
+  CustomError,
+  IDetailProductCart2,
+  IVoucher,
+} from "../../types/product.type";
 import {
   convertToCurrencyString,
   regexPhoneNumber,
@@ -257,15 +261,36 @@ const PaymentPage = () => {
                   }`
               );
               if (response.status) {
-                // console.log(response.data.data);
                 window.location.href = response.data.data;
               }
             } catch (error) {
-              console.error("Error making axios request:", error);
+              if (typeof error === "string") {
+                toast.error(error);
+              } else if (error instanceof Error) {
+                const customError = error as CustomError;
+                if (customError.response && customError.response.data) {
+                  toast.error(customError.response.data);
+                } else {
+                  toast.error(customError.message);
+                }
+              } else {
+                toast.error("Hãy thử lại.");
+              }
             }
           }
         } catch (error) {
-          console.log(error);
+          if (typeof error === "string") {
+            toast.error(error);
+          } else if (error instanceof Error) {
+            const customError = error as CustomError;
+            if (customError.response && customError.response.data) {
+              toast.error(customError.response.data);
+            } else {
+              toast.error(customError.message);
+            }
+          } else {
+            toast.error("Hãy thử lại.");
+          }
         }
       }
     }

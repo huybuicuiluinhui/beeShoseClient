@@ -215,8 +215,18 @@ const LoginScreen = () => {
       } else {
       }
     } catch (error) {
-      console.log("error", error);
-      toast.error("Đăng ký thất bại");
+      if (typeof error === "string") {
+        toast.error(error);
+      } else if (error instanceof Error) {
+        const customError = error as CustomError;
+        if (customError.response && customError.response.data) {
+          toast.error(customError.response.data);
+        } else {
+          toast.error(customError.message);
+        }
+      } else {
+        toast.error("Hãy thử lại.");
+      }
     }
   };
   const forgotPasss = async () => {

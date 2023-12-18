@@ -5,11 +5,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import path from "../../constants/path";
 import { useShoppingCart } from "../../context/shoppingCart.context";
+import { CustomError } from "../../types/product.type";
 
 export default function Payment() {
-  console.log("đã vô rồi");
   const navigate = useNavigate();
-  const { removeAllCart } = useShoppingCart();
+  const { removeAllCart, userPrf, removeAllCartKH } = useShoppingCart();
   useEffect(() => {
     let isMounted = true;
 
@@ -39,10 +39,20 @@ export default function Payment() {
               paymentReturn
             );
             if (response.status) {
-              console.log("ahihihihihih");
-              toast.success("Đặt hàng thành công");
-              removeAllCart();
-              navigate(path.home);
+              console.log("response.data", response.data);
+              if (!!userPrf) {
+                toast.success("Đặt hàng thành công");
+                removeAllCart();
+                navigate(
+                  `/showBillCheck/${response?.data?.data?.data?.id}/${response?.data?.data?.data?.code}`
+                );
+              } else {
+                removeAllCartKH();
+                toast.success("Đặt hàng thành công");
+                navigate(
+                  `/showBillCheck/${response?.data?.data?.data?.id}/${response?.data?.data?.data?.code}`
+                );
+              }
             }
           } else {
             localStorage.removeItem("checkout");
@@ -51,7 +61,18 @@ export default function Payment() {
           }
         }
       } catch (error) {
-        console.error("Error:", error);
+        if (typeof error === "string") {
+          toast.error(error);
+        } else if (error instanceof Error) {
+          const customError = error as CustomError;
+          if (customError.response && customError.response.data) {
+            toast.error(customError.response.data);
+          } else {
+            toast.error(customError.message);
+          }
+        } else {
+          toast.error("Hãy thử lại.");
+        }
       }
     }
 
