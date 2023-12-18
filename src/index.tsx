@@ -13,7 +13,7 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
-      <ToastContainer autoClose={1000} position="top-center" />
+      <ToastContainer autoClose={1000} />
     </BrowserRouter>
   </React.StrictMode>
 );

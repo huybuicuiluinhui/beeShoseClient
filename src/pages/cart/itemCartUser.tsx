@@ -131,6 +131,7 @@ const ItemCartUser = ({ item }: { item: IDetailProductCart }) => {
               <button
                 onClick={() => {
                   removeFromCartUser(item?.id);
+                  setShowMoal(false);
                 }}
                 data-modal-hide="popup-modal"
                 type="button"

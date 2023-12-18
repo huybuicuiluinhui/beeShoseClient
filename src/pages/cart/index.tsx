@@ -255,12 +255,13 @@ const CartPage = () => {
               </h3>
             </div>
           )}
-
           {!!userPrf ? (
             !!listProducts && listProducts.length > 0 ? (
-              listProducts.map((item, index) => {
-                return <ItemCartUser item={item} key={index} />;
-              })
+              <div className="max-h-[370px] overflow-y-scroll">
+                {listProducts.map((item, index) => {
+                  return <ItemCartUser item={item} key={index} />;
+                })}
+              </div>
             ) : (
               <div className="w-full">
                 <img
@@ -271,7 +272,7 @@ const CartPage = () => {
               </div>
             )
           ) : (
-            <div>
+            <div className="max-h-[370px] overflow-y-scroll">
               {!!cartItems && cartItems.length > 0 ? (
                 cartItems.map((item) => {
                   return (

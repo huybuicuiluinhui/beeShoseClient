@@ -68,8 +68,6 @@ const Header = () => {
           (notification: any) => notification.type === 0
         ).length;
         setUnreadNotificationsCount(unreadNotificationsCount);
-        console.log(res.data?.data);
-        console.log(userPrf?.id);
         setDataNoti(res.data?.data);
       }
     }
@@ -87,7 +85,7 @@ const Header = () => {
   };
   useEffect(() => {
     getDataNoti();
-  }, [userPrf?.id, type]);
+  }, [userPrf?.id, type, showModalNoti]);
 
   const getCategory = async () => {
     try {
@@ -410,9 +408,9 @@ const Header = () => {
                                         return (
                                           <div
                                             onClick={() => {
+                                              getDataNoti();
                                               setShowModalNoti(false);
                                               navigate(`/notification/${e.id}`);
-                                              getDataNoti();
                                             }}
                                             className={`group  relative px-2 py-3 ${
                                               e.type === 1 ? "bg-gray-100" : ""
