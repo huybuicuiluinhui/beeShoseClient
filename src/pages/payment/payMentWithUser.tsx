@@ -224,6 +224,8 @@ const PayMentWithUser = () => {
       } finally {
         removeAllCart();
       }
+    } else {
+      toast.warning("Bạn cần thêm địa chỉ");
     }
   };
 
@@ -278,6 +280,7 @@ const PayMentWithUser = () => {
       getListDetailCart();
     }
   }, [userPrf?.id]);
+  console.log("userPrf?.id", userPrf?.id);
   useEffect(() => {
     if (userPrf?.id) {
       loadAddress();

@@ -357,7 +357,7 @@ const ProductItem = ({
                     if (idAddToCart) addToCartUser(idAddToCart, amount);
                     setAmount(1);
                     // openCart();
-                    navigate(path.payment);
+                    navigate(path.payMentWithUser);
                   } else {
                     if (
                       !!idAddToCart &&

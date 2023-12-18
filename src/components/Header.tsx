@@ -68,11 +68,13 @@ const Header = () => {
           (notification: any) => notification.type === 0
         ).length;
         setUnreadNotificationsCount(unreadNotificationsCount);
+        console.log(res.data?.data);
 
         setDataNoti(res.data?.data);
       }
     }
   };
+  console.log(userPrf?.id);
   const deleteNotiOne = async (id: number) => {
     if (!!userPrf) {
       const res = await axios({

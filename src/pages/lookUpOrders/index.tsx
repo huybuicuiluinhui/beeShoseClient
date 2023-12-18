@@ -166,8 +166,9 @@ const LookUpOrders = () => {
                     {formatCurrency(listDataBill.moneyShip)}{" "}
                   </td>
                   <td className="px-6 py-4">
-                    {formatCurrency(listDataBill.totalMoney) +
-                      listDataBill.moneyShip}{" "}
+                    {formatCurrency(
+                      listDataBill.totalMoney + listDataBill.moneyShip
+                    )}{" "}
                   </td>
                 </tr>
               </tbody>
